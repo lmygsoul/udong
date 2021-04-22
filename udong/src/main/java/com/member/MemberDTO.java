@@ -1,30 +1,30 @@
 package com.member;
 
 public class MemberDTO {
-	private String userId;
-	private String userPwd;
-	private String userName;
-	private String nickName;
-	private int type;
-	private String created_date;
-	private String birth;
-	private String email,email1,email2;
-	private String tel, tel1, tel2, tel3;
-	private String zipCode;
-	private String addr1, addr2;
-	private String myComment;
+	//private String userId;
+	//private String userPwd;
+	//private String userName;
+	//private String nickName;
+	//private int type;
+	//private String created_date;
+	//private String birth;
+	//private String email,email1,email2;
+	//private String tel, tel1, tel2, tel3;
+	//private String zipCode;
+	//private String addr1, addr2;
+	//private String myComment;
 	
+	private String userId, userName, userPwd, created_date, modify_date;
+	private String email, email1, email2;
+	private String tel, tel1, tel2, tel3;
+	private String birth;
+	private String zip, addr1, addr2;
+	private int enabled;
 	public String getUserId() {
 		return userId;
 	}
 	public void setUserId(String userId) {
 		this.userId = userId;
-	}
-	public String getUserPwd() {
-		return userPwd;
-	}
-	public void setUserPwd(String userPwd) {
-		this.userPwd = userPwd;
 	}
 	public String getUserName() {
 		return userName;
@@ -32,17 +32,11 @@ public class MemberDTO {
 	public void setUserName(String userName) {
 		this.userName = userName;
 	}
-	public String getNickName() {
-		return nickName;
+	public String getUserPwd() {
+		return userPwd;
 	}
-	public void setNickName(String nickName) {
-		this.nickName = nickName;
-	}
-	public int getType() {
-		return type;
-	}
-	public void setType(int type) {
-		this.type = type;
+	public void setUserPwd(String userPwd) {
+		this.userPwd = userPwd;
 	}
 	public String getCreated_date() {
 		return created_date;
@@ -50,11 +44,11 @@ public class MemberDTO {
 	public void setCreated_date(String created_date) {
 		this.created_date = created_date;
 	}
-	public String getBirth() {
-		return birth;
+	public String getModify_date() {
+		return modify_date;
 	}
-	public void setBirth(String birth) {
-		this.birth = birth;
+	public void setModify_date(String modify_date) {
+		this.modify_date = modify_date;
 	}
 	public String getEmail() {
 		return email;
@@ -98,11 +92,17 @@ public class MemberDTO {
 	public void setTel3(String tel3) {
 		this.tel3 = tel3;
 	}
-	public String getZipCode() {
-		return zipCode;
+	public String getBirth() {
+		return birth;
 	}
-	public void setZipCode(String zipCode) {
-		this.zipCode = zipCode;
+	public void setBirth(String birth) {
+		this.birth = birth;
+	}
+	public String getZip() {
+		return zip;
+	}
+	public void setZip(String zip) {
+		this.zip = zip;
 	}
 	public String getAddr1() {
 		return addr1;
@@ -116,11 +116,11 @@ public class MemberDTO {
 	public void setAddr2(String addr2) {
 		this.addr2 = addr2;
 	}
-	public String getMyComment() {
-		return myComment;
+	public int getEnabled() {
+		return enabled;
 	}
-	public void setMyComment(String myComment) {
-		this.myComment = myComment;
+	public void setEnabled(int enabled) {
+		this.enabled = enabled;
 	}
 	
 	
