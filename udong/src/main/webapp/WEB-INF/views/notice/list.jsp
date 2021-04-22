@@ -25,15 +25,6 @@
 	
 <div class="container">
 	
-    <div class="body-side">
-       <ul>
-        	<li><h3>MY PAGE</h3></li>
-        	<li><a href="#">쪽지</a></li>
-        	<li><a href="#">내가쓴글</a></li>
-        	<li><a href="#">찜한목록</a></li>
-        </ul>
-     </div>
-        
     <div class="body-container" style="width: 700px;">
         <div class="body-title">
             <h3><span style="font-family: Webdings">4</span> notice </h3>

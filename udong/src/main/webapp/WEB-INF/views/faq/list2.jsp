@@ -25,6 +25,7 @@
 	
 <div class="container">
 	
+	<!-- my page용 list2 파일 입니다. 그외는 list를 사용해주세요 -->
     <div class="body-side">
        <ul>
         	<li><h3>MY PAGE</h3></li>
