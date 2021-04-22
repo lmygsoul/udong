@@ -1,5 +1,38 @@
 package com.neighbor_bbs;
 
-public class neighborDAO {
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
+import com.util.DBConn;
+
+public class neighborDAO {
+	private Connection conn = DBConn.getConnection();
+	
+	public int insertNeighbor(neighborDTO dto) throws SQLException{
+		int result = 0;
+		String sql;
+		PreparedStatement pstmt = null;
+		
+		try {
+			sql = "INSERT INTO neighbor";
+			pstmt = conn.prepareStatement(sql);
+			
+			result = pstmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+		}
+		
+		
+		return result;
+	}
+	
 }
