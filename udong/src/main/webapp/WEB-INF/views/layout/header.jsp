@@ -54,7 +54,7 @@ $(function(){
         <li>
             <a href="#"><span>동네홍보</span></a>
             <ul>
-                <li><a href="#" style="margin-left:124px; " onmouseover="this.style.marginLeft='124px';">우동리뷰</a></li>
+                <li><a href="#" style="margin-left:124px; " onmouseover="this.style.marginLeft='124px';">우동자랑</a></li>
                 <li><a href="#">우동홍보</a></li>
                 <li><a href="#">우동클래스</a></li>
             </ul>
