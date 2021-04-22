@@ -74,7 +74,8 @@ $(function(){
         <li>
             <a href="#"><span>고객센터</span></a>
             <ul>
-                <li><a href="#" style="margin-left:347px; " onmouseover="this.style.marginLeft='347px';">공지사항</a></li>
+                <li>
+                <a href="${pageContext.request.contextPath}/notice/list.do" style="margin-left:347px; " onmouseover="this.style.marginLeft='347px';">공지사항</a></li>
 	            <li>
 	            <a href="${pageContext.request.contextPath}/faq/list.do"><span>FAQ</span></a>
 				</li>
