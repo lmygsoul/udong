@@ -25,11 +25,9 @@
 	
 <div class="container">
 	
-	<div class="body-inner">
-	
-    <div class="body-container" style="margin: 80px 150px 120px;">
+    <div class="body-container" style="width: 700px;">
         <div class="body-title">
-            <h3><span style="font-family: Webdings">4</span> FAQ </h3>
+            <h3><span style="font-family: Webdings">4</span> faq </h3>
         </div>
         
         
@@ -100,7 +98,6 @@
 			   </tr>
 			</table>
         </div>
-    </div>
     </div>
 </div>
 
