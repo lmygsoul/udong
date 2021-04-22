@@ -18,8 +18,8 @@ public class FaqDAO {
 		String sql;
 		
 		try {
-			sql = "INSERT INTO bbs(num, subject, content, userId, hitCount, created) "
-					+ " VALUES(bbs_seq.NEXTVAL,?,?,?,0,SYSDATE)";
+			sql = "INSERT INTO faq(num, subject, content, userId, hitCount, created) "
+					+ " VALUES(faq_seq.NEXTVAL,?,?,?,0,SYSDATE)";
 			
 			pstmt = conn.prepareStatement(sql);
 			
@@ -56,7 +56,7 @@ public class FaqDAO {
 		
 		try {
 			
-			sql = "SELECT COUNT(*) FROM bbs";
+			sql = "SELECT COUNT(*) FROM faq";
 			pstmt = conn.prepareStatement(sql);
 			
 
@@ -88,7 +88,7 @@ public class FaqDAO {
 	
 	public List<FaqDTO> listFaq(int offset, int rows){
 		List<FaqDTO> list = new ArrayList<FaqDTO>();
-		//bbs와 member1 equi join
+		//faq와 member1 equi join
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		String sql;
@@ -96,7 +96,7 @@ public class FaqDAO {
 		try {
 			sql = "SELECT num, userName, subject, hitCount, "
 					+ "TO_CHAR(created, 'YYYY-MM-DD') created "
-					+ " FROM bbs b "
+					+ " FROM faq b "
 					+ " JOIN member1 m ON b.userId = m.userId"
 					+ " ORDER BY num DESC"
 					+ " OFFSET ? ROWS FETCH FIRST ? ROWS ONLY ";
@@ -142,13 +142,13 @@ public class FaqDAO {
 	//검색일때 데이터 개수
 	public int dataCount(String condition, String keyword) {
 		int result=0;
-		//bbs와 member1 equi join
+		//faq와 member1 equi join
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		String sql;
 		
 		try {
-			sql = "SELECT COUNT(*) FROM bbs b JOIN member1 m ON b.userId = m.userId ";			
+			sql = "SELECT COUNT(*) FROM faq b JOIN member1 m ON b.userId = m.userId ";			
 			
 			if(condition.equals("all")) {
 				sql+=" WHERE INSTR(subject, ?) >= 1 OR INSTR(content, ?) >= 1 ";
@@ -199,7 +199,7 @@ public class FaqDAO {
 	//검색일때 리스트
 	public List<FaqDTO> listFaq(int offset, int rows, String condition, String keyword){
 		List<FaqDTO> list = new ArrayList<FaqDTO>();
-		//bbs와 member1 equi join
+		//faq와 member1 equi join
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		String sql;
@@ -207,7 +207,7 @@ public class FaqDAO {
 		try {
 			sql = "SELECT num, userName, subject, hitCount, "
 					+ "TO_CHAR(created, 'YYYY-MM-DD') created "
-					+ " FROM bbs b "
+					+ " FROM faq b "
 					+ " JOIN member1 m ON b.userId = m.userId";
 			if(condition.equals("all")) {
 				sql += "  WHERE INSTR(subject, ?) >= 1 OR INSTR(content, ?) >=1";
@@ -273,7 +273,7 @@ public class FaqDAO {
 		String sql;
 		
 		try {
-			sql = "UPDATE bbs SET hitCount = hitCount +1 WHERE num = ? ";
+			sql = "UPDATE faq SET hitCount = hitCount +1 WHERE num = ? ";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, num);
 			
@@ -301,7 +301,7 @@ public class FaqDAO {
 		
 		try {
 			sql = "SELECT num, b.userId, userName, subject, content, hitCount, created "
-					+ " FROM bbs b "
+					+ " FROM faq b "
 					+ " JOIN member1 m ON b.userId = m.userId "
 					+ " WHERE num = ? ";
 			pstmt = conn.prepareStatement(sql);
@@ -349,7 +349,7 @@ public class FaqDAO {
 
 	        try {
 	        	if(keyword.length() != 0) {
-	                sb.append("SELECT num, subject FROM bbs  b ");
+	                sb.append("SELECT num, subject FROM faq  b ");
 	                sb.append(" JOIN member1 m ON b.userId = m.userId ");
 	                if(condition.equals("all")) {
 	                    sb.append(" WHERE ( INSTR(subject, ?) >= 1 OR INSTR(content, ?) >= 1  ) ");
@@ -374,7 +374,7 @@ public class FaqDAO {
 	                   	pstmt.setInt(2, num);
 	                }
 	            } else {
-	                sb.append("SELECT num, subject FROM bbs ");
+	                sb.append("SELECT num, subject FROM faq ");
 	                sb.append(" WHERE num > ? ");
 	                sb.append(" ORDER BY num ASC ");
 	                sb.append(" FETCH  FIRST  1  ROWS  ONLY ");
@@ -420,7 +420,7 @@ public class FaqDAO {
 
 	        try {
 	        	if(keyword.length() != 0) {
-	                sb.append("SELECT num, subject FROM bbs b ");
+	                sb.append("SELECT num, subject FROM faq b ");
 	                sb.append(" JOIN member1 m ON  b.userId = m.userId ");
 	                if(condition.equals("all")) {
 	                    sb.append(" WHERE ( INSTR(subject, ?) >= 1 OR INSTR(content, ?) >= 1  )  ");
@@ -444,7 +444,7 @@ public class FaqDAO {
 	                   	pstmt.setInt(2, num);
 	                }
 	            } else {
-	                sb.append("SELECT num, subject FROM bbs ");
+	                sb.append("SELECT num, subject FROM faq ");
 	                sb.append(" WHERE num < ? ");
 	                sb.append(" ORDER BY num DESC ");
 	                sb.append(" FETCH  FIRST  1  ROWS  ONLY ");
@@ -488,7 +488,7 @@ public class FaqDAO {
 	    	try {
 	    		// 게시판 테이블에서 subject, content 2개만 수정
 	    		// 게시글을 올린 사람만 수정 가능하도록 > num, userId가 동일
-				sql = "UPDATE bbs SET subject=?, content=? WHERE num=? AND userId=?";
+				sql = "UPDATE faq SET subject=?, content=? WHERE num=? AND userId=?";
 				pstmt = conn.prepareStatement(sql);
 				
 				pstmt.setString(1, dto.getSubject());
@@ -518,7 +518,7 @@ public class FaqDAO {
 	    	
 	    	try {
 	    		// 조건 : 게시글 작성자나 관리자만 지울 수 있다.
-	    		sql="DELETE FROM bbs WHERE num=?";
+	    		sql="DELETE FROM faq WHERE num=?";
 	    		// 관리자가 아닐 경우, userId 대조
 	    		if(! userId.equals("admin")) {
 	    			sql += " AND userId = ?";
