@@ -5,7 +5,7 @@
 
 <div class="footer-con">
 	<div class="footer-left">
-		<img src="${pageContext.request.contextPath}/resource/images/logo_wh.png" style="width: 100%;" >
+		<img src="${pageContext.request.contextPath}/resource/images/logo_wh2.png" style="width: 100%;" >
 	</div>
 	<div class="footer-right">
 		<a href="">학진마켓 정책 및 약관</a>&nbsp;&nbsp;&nbsp;
