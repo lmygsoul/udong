@@ -42,7 +42,7 @@
 <div class="container">
     <div class="body-container">
         <div class="body-title" style="margin-bottom: 0;">
-            <h3><span style="font-family: Webdings">4</span> notice </h3>
+            <h3><span style="font-family: Webdings">4</span> 공지사항 </h3>
         </div>
         
         <div>

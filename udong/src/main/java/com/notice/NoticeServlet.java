@@ -13,7 +13,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 // import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpSession;
 
+import com.member.SessionInfo;
 import com.util.MyUtil;
 
 @WebServlet("/notice/*")
@@ -41,7 +43,7 @@ public class NoticeServlet extends HttpServlet {
 		String uri = req.getRequestURI();
 		
 		//로그인이 되지 않은 상태이면 로그인 페이지로
-		/*HttpSession session = req.getSession();
+		HttpSession session = req.getSession();
 		SessionInfo info = (SessionInfo)session.getAttribute("member");
 		
 		if (info==null) {
@@ -49,7 +51,7 @@ public class NoticeServlet extends HttpServlet {
 			resp.sendRedirect(cp+"/member/login.do");
 			return;
 		}
-		*/
+		
 		if(uri.indexOf("list.do")!=-1) {
 			list(req, resp);
 		} else if(uri.indexOf("created.do")!=-1) {
@@ -155,13 +157,14 @@ public class NoticeServlet extends HttpServlet {
 		NoticeDAO dao = new NoticeDAO();
 		NoticeDTO dto = new NoticeDTO();
 		
-		// HttpSession session = req.getSession();
-		// SessionInfo info = (SessionInfo)session.getAttribute("member");
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
 		
 		try {
 			dto.setSubject(req.getParameter("subject"));
 			dto.setContent(req.getParameter("content"));
-			// dto.setUserId(info.getUserId()); //세션의 아이디
+			dto.setUserId(info.getUserId()); //세션의 아이디
+			dto.setUserName(info.getUserName()); //세션의 이름
 			
 			dao.insertNotice(dto);
 			
@@ -224,18 +227,17 @@ public class NoticeServlet extends HttpServlet {
 	}
 	
 	protected void updateForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// NoticeDAO dao = new NoticeDAO();
-		// HttpSession session = req.getSession();
-		// SessionInfo info = (SessionInfo)session.getAttribute("member");
+		NoticeDAO dao = new NoticeDAO();
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
 		
 		String page = req.getParameter("page");
 		
 		try {
-			// int num = Integer.parseInt(req.getParameter("num"));
-			// NoticeDTO dto = dao.readNotice(num);
+			int num = Integer.parseInt(req.getParameter("num"));
+			NoticeDTO dto = dao.readNotice(num);
 			
 			// DB에 데이터가 있고(dto), 게시글을 올린 사람만(로그인한 사람 info)
-			/*
 			if(dto!=null && dto.getUserId().equals(info.getUserId())) {
 				req.setAttribute("dto", dto);
 				req.setAttribute("page", page);
@@ -243,7 +245,7 @@ public class NoticeServlet extends HttpServlet {
 				forward(req, resp, "/WEB-INF/views/notice/created.jsp"); // created.jsp - textarea 수정
 				return;
 			}
-			*/
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -254,8 +256,8 @@ public class NoticeServlet extends HttpServlet {
 	
 	protected void updateSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		NoticeDAO dao = new NoticeDAO();
-		// HttpSession session = req.getSession();
-		//SessionInfo info = (SessionInfo)session.getAttribute("member");
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
 		String page = req.getParameter("page");
 		
 		try {
@@ -263,7 +265,7 @@ public class NoticeServlet extends HttpServlet {
 			dto.setNum(Integer.parseInt(req.getParameter("num")));
 			dto.setSubject(req.getParameter("subject"));
 			dto.setContent(req.getParameter("content"));
-			// dto.setUserId(info.getUserId());
+			dto.setUserId(info.getUserId());
 			
 			dao.updateNotice(dto);
 		} catch (Exception e) {
@@ -275,15 +277,15 @@ public class NoticeServlet extends HttpServlet {
 	}
 	
 	protected void delete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// NoticeDAO dao = new NoticeDAO();
-		// HttpSession session = req.getSession();
-		// SessionInfo info = (SessionInfo)session.getAttribute("member");
+		NoticeDAO dao = new NoticeDAO();
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
 		
 		String page = req.getParameter("page");
 		String query = "page="+page;
 		
 		try {
-			// int num = Integer.parseInt(req.getParameter("num"));
+			int num = Integer.parseInt(req.getParameter("num"));
 			String condition = req.getParameter("condition");
 			String keyword = req.getParameter("keyword");
 			
@@ -297,7 +299,7 @@ public class NoticeServlet extends HttpServlet {
 				query += "&condition="+condition
 						+"&keyword="+URLEncoder.encode(keyword, "utf-8");
 			}
-			// dao.deletenotice(num, info.getUserId());
+			dao.deleteNotice(num, info.getUserId());
 			
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -11,7 +11,7 @@
 <jsp:include page="/WEB-INF/views/layout/staticHeader.jsp"/>
 <script type="text/javascript">
     function sendOk() {
-        var f = document.faqForm;
+        var f = document.tableNameForm;
 
     	var str = f.subject.value;
         if(!str) {
@@ -27,13 +27,15 @@
             return;
         }
 
-   		f.action="${pageContext.request.contextPath}/faq/${mode}_ok.do";
+   		f.action="${pageContext.request.contextPath}/tableName/${mode}_ok.do";
 
         f.submit();
     }
 </script>
 </head>
 <body>
+
+<!-- tableName -> 본인 폴더명으로 모두 바꾸기 -->
 
 <div class="header">
     <jsp:include page="/WEB-INF/views/layout/header.jsp"></jsp:include>
@@ -42,11 +44,11 @@
 <div class="container">
     <div class="body-container">
         <div class="body-title" style="margin-bottom: 0;">
-            <h3><span style="font-family: Webdings">4</span> FAQ </h3>
+            <h3><span style="font-family: Webdings">4</span> tableName </h3>
         </div>
         
         <div>
-			<form name="faqForm" method="post">
+			<form name="tableNameForm" method="post">
 			  <table style="width: 100%; margin: 0 auto; border-spacing: 0px; border-collapse: collapse;">
 			  <tr align="left" height="40" style="border-bottom: 1px solid #cccccc;"> 
 			      <td width="100" style="text-align: center;">제&nbsp;&nbsp;&nbsp;&nbsp;목</td>
@@ -80,7 +82,7 @@
 			      	</c:if>
 			        <button type="button" class="btn btnCreate" onclick="sendOk();">${mode=='update'?'수정완료':'등록하기'}</button>
 			        <button type="reset" class="btn">다시입력</button>
-			        <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/faq/list.do';">${mode=='update'?'수정취소':'등록취소'}</button>
+			        <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/tableName/list.do';">${mode=='update'?'수정취소':'등록취소'}</button>
 			      </td>
 			    </tr>
 			  </table>

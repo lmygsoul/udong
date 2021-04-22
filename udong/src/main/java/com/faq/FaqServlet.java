@@ -41,7 +41,7 @@ public class FaqServlet extends HttpServlet {
 		String uri = req.getRequestURI();
 		
 		//로그인이 되지 않은 상태이면 로그인 페이지로
-		/*HttpSession session = req.getSession();
+		HttpSession session = req.getSession();
 		SessionInfo info = (SessionInfo)session.getAttribute("member");
 		
 		if (info==null) {
@@ -49,7 +49,7 @@ public class FaqServlet extends HttpServlet {
 			resp.sendRedirect(cp+"/member/login.do");
 			return;
 		}
-		*/
+		
 		
 		if(uri.indexOf("list.do")!=-1) {
 			list(req, resp);

@@ -18,14 +18,15 @@ public class NoticeDAO {
 		String sql;
 		
 		try {
-			sql = "INSERT INTO notice_bbs(num, subject, content, userId, hitCount, created) "
-					+ " VALUES(notice_bbs_seq.NEXTVAL,?,?,?,0,SYSDATE)";
+			sql = "INSERT INTO notice_bbs(num, subject, content, userId, userName, hitCount, created) "
+					+ " VALUES(notice_bbs_seq.NEXTVAL,?,?,?,?,0,SYSDATE)";
 			
 			pstmt = conn.prepareStatement(sql);
 			
 			pstmt.setString(1, dto.getSubject());
 			pstmt.setString(2, dto.getContent());
 			pstmt.setString(3, dto.getUserId());
+			pstmt.setString(4, dto.getUserName());
 			
 			result = pstmt.executeUpdate();
 			
@@ -94,7 +95,7 @@ public class NoticeDAO {
 		String sql;
 		
 		try {
-			sql = "SELECT num, userName, subject, hitCount, "
+			sql = "SELECT num, b.userName, subject, hitCount, "
 					+ "TO_CHAR(created, 'YYYY-MM-DD') created "
 					+ " FROM notice_bbs b "
 					+ " JOIN member1 m ON b.userId = m.userId"
@@ -205,7 +206,7 @@ public class NoticeDAO {
 		String sql;
 		
 		try {
-			sql = "SELECT num, userName, subject, hitCount, "
+			sql = "SELECT num, b.userName, subject, hitCount, "
 					+ "TO_CHAR(created, 'YYYY-MM-DD') created "
 					+ " FROM notice_bbs b "
 					+ " JOIN member1 m ON b.userId = m.userId";
@@ -300,7 +301,7 @@ public class NoticeDAO {
 		String sql;
 		
 		try {
-			sql = "SELECT num, b.userId, userName, subject, content, hitCount, created "
+			sql = "SELECT num, b.userId, b.userName, subject, content, hitCount, created "
 					+ " FROM notice_bbs b "
 					+ " JOIN member1 m ON b.userId = m.userId "
 					+ " WHERE num = ? ";

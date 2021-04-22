@@ -15,7 +15,7 @@
 <c:if test="${dto.userId == sessionScope.member.userId || sessionScope.member.userId == 'admin'}">
 function deleteBoard(num) {
 	if(confirm("게시물을 삭제 하시겠습니까 ?")) {
-		var url="${pageContext.request.contextPath}/faq/delete.do?num="+num+"&${query}";
+		var url="${pageContext.request.contextPath}/notice/delete.do?num="+num+"&${query}";
 		location.href=url;
 	}
 }
@@ -31,7 +31,7 @@ function deleteBoard(num) {
 <div class="container">
     <div class="body-container" style="width: 700px;">
         <div class="body-title" style="margin: 0;">
-            <h3><span style="font-family: Webdings">4</span> FAQ </h3>
+            <h3><span style="font-family: Webdings">4</span> 공지사항 </h3>
         </div>
         
         <div>
@@ -47,7 +47,7 @@ function deleteBoard(num) {
 			       이름 : ${dto.userName}
 			    </td>
 			    <td width="50%" align="right" class="col-2">
-			        ${dto.created}
+			        ${dto.created} | 조회 ${dto.hitCount}
 			    </td>
 			</tr>
 			
@@ -61,7 +61,7 @@ function deleteBoard(num) {
 			    <td colspan="2" align="left" class="col-3">
 			       이전글 : 
 					<c:if test="${not empty preReadDto}">
-						<a href="${pageContext.request.contextPath}/faq/article.do?num=${preReadDto.num}&${query}">${preReadDto.subject}</a>
+						<a href="${pageContext.request.contextPath}/notice/article.do?num=${preReadDto.num}&${query}">${preReadDto.subject}</a>
 					</c:if>
 			    </td>
 			</tr>
@@ -70,7 +70,7 @@ function deleteBoard(num) {
 			    <td colspan="2" align="left" class="col-3">
 			       다음글 :
 					<c:if test="${not empty nextReadDto}">
-						<a href="${pageContext.request.contextPath}/faq/article.do?num=${nextReadDto.num}&${query}">${nextReadDto.subject}</a>
+						<a href="${pageContext.request.contextPath}/notice/article.do?num=${nextReadDto.num}&${query}">${nextReadDto.subject}</a>
 					</c:if>
 			    </td>
 			</tr>
@@ -78,7 +78,7 @@ function deleteBoard(num) {
 			    <td class="col-4">
 			    	<c:choose>
 			    		<c:when test="${dto.userId == sessionScope.member.userId}">
-			          		<button type="button" class="btn" style="margin-right: 3px;" onclick="javascript:location.href='${pageContext.request.contextPath}/faq/update.do?num=${dto.num}&page=${page}';">수정</button>
+			          		<button type="button" class="btn" style="margin-right: 3px;" onclick="javascript:location.href='${pageContext.request.contextPath}/notice/update.do?num=${dto.num}&page=${page}';">수정</button>
 			    		</c:when>
 			    		<c:otherwise>
 			    			<button type="button" class="btn" disabled="disabled">수정</button>
@@ -97,7 +97,7 @@ function deleteBoard(num) {
 			    </td>
 			
 			    <td align="right" class="col-4">
-			        <button type="button" class="btn btnList" onclick="javascript:location.href='${pageContext.request.contextPath}/faq/list.do?${query}';">리스트</button>
+			        <button type="button" class="btn btnList" onclick="javascript:location.href='${pageContext.request.contextPath}/notice/list.do?${query}';">리스트</button>
 			    </td>
 			</tr>
 			</table>
