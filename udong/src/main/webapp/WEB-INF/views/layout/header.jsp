@@ -23,7 +23,7 @@ $(function(){
     <div class="header-left">
         <p style="margin: 2px;">
             <a href="${pageContext.request.contextPath}/" style="text-decoration: none;">
-            	<img src="${pageContext.request.contextPath}/resource/images/logo.png" style="width: 35%; position: relative; top:15px; ">
+            	<img src="${pageContext.request.contextPath}/resource/images/logo2.png" style="width: 35%; position: relative; top:18px; ">
             </a>
         </p>
     </div>
@@ -53,18 +53,35 @@ $(function(){
 			
         <li>
             <a href="#"><span>동네홍보</span></a>
+            <ul>
+                <li><a href="#" style="margin-left:124px; " onmouseover="this.style.marginLeft='124px';">우동리뷰</a></li>
+                <li><a href="#">우동홍보</a></li>
+                <li><a href="#">우동클래스</a></li>
+            </ul>
         </li>
 
         <li>
-            <a href="#"><span>자유게시판</span></a>
+            <a href="#"><span>커뮤니티</span></a>
+            <ul>
+                <li><a href="#" style="margin-left:235px; " onmouseover="this.style.marginLeft='235px';">출석체크</a></li>
+                <li><a href="#">가입인사</a></li>
+                <li><a href="#">우동이야기</a></li>
+                <li><a href="#">우동사진</a></li>
+                <li><a href="#">우동지식</a></li>
+            </ul>
         </li>
         
         <li>
-            <a href="#"><span>공지사항</span></a>
+            <a href="#"><span>고객센터</span></a>
+            <ul>
+                <li><a href="#" style="margin-left:347px; " onmouseover="this.style.marginLeft='347px';">공지사항</a></li>
+	            <li>
+	            <a href="${pageContext.request.contextPath}/faq/list.do"><span>FAQ</span></a>
+				</li>
+            </ul>
         </li>
         
         <li>
-            <a href="${pageContext.request.contextPath}/faq/list.do"><span>FAQ</span></a>
         </li>
 
         <!--
@@ -74,7 +91,7 @@ $(function(){
         <li>
             <a href="#"><span>마이페이지</span></a>
             <ul>
-                <li><a href="#" style="margin-left:575px; " onmouseover="this.style.marginLeft='575px';">쪽지</a></li>
+                <li><a href="#" style="margin-left:480px; " onmouseover="this.style.marginLeft='480px';">쪽지</a></li>
                 <li><a href="#">내가쓴글</a></li>
                 <li><a href="#">찜한목록</a></li>
             </ul>
