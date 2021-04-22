@@ -118,7 +118,7 @@ li {
 .body-container {
     clear:both;
     width: 700px;
-    min-height: 380px;
+    min-height: 375px;
     margin: 50px auto 80px;
     border: 1px solid #ddd; /* 연한 회색 */
     border-radius: 5px;
@@ -176,6 +176,11 @@ li {
 
 .artiBox{
 	padding: 20px 20px;
+}
+
+/* form */
+.formBox {
+	padding: 0 15px;
 }
 
 

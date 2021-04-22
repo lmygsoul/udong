@@ -41,36 +41,36 @@
 	
 <div class="container">
     <div class="body-container">
-        <div class="body-title" style="margin-bottom: 0;">
+        <div class="body-title" style="margin-bottom: 0; border-bottom: 0;">
             <h3><span style="font-family: Webdings">4</span> FAQ </h3>
         </div>
         
         <div>
-			<form name="faqForm" method="post">
+			<form name="faqForm" method="post" class="formBox">
 			  <table style="width: 100%; margin: 0 auto; border-spacing: 0px; border-collapse: collapse;">
-			  <tr align="left" height="40" style="border-bottom: 1px solid #cccccc;"> 
+			  <tr align="left" height="43" style="border-bottom: 1px solid #ccc; border-top: 1px solid #ccc;"> 
 			      <td width="100" style="text-align: center;">제&nbsp;&nbsp;&nbsp;&nbsp;목</td>
 			      <td style="padding-left:10px;"> 
-			        <input type="text" name="subject" maxlength="100" class="boxTF" style="width: 95%;" value="${dto.subject}">
+			        <input type="text" name="subject" maxlength="100" class="boxTF" style="width: 97%;" value="${dto.subject}">
 			      </td>
 			  </tr>
 			
-			  <tr align="left" height="40" style="border-bottom: 1px solid #cccccc;"> 
+			  <tr align="left" height="43" style="border-bottom: 1px solid #ccc;"> 
 			      <td width="100" style="text-align: center;">작성자</td>
 			      <td style="padding-left:10px;"> 
 			          ${sessionScope.member.userName}
 			      </td>
 			  </tr>
 			
-			  <tr align="left" style="border-bottom: 1px solid #cccccc;"> 
+			  <tr align="left" style="border-bottom: 1px solid #ccc;"> 
 			      <td width="100" style="text-align: center; padding-top:10px;" valign="top">내&nbsp;&nbsp;&nbsp;&nbsp;용</td>
 			      <td valign="top" style="padding:10px 0px 5px 10px;"> 
-			        <textarea name="content" rows="12" class="boxTA" style="width: 95%;">${dto.content}</textarea>
+			        <textarea name="content" rows="12" class="boxTA" style="width: 97%;">${dto.content}</textarea>
 			      </td>
 			  </tr>
 			  </table>
 			
-			  <table style="width: 100%; border-spacing: 0px; margin-top: 10px;">
+			  <table style="width: 100%; border-spacing: 0px; margin-top: 5px;">
 			     <tr height="45"> 
 			      <td align="center" >
 			      <!-- 수정 모드일 때 -> 글번호, 페이지 번호를 넘긴다 (*page는 dto 안에 없음) -->
