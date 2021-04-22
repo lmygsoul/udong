@@ -20,10 +20,11 @@
   	font-family:"Noto Sans KR", "Malgun Gothic", "맑은 고딕", NanumGothic, 나눔고딕, 돋움, sans-serif;
 }
 .btnlogin{
-	width : 400px;
-	height: 40px;
+	width : 410px;
+	height: 50px;
 	border: 1px solid #FF9933;
 	background-color : #FF9933;
+	color: white;
 	font-size:20px;
   	border-radius:4px;
   	font-family:"Noto Sans KR", "Malgun Gothic", "맑은 고딕", NanumGothic, 나눔고딕, 돋움, sans-serif;
@@ -61,7 +62,7 @@ function sendLogin() {
 	    <div class="main-container">
 	    	<div style="margin: 80px auto 70px; width:410px;">
 	    	<div style="text-align: center; padding-top: 150px;">
-	        	<span style="font-weight: bold; font-size:27px; color: #424951;">회원 로그인</span>
+	        	<span style="font-weight: 500; font-size:27px; color: #424951;">회원 로그인</span>
 	        </div>
 	        
 			<form name="loginForm" method="post" >
@@ -84,7 +85,7 @@ function sendLogin() {
 			      </td>
 			  </tr>
 
-			  <tr align="center" height="45">
+			  <tr align="center" height="60">
 			      <td>
 			       		<a href="${pageContext.request.contextPath}/">아이디찾기</a>&nbsp;&nbsp;&nbsp;
 			       		<a href="${pageContext.request.contextPath}/">패스워드찾기</a>&nbsp;&nbsp;&nbsp;

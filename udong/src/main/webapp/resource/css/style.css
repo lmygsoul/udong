@@ -142,6 +142,10 @@ textarea:focus, input:focus{
 	color: #ddd; /* 연한 회색 */
 }
 
+._text_wh {
+	color: white; /* 흰색 */
+}
+
 /* 박스 색상 */
 ._box_do {
 	background-color: #FF8A3D; /* 진한 오렌지 */
