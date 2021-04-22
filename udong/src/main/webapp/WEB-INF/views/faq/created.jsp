@@ -65,7 +65,7 @@
 			  <tr align="left" style="border-bottom: 1px solid #cccccc;"> 
 			      <td width="100" style="text-align: center; padding-top:10px;" valign="top">내&nbsp;&nbsp;&nbsp;&nbsp;용</td>
 			      <td valign="top" style="padding:10px 0px 5px 10px;"> 
-			        <textarea name="content" rows="12" class="boxTA" style="width: 95%;"></textarea>
+			        <textarea name="content" rows="12" class="boxTA" style="width: 95%;">${dto.content}</textarea>
 			      </td>
 			  </tr>
 			  </table>

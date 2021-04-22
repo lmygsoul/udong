@@ -27,7 +27,7 @@
 	
     <div class="body-container" style="width: 700px;">
         <div class="body-title">
-            <h3><span style="font-family: Webdings">4</span> faq </h3>
+            <h3><span style="font-family: Webdings">4</span> FAQ </h3>
         </div>
         
         
@@ -49,7 +49,6 @@
 			      <th style="color: #787878;">제목</th>
 			      <th width="100" style="color: #787878;">작성자</th>
 			      <th width="80" style="color: #787878;">작성일</th>
-			      <th width="60" style="color: #787878;">조회수</th>
 			  </tr>
 			 
 			 <c:forEach var="dto" items="${list}">
@@ -60,7 +59,6 @@
 			      </td>
 			      <td>${dto.userName}</td>
 			      <td>${dto.created}</td>
-			      <td>${dto.hitCount}</td>
 			  </tr>
 			</c:forEach>
 			

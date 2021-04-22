@@ -18,14 +18,15 @@ public class FaqDAO {
 		String sql;
 		
 		try {
-			sql = "INSERT INTO faq(num, subject, content, userId, hitCount, created) "
-					+ " VALUES(faq_seq.NEXTVAL,?,?,?,0,SYSDATE)";
+			sql = "INSERT INTO faq(num, subject, content, userId, userName, created) "
+					+ " VALUES(faq_seq.NEXTVAL,?,?,?,?,SYSDATE)";
 			
 			pstmt = conn.prepareStatement(sql);
 			
 			pstmt.setString(1, dto.getSubject());
 			pstmt.setString(2, dto.getContent());
 			pstmt.setString(3, dto.getUserId());
+			pstmt.setString(4, dto.getUserName());
 			
 			result = pstmt.executeUpdate();
 			
@@ -94,7 +95,7 @@ public class FaqDAO {
 		String sql;
 		
 		try {
-			sql = "SELECT num, userName, subject, hitCount, "
+			sql = "SELECT num, b.userName, subject, "
 					+ "TO_CHAR(created, 'YYYY-MM-DD') created "
 					+ " FROM faq b "
 					+ " JOIN member1 m ON b.userId = m.userId"
@@ -111,7 +112,6 @@ public class FaqDAO {
 				dto.setNum(rs.getInt("num"));
 				dto.setUserName(rs.getString("userName"));
 				dto.setSubject(rs.getString("subject"));
-				dto.setHitCount(rs.getInt("hitCount"));
 				dto.setCreated(rs.getString("created"));
 				
 				list.add(dto); 
@@ -205,7 +205,7 @@ public class FaqDAO {
 		String sql;
 		
 		try {
-			sql = "SELECT num, userName, subject, hitCount, "
+			sql = "SELECT num, userName, subject, "
 					+ "TO_CHAR(created, 'YYYY-MM-DD') created "
 					+ " FROM faq b "
 					+ " JOIN member1 m ON b.userId = m.userId";
@@ -239,7 +239,6 @@ public class FaqDAO {
 				dto.setNum(rs.getInt("num"));
 				dto.setUserName(rs.getString("userName"));
 				dto.setSubject(rs.getString("subject"));
-				dto.setHitCount(rs.getInt("hitCount"));
 				dto.setCreated(rs.getString("created"));
 				
 				list.add(dto); 
@@ -300,7 +299,7 @@ public class FaqDAO {
 		String sql;
 		
 		try {
-			sql = "SELECT num, b.userId, userName, subject, content, hitCount, created "
+			sql = "SELECT num, b.userId, b.userName, subject, content, created "
 					+ " FROM faq b "
 					+ " JOIN member1 m ON b.userId = m.userId "
 					+ " WHERE num = ? ";
@@ -315,7 +314,6 @@ public class FaqDAO {
 				dto.setUserName(rs.getString("userName"));
 				dto.setSubject(rs.getString("subject"));
 				dto.setContent(rs.getString("content"));
-				dto.setHitCount(rs.getInt("hitCount"));
 				dto.setCreated(rs.getString("created"));
 			}
 			

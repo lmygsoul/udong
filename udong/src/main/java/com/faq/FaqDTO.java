@@ -7,7 +7,6 @@ public class FaqDTO {
 	private String subject;
 	private String content;
 	private String created;
-	private int hitCount;
 	
 	public int getNum() {
 		return num;
@@ -51,13 +50,5 @@ public class FaqDTO {
 	public void setCreated(String created) {
 		this.created = created;
 	}
-	public int getHitCount() {
-		return hitCount;
-	}
-	public void setHitCount(int hitCount) {
-		this.hitCount = hitCount;
-	}
-	
-	
 	
 }

@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.member.SessionInfo;
 import com.util.MyUtil;
 
 @WebServlet("/faq/*")
@@ -49,6 +50,7 @@ public class FaqServlet extends HttpServlet {
 			return;
 		}
 		*/
+		
 		if(uri.indexOf("list.do")!=-1) {
 			list(req, resp);
 		} else if(uri.indexOf("created.do")!=-1) {
@@ -154,13 +156,14 @@ public class FaqServlet extends HttpServlet {
 		FaqDAO dao = new FaqDAO();
 		FaqDTO dto = new FaqDTO();
 		
-		// HttpSession session = req.getSession();
-		// SessionInfo info = (SessionInfo)session.getAttribute("member");
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
 		
 		try {
 			dto.setSubject(req.getParameter("subject"));
 			dto.setContent(req.getParameter("content"));
-			// dto.setUserId(info.getUserId()); //세션의 아이디
+			dto.setUserId(info.getUserId()); //세션의 아이디
+			dto.setUserName(info.getUserName()); //세션의 이름
 			
 			dao.insertFaq(dto);
 			
@@ -195,7 +198,7 @@ public class FaqServlet extends HttpServlet {
 			}
 			
 			//조회수
-			dao.updateHitCount(num);
+			//dao.updateHitCount(num);
 			
 			//게시글 가져오기
 			FaqDTO dto = dao.readFaq(num);
@@ -224,8 +227,8 @@ public class FaqServlet extends HttpServlet {
 	
 	protected void updateForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		FaqDAO dao = new FaqDAO();
-		// HttpSession session = req.getSession();
-		// SessionInfo info = (SessionInfo)session.getAttribute("member");
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
 		
 		String page = req.getParameter("page");
 		
@@ -234,7 +237,6 @@ public class FaqServlet extends HttpServlet {
 			FaqDTO dto = dao.readFaq(num);
 			
 			// DB에 데이터가 있고(dto), 게시글을 올린 사람만(로그인한 사람 info)
-			/*
 			if(dto!=null && dto.getUserId().equals(info.getUserId())) {
 				req.setAttribute("dto", dto);
 				req.setAttribute("page", page);
@@ -242,7 +244,7 @@ public class FaqServlet extends HttpServlet {
 				forward(req, resp, "/WEB-INF/views/faq/created.jsp"); // created.jsp - textarea 수정
 				return;
 			}
-			*/
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -253,8 +255,8 @@ public class FaqServlet extends HttpServlet {
 	
 	protected void updateSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		FaqDAO dao = new FaqDAO();
-		// HttpSession session = req.getSession();
-		//SessionInfo info = (SessionInfo)session.getAttribute("member");
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
 		String page = req.getParameter("page");
 		
 		try {
@@ -262,7 +264,7 @@ public class FaqServlet extends HttpServlet {
 			dto.setNum(Integer.parseInt(req.getParameter("num")));
 			dto.setSubject(req.getParameter("subject"));
 			dto.setContent(req.getParameter("content"));
-			// dto.setUserId(info.getUserId());
+			dto.setUserId(info.getUserId());
 			
 			dao.updateFaq(dto);
 		} catch (Exception e) {
@@ -275,8 +277,8 @@ public class FaqServlet extends HttpServlet {
 	
 	protected void delete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		FaqDAO dao = new FaqDAO();
-		// HttpSession session = req.getSession();
-		// SessionInfo info = (SessionInfo)session.getAttribute("member");
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
 		
 		String page = req.getParameter("page");
 		String query = "page="+page;
@@ -296,7 +298,7 @@ public class FaqServlet extends HttpServlet {
 				query += "&condition="+condition
 						+"&keyword="+URLEncoder.encode(keyword, "utf-8");
 			}
-			// dao.deleteFaq(num, info.getUserId());
+			dao.deleteFaq(num, info.getUserId());
 			
 		} catch (Exception e) {
 			e.printStackTrace();

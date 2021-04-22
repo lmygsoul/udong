@@ -31,7 +31,7 @@ function deleteBoard(num) {
 <div class="container">
     <div class="body-container" style="width: 700px;">
         <div class="body-title">
-            <h3><span style="font-family: Webdings">2</span> 게시판 </h3>
+            <h3><span style="font-family: Webdings">2</span> FAQ </h3>
         </div>
         
         <div>
@@ -47,7 +47,7 @@ function deleteBoard(num) {
 			       이름 : ${dto.userName}
 			    </td>
 			    <td width="50%" align="right" style="padding-right: 5px;">
-			        ${dto.created} | 조회 ${dto.hitCount}
+			        ${dto.created}
 			    </td>
 			</tr>
 			
@@ -77,20 +77,15 @@ function deleteBoard(num) {
 			<tr height="45">
 			    <td>
 			    	<c:choose>
-			    		<!-- db속 UserId와 로그인한 id가 같은지 대조 -->
-			    		<!-- 표현식에서는 같다 == -->
 			    		<c:when test="${dto.userId == sessionScope.member.userId}">
 			          		<button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/faq/update.do?num=${dto.num}&page=${page}';">수정</button>
 			    		</c:when>
-			    		<!-- id가 같지 않으면, 버튼 비활성화 -->
 			    		<c:otherwise>
 			    			<button type="button" class="btn" disabled="disabled">수정</button>
 			    		</c:otherwise>
 			    	</c:choose>
 			    	
 			    	<c:choose>
-			    		<!-- db속 UserId와 로그인한 id가 같은지 대조 -->
-			    		<!-- admin은 풀어줌 -->
 			    		<c:when test="${dto.userId == sessionScope.member.userId || sessionScope.member.userId=='admin'}">
 				        	<button type="button" class="btn" onclick="deleteBoard('${dto.num}');">삭제</button>
 			    		</c:when>
