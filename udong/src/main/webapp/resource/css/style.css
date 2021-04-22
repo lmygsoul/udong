@@ -156,7 +156,7 @@ textarea:focus, input:focus{
 }
 
 ._box_mg {
-	background-color: #ccc; /* 중간 회색 (table td 밑선 등..) */
+	background-color: #ccc; /* 중간 회색 */
 }
 ._box_lg {
 	background-color: #ddd; /* 연한 회색 */
