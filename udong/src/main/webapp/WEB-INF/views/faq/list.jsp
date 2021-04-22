@@ -25,17 +25,8 @@
 	
 <div class="container">
 	
-	<!-- 마이페이지만 body-inner 사용 -->
 	<div class="body-inner">
-    <div class="body-side">
-       <ul>
-        	<li><h3>MY PAGE</h3></li>
-        	<li><a href="#">쪽지</a></li>
-        	<li><a href="#">내가쓴글</a></li>
-        	<li><a href="#">찜한목록</a></li>
-        </ul>
-     </div>
-        
+	
     <div class="body-container" style="margin: 80px 150px 120px;">
         <div class="body-title">
             <h3><span style="font-family: Webdings">4</span> FAQ </h3>
