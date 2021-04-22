@@ -11,6 +11,6 @@
 		<a href="">학진마켓 정책 및 약관</a>&nbsp;&nbsp;&nbsp;
 		<a href="">이용약관</a>&nbsp;&nbsp;&nbsp;
 		<a href="">개인정보취급방침</a>&nbsp;&nbsp;&nbsp;
-		© HJ Market Corp.
+		© Udong Market Corp.
 	</div>
 </div>

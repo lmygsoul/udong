@@ -54,7 +54,7 @@ li {
 .main-container {
     clear:both;
     margin: 0 auto;
-    min-height: 700px;
+    min-height: 600px;
     width: 920px;
     position: relative;
 }
@@ -62,7 +62,7 @@ li {
 .main-left {
 	width: 30%;
 	float: left;
-	padding-top: 160px;
+	padding-top: 142px;
 	font-size: 45px;
 	font-weight: 700;
 }
@@ -76,7 +76,7 @@ li {
 .main-right {
 	height: 100px;
 	width: 70%;
-	padding-top: 211px;
+	padding-top: 112px;
 	float: left;
 }
 
