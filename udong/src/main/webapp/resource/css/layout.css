@@ -143,12 +143,41 @@ li {
 
 /* table */
 
-.col-1 {
+.row-1 {
 	border-top: 1px solid #ccc; border-bottom: 1px solid #ccc;	
 }
-.col-2 {
+.row-2 {
 	border-bottom: 1px solid #ccc;
 }
+
+.row-3 {
+	border-top: 0;
+	border-bottom: 0;
+}
+
+.col-1 {
+	padding: 10px 20px 0px;
+	font-weight: 500;
+	font-size: 15px;
+}
+
+.col-2 {
+	padding: 5px 20px 10px;
+	color: gray;
+}
+
+.col-3 {
+	padding: 10px 20px;
+}
+
+.col-4 {
+	padding: 10px 15px;
+}
+
+.artiBox{
+	padding: 20px 20px;
+}
+
 
 /* footer */
 .footer {

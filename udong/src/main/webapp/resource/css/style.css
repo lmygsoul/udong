@@ -64,7 +64,7 @@ a:hover, a:active {
 	border-radius:4px;
 }
 
-.btnCreate {
+.btnCreate, .btnList {
 	color: white;
 	background: #495057;
 }
