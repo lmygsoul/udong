@@ -1,13 +1,10 @@
-package com.neighbor_bbs;
+package com.store_bbs;
 
-public class neighborDTO {
+public class StoreDTO {
 	int num;
 	String userId;
 	String subject;
 	String content;
-	String imageFileName;
-	int HitCount;
-	String created;
 	public int getNum() {
 		return num;
 	}
@@ -38,16 +35,20 @@ public class neighborDTO {
 	public void setImageFileName(String imageFileName) {
 		this.imageFileName = imageFileName;
 	}
-	public int getHitCount() {
-		return HitCount;
-	}
-	public void setHitCount(int hitCount) {
-		HitCount = hitCount;
-	}
 	public String getCreated() {
 		return created;
 	}
 	public void setCreated(String created) {
 		this.created = created;
 	}
+	public float getScore() {
+		return score;
+	}
+	public void setScore(float score) {
+		this.score = score;
+	}
+	String imageFileName;
+	String created;
+	float score;
+	
 }
