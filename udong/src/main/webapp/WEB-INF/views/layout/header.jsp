@@ -64,7 +64,7 @@ $(function(){
             <a href="#"><span>커뮤니티</span></a>
             <ul>
                 <li><a href="#" style="margin-left:235px; " onmouseover="this.style.marginLeft='235px';">출석체크</a></li>
-                <li><a href="#">가입인사</a></li>
+                <li><a href="${pageContext.request.contextPath}/greeting/list.do">가입인사</a></li>
                 <li><a href="#">우동이야기</a></li>
                 <li><a href="#">우동사진</a></li>
                 <li><a href="#">우동지식</a></li>

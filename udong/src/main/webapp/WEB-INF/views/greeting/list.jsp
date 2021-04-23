@@ -77,10 +77,10 @@
 			<table style="width: 100%; margin: 10px auto; border-spacing: 0px;">
 			   <tr height="40">
 			      <td align="left" width="100">
-			          <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/notice/list.do';">새로고침</button>
+			          <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/greeting/list.do';">새로고침</button>
 			      </td>
 			      <td align="center">
-			          <form name="searchForm" action="${pageContext.request.contextPath}/notice/list.do" method="post">
+			          <form name="searchForm" action="${pageContext.request.contextPath}/greeting/list.do" method="post">
 			              <select name="condition" class="selectField">
 			              	  <option value="all" 		${condition=="all"?"selected='selected'":""}>제목+내용</option>
 			                  <option value="subject" 	${condition=="subject"?"selected='selected'":""}>제목</option>

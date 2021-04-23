@@ -150,7 +150,7 @@ public class GreetingServlet extends HttpServlet {
 		req.setAttribute("keyword", keyword );
 		
 		//JSP로 포워딩
-		forward(req, resp, "/WEB-INF/views/bbs/list.jsp");
+		forward(req, resp, "/WEB-INF/views/greeting/list.jsp");
 	}
 	
 	//글작성
