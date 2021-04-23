@@ -5,7 +5,7 @@ public class MemberDTO {
 	private String userPwd;
 	private String userName;
 	private String nickName;
-	private int type;
+	private String type;
 	private String created_date;
 	private String birth;
 	private String email,email1,email2;
@@ -13,6 +13,14 @@ public class MemberDTO {
 	private String zipCode;
 	private String addr1, addr2;
 	private String myComment;
+	
+	
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
+	}
 	public String getUserId() {
 		return userId;
 	}
@@ -36,12 +44,6 @@ public class MemberDTO {
 	}
 	public void setNickName(String nickName) {
 		this.nickName = nickName;
-	}
-	public int getType() {
-		return type;
-	}
-	public void setType(int type) {
-		this.type = type;
 	}
 	public String getCreated_date() {
 		return created_date;
