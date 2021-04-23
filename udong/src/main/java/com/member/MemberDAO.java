@@ -31,7 +31,7 @@ public class MemberDAO {
 				dto.setUserPwd(rs.getString("userPwd"));
 				dto.setUserName(rs.getString("userName"));
 				dto.setNickName(rs.getString("nickName"));
-				dto.setType(rs.getInt("type"));
+				dto.setType(rs.getString("type"));
 				dto.setCreated_date(rs.getString("created_date"));
 				dto.setBirth(rs.getString("birth"));
 				dto.setEmail(rs.getString("email"));
@@ -74,5 +74,48 @@ public class MemberDAO {
 			}
 		}
 		return dto;
+	}
+	public int insertMember(MemberDTO dto) throws SQLException{
+		int result=0;
+		PreparedStatement pstmt = null;
+		String sql;
+		
+		try {
+			sql = "INSERT INTO member1(userId, userPwd, userName, nickName, type, created_date) VALUES (?,?,?,?,?,SYSDATE)";
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, dto.getUserId());
+			pstmt.setString(2, dto.getUserPwd());
+			pstmt.setString(3, dto.getUserName());
+			pstmt.setString(4, dto.getNickName());
+			pstmt.setString(5, dto.getType());
+			result=pstmt.executeUpdate();
+			pstmt.close();
+			pstmt=null;
+			
+			sql="INSERT INTO member2(userId, birth, email, tel, zipcode, addr1, addr2, myComment) VALUES (?,TO_DATE(?,'YYYYMMDD'),?,?,?,?,?,?)";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, dto.getUserId());
+			pstmt.setString(2, dto.getBirth());
+			pstmt.setString(3, dto.getEmail());
+			pstmt.setString(4, dto.getTel());
+			pstmt.setString(5, dto.getZipCode());
+			pstmt.setString(6, dto.getAddr1());
+			pstmt.setString(7, dto.getAddr2());
+			pstmt.setString(8, dto.getMyComment());
+			
+			result+=pstmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+		
+		return result;
 	}
 }

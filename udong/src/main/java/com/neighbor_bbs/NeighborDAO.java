@@ -1,4 +1,4 @@
-package com.store_bbs;
+package com.neighbor_bbs;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -6,16 +6,16 @@ import java.sql.SQLException;
 
 import com.util.DBConn;
 
-public class StoreDAO {
+public class NeighborDAO {
 private Connection conn = DBConn.getConnection();
 	
-	public int insertNeighbor(StoreDTO dto) throws SQLException{
+	public int insertNeighbor(NeighborDTO dto) throws SQLException{
 		int result = 0;
 		String sql;
 		PreparedStatement pstmt = null;
 		
 		try {
-			sql = "INSERT INTO store_bbs";
+			sql = "INSERT INTO neighbor";
 			pstmt = conn.prepareStatement(sql);
 			
 			result = pstmt.executeUpdate();

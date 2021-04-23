@@ -1,10 +1,14 @@
-package com.store_bbs;
+package com.store;
 
 public class StoreDTO {
 	int num;
 	String userId;
+	String nickname;
 	String subject;
 	String content;
+	String imageFileName;
+	String created;
+	double score;
 	public int getNum() {
 		return num;
 	}
@@ -16,6 +20,12 @@ public class StoreDTO {
 	}
 	public void setUserId(String userId) {
 		this.userId = userId;
+	}
+	public String getNickname() {
+		return nickname;
+	}
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
 	}
 	public String getSubject() {
 		return subject;
@@ -41,14 +51,10 @@ public class StoreDTO {
 	public void setCreated(String created) {
 		this.created = created;
 	}
-	public float getScore() {
+	public double getScore() {
 		return score;
 	}
-	public void setScore(float score) {
+	public void setScore(double score) {
 		this.score = score;
-	}
-	String imageFileName;
-	String created;
-	float score;
-	
+	}	
 }
