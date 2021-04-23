@@ -1,5 +1,6 @@
 package com.neighbor_bbs;
 
+import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 
@@ -7,13 +8,14 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.util.DBConn;
 
-public class neightborServlet extends HttpServlet{
+public class NeighborServlet extends HttpServlet{
 
 	private static final long serialVersionUID = 1L;
-
+	private String pathname;
 	Connection conn = DBConn.getConnection();
 
 	@Override
@@ -31,6 +33,10 @@ public class neightborServlet extends HttpServlet{
 		
 		String uri = req.getRequestURI();
 		String cp = req.getContextPath();
+		HttpSession session = req.getSession();
+
+		String root = session.getServletContext().getRealPath("/");
+		pathname = root + "uploads" + File.separator + "photo";
 		
 		if (uri.indexOf("list.do") != -1) {
 			list(req, resp);
@@ -76,5 +82,4 @@ public class neightborServlet extends HttpServlet{
 	protected void article(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 	
 	}
-
 }
