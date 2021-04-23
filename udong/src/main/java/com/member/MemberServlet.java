@@ -42,7 +42,7 @@ public class MemberServlet extends MyServlet{
 		String userPwd = req.getParameter("userPwd");
 		MemberDTO dto = dao.readMember(userId);
 		if(dto!=null) {
-			if(userPwd.equals(dto.getUserPwd())&&dto.getType()!=1) {
+			if(userPwd.equals(dto.getUserPwd())&&dto.getType()!=3) {
 			//if(userPwd.equals(dto.getUserPwd())&&dto.getType()!=3)
 				//type 0: 관리자, 1:일반유저, 2:상공인, 3:탈퇴유저
 				session.setMaxInactiveInterval(0);
