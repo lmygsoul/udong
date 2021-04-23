@@ -19,7 +19,7 @@ public class GreetingDAO {
 		
 		try {
 			sql = "INSERT INTO greeting(num, userId, subject, content, created, hitCount)"
-				+ " VALUES(greeting_seq.NEXTVAL, ?, ?, ? SYSDATE, 0)";
+				+ " VALUES(greeting_seq.NEXTVAL, ?, ?, ?, SYSDATE, 0)";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, dto.getUserId());
 			pstmt.setString(2, dto.getSubject());
@@ -272,7 +272,7 @@ public class GreetingDAO {
 			}
 			
 			//글보기 
-			public GreetingDTO readBoard(int num) {
+			public GreetingDTO readGreeting(int num) {
 				GreetingDTO dto = null;
 				PreparedStatement pstmt = null;
 				ResultSet rs = null;
@@ -350,7 +350,7 @@ public class GreetingDAO {
 		                   	pstmt.setInt(2, num);
 		                }
 		            } else {
-		                sb.append("SELECT num, subject FROM bbs ");
+		                sb.append("SELECT num, subject FROM greeting ");
 		                sb.append(" WHERE num > ? ");
 		                sb.append(" ORDER BY num ASC ");
 		                sb.append(" FETCH  FIRST  1  ROWS  ONLY ");
@@ -427,7 +427,7 @@ public class GreetingDAO {
 					  pstmt.setInt(2, num);
 				  }
 			  } else {
-				  sb.append("SELECT num, subject FROM bbs ");
+				  sb.append("SELECT num, subject FROM greeting ");
 				  sb.append(" WHERE num < ? ");
 				  sb.append(" ORDER BY num DESC ");
 				  sb.append(" FETCH  FIRST  1  ROWS  ONLY ");
@@ -464,7 +464,7 @@ public class GreetingDAO {
 		}
 			
 		//수정
-		public int updateBoard(GreetingDTO dto) throws SQLException {
+		public int updateGreeting(GreetingDTO dto) throws SQLException {
 			int result = 0;
 			PreparedStatement pstmt = null;
 			String sql;

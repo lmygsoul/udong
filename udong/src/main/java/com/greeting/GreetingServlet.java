@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-
 import com.member.SessionInfo;
 import com.util.MyUtil;
 
@@ -165,19 +164,21 @@ public class GreetingServlet extends HttpServlet {
 
 		HttpSession session = req.getSession();
 		SessionInfo info = (SessionInfo) session.getAttribute("member");
+		
 		GreetingDAO dao = new GreetingDAO();
 
 		try {
 			GreetingDTO dto=new GreetingDTO();
 			
 			// userId는 세션에 저장된 정보
-			dto.setUserId(info.getUserId());
-			
+			dto.setUserId(info.getUserId()); //작성자아이디	
 			// 파라미터
-			dto.setSubject(req.getParameter("subject"));
-			dto.setContent(req.getParameter("content"));
+			dto.setSubject(req.getParameter("subject")); //제목
+			dto.setContent(req.getParameter("content")); //내용
+		
 			
 			dao.insertGreeting(dto);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -186,20 +187,157 @@ public class GreetingServlet extends HttpServlet {
 	}
 	
 	//글보기
-	protected void updateForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-	
-	}
-	//글수정
-	protected void updateSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-	
-	}
-	//글수정 완료
-	protected void delete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-	
-	}
-	//글 삭제
 	protected void article(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-	
+		//게시글 보기(페이지번호는 무조건 넘어오고 condition,keyword는 검색일 때만 넘어옴)
+		GreetingDAO dao = new GreetingDAO();
+		String cp = req.getContextPath();
+		String page = req.getParameter("page");
+		String query = "page="+page;
+								
+		try {
+			int num = Integer.parseInt(req.getParameter("num"));
+									
+			String condition = req.getParameter("condition");
+			String keyword = req.getParameter("keyword");
+			if(condition == null) {//검색이 x 때 
+				condition = "all";
+				keyword = "";
+			}
+			keyword = URLDecoder.decode(keyword, "utf-8");//넘어온 방식이GET방식이기 때문에 인코딩되어 넘어와서 다시 디코딩 해줌
+									
+			if(keyword.length() !=0) {//검색일 때 
+					query += "&condition="+condition+"&keyword="+URLEncoder.encode(keyword,"utf-8");
+			}
+									
+			//조회수
+			dao.updateHitCount(num);
+									
+			//게시글 가져오기 
+			GreetingDTO dto = dao.readGreeting(num);
+			if(dto == null) {
+				resp.sendRedirect(cp+"/greeting/list.do?"+query);
+				return;
+			}
+			dto.setContent(dto.getContent().replace("\n", "<br>"));	
+			GreetingDTO preReadDto = dao.preReadGreeting(num, condition, keyword);
+			GreetingDTO nextReadDto =dao.nextReadGreeting(num, condition, keyword);
+									
+			req.setAttribute("dto", dto);
+			req.setAttribute("preReadDto", preReadDto);
+			req.setAttribute("nextReadDto", nextReadDto);
+			req.setAttribute("page", page);
+			req.setAttribute("query", query);
+									
+			forward(req, resp, "/WEB-INF/views/greeting/article.jsp");
+			return;			
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+								
+			resp.sendRedirect(cp+"/greeting/list.do?"+query);	
+		
+	}					
+			
+	//글수정
+	protected void updateForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		String cp = req.getContextPath();
+		GreetingDAO dao = new GreetingDAO();
+
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+
+		String page=req.getParameter("page");
+		
+		try {
+			int num=Integer.parseInt(req.getParameter("num"));
+			GreetingDTO dto=dao.readGreeting(num);
+			
+			if(dto==null) {
+				resp.sendRedirect(cp+"/greeting/list.do?page="+page);
+				return;
+			}
+			
+			// 게시물을 올린 사용자가 아니면
+			if(! dto.getUserId().equals(info.getUserId())) {
+				resp.sendRedirect(cp+"/greeting/list.do?page="+page);
+				return;
+			}
+			
+			req.setAttribute("dto", dto);
+			req.setAttribute("page", page);
+			req.setAttribute("mode", "update");
+			
+			forward(req, resp, "/WEB-INF/views/greeting/created.jsp");
+			return;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		resp.sendRedirect(cp+"/greeting/list.do?page="+page);
 	}
+
+	//글수정 완료
+	protected void updateSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		String cp = req.getContextPath();
+		GreetingDAO dao = new GreetingDAO();
+		
+		HttpSession session=req.getSession();
+		SessionInfo info=(SessionInfo)session.getAttribute("member");
+		String page=req.getParameter("page");
+		
+		try {
+			if(req.getMethod().equalsIgnoreCase("GET")) {
+				resp.sendRedirect(cp+"/greeting/list.do?page="+page);
+				return;
+			}
+			
+			GreetingDTO dto=new GreetingDTO();
+			dto.setNum(Integer.parseInt(req.getParameter("num")));
+			dto.setSubject(req.getParameter("subject"));
+			dto.setContent(req.getParameter("content"));
+			
+			dto.setUserId(info.getUserId());
+			
+			dao.updateGreeting(dto);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		resp.sendRedirect(cp+"/greeting/list.do?page="+page);
+	}
+	
+	//글 삭제
+	protected void delete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		String cp = req.getContextPath();
+		GreetingDAO dao = new GreetingDAO();
+
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+		String page=req.getParameter("page");
+		String query="page="+page;
+		
+		try {
+			int num=Integer.parseInt(req.getParameter("num"));
+			String condition=req.getParameter("condition");
+			String keyword=req.getParameter("keyword");
+			if(condition==null) {
+				condition="all";
+				keyword="";
+			}
+			keyword=URLDecoder.decode(keyword, "utf-8");
+
+			if(keyword.length()!=0) {
+				query+="&condition="+condition+"&keyword="+URLEncoder.encode(keyword, "UTF-8");
+			}
+
+			dao.deleteGreeting(num, info.getUserId());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		resp.sendRedirect(cp+"/greeting/list.do?"+query);	
+	}
+	
+	
 	
 }

@@ -58,7 +58,7 @@
 			      <td align="left" style="padding-left: 10px;">
 			           <a href="${articleUrl}&num=${dto.num}">${dto.subject}</a>
 			      </td>
-			      <td>${dto.userName}</td>
+			      <td>${dto.nickName}</td>
 			      <td>${dto.created}</td>
 			      <td>${dto.hitCount}</td>
 			  </tr>
