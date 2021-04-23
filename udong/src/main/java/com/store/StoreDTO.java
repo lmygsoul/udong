@@ -56,7 +56,5 @@ public class StoreDTO {
 	}
 	public void setScore(double score) {
 		this.score = score;
-	}
-
-	
+	}	
 }

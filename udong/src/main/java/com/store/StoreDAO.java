@@ -12,7 +12,7 @@ import com.util.DBConn;
 public class StoreDAO {
 private Connection conn = DBConn.getConnection();
 	
-	public int insertNeighbor(StoreDTO dto) throws SQLException{
+	public int insertStore(StoreDTO dto) throws SQLException{
 		int result = 0;
 		String sql;
 		PreparedStatement pstmt = null;
@@ -111,6 +111,144 @@ private Connection conn = DBConn.getConnection();
 		}
 		return list;
 	}
+
+	public StoreDTO readStore(int num) {
+		StoreDTO dto =null;
+		PreparedStatement pstmt = null;
+		StringBuilder sb = new StringBuilder();
+		ResultSet rs = null;
+		try {
+			sb.append(" SELECT s.num, s.userid, nickname, subject, content, imageFileName, created, score ");
+			sb.append(" FROM store_bbs s");
+			sb.append(" LEFT OUTER JOIN member1 m ON s.userid=m.userid");
+			sb.append(" LEFT OUTER JOIN (SELECT num, AVG(star) score FROM store_rec GROUP BY num) r ON s.num=r.num");
+			sb.append(" WHERE s.num=?");
+			pstmt = conn.prepareStatement(sb.toString());
+			pstmt.setInt(1, num);
+			
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				dto = new StoreDTO();
+				dto.setNum(rs.getInt("num"));
+				dto.setUserId(rs.getString("userid"));
+				dto.setNickname(rs.getString("nickname"));
+				dto.setSubject(rs.getString("subject"));
+				dto.setContent(rs.getString("content"));
+				dto.setImageFileName(rs.getString("imageFileName"));
+				dto.setCreated(rs.getString("created"));
+				dto.setScore(rs.getDouble("score"));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if(rs!=null) {
+				try {
+					rs.close();
+				} catch (Exception e2) {
+				}
+			}
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+		}
+		
+		return dto;
+	}
+
+	public StoreDTO preReadStore(int num) {
+		StoreDTO dto =null;
+		PreparedStatement pstmt = null;
+		StringBuilder sb = new StringBuilder();
+		ResultSet rs = null;
+		try {
+			sb.append(" SELECT num, subject");
+			sb.append(" FROM store_bbs");
+			sb.append(" WHERE s.num<?");
+			sb.append(" ORDER BY num DESC");
+			sb.append(" FETCH FIRST 1 ROWS ONLY");
+			pstmt = conn.prepareStatement(sb.toString());
+			pstmt.setInt(1, num);
+			
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				dto = new StoreDTO();
+				dto.setNum(rs.getInt("num"));
+				dto.setSubject(rs.getString("subject"));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if(rs!=null) {
+				try {
+					rs.close();
+				} catch (Exception e2) {
+				}
+			}
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+		}
+		
+		return dto;
+	}
+
+	public StoreDTO nextReadStore(int num) {
+		StoreDTO dto =null;
+		PreparedStatement pstmt = null;
+		StringBuilder sb = new StringBuilder();
+		ResultSet rs = null;
+		try {
+			sb.append(" SELECT num, subject");
+			sb.append(" FROM store_bbs");
+			sb.append(" WHERE s.num>?");
+			sb.append(" ORDER BY num ASC");
+			sb.append(" FETCH FIRST 1 ROWS ONLY");
+			pstmt = conn.prepareStatement(sb.toString());
+			pstmt.setInt(1, num);
+			
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				dto = new StoreDTO();
+				dto.setNum(rs.getInt("num"));
+				dto.setSubject(rs.getString("subject"));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if(rs!=null) {
+				try {
+					rs.close();
+				} catch (Exception e2) {
+				}
+			}
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+		}
+		
+		return dto;
+	}
+
+	public int updateScore(StoreDTO dto) {
+		int result = 0;
+		PreparedStatement pstmt = null;
+		String sql;
+		try {
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return result;
+	}
+	
 
 
 }
