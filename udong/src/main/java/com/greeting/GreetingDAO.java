@@ -39,7 +39,7 @@ public class GreetingDAO {
 			}
 		}
 		return result;
-	}
+	} 
 	
 	//전체데이터수
 	public int dataCount() { 
