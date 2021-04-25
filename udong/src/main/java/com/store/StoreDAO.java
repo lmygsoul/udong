@@ -166,7 +166,7 @@ private Connection conn = DBConn.getConnection();
 		try {
 			sb.append(" SELECT num, subject");
 			sb.append(" FROM store_bbs");
-			sb.append(" WHERE s.num<?");
+			sb.append(" WHERE num<?");
 			sb.append(" ORDER BY num DESC");
 			sb.append(" FETCH FIRST 1 ROWS ONLY");
 			pstmt = conn.prepareStatement(sb.toString());
@@ -206,7 +206,7 @@ private Connection conn = DBConn.getConnection();
 		try {
 			sb.append(" SELECT num, subject");
 			sb.append(" FROM store_bbs");
-			sb.append(" WHERE s.num>?");
+			sb.append(" WHERE num>?");
 			sb.append(" ORDER BY num ASC");
 			sb.append(" FETCH FIRST 1 ROWS ONLY");
 			pstmt = conn.prepareStatement(sb.toString());
@@ -243,12 +243,59 @@ private Connection conn = DBConn.getConnection();
 		PreparedStatement pstmt = null;
 		String sql;
 		try {
+			sql = "INSERT INTO store_rec(num, rec_id, score) VALUES(?,?,?)";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, dto.num);
+			pstmt.setString(2, dto.userId);
+			pstmt.setDouble(3, dto.score);
+			
+			result = pstmt.executeUpdate();
+			
 		} catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
+		} finally {
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
 		}
 		return result;
 	}
 	
+	public boolean RecCheck(StoreDTO dto) {
+		PreparedStatement pstmt = null;
+		String sql;
+		ResultSet rs = null;
+		boolean rec=false;
+		try {
+			sql = "SELECT score FROM store_rec WHERE num=? AND userId=?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, dto.getNum());
+			pstmt.setString(2, dto.getUserId());
+			rs = pstmt.executeQuery();
+			if(rs.next()==true) {
+				rec=true;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if(rs!=null) {
+				try {
+					rs.close();
+				} catch (Exception e2) {
+				}
+			}
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+		}
+		return rec;
+	}
 
 
 }

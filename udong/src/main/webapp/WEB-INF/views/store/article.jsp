@@ -61,35 +61,42 @@ function deleteStore(num) {
 			      내용
 			   </td>
 			</tr>
-			
-			<tr height="35" style="border-bottom: 1px solid #cccccc;">
+			  	<c:choose>
+			    		<c:when test="${sessionScope.member.userId!=null}">
+			<tr height="35" style="border-top: 1px solid #cccccc;">
 			    <td colspan="2" align="right">
-			       평점등록 : <select name="selectScore" class="selectField">
-			       	<option value="5">5</option>
-			       	<option value="4.5">4.5</option>
-			       	<option value="4">4</option>
-			       	<option value="3.5">3.5</option>
-			       	<option value="3">3</option>
-			       	<option value="2.5">2.5</option>
-			       	<option value="2">2</option>
-			       	<option value="1.5">1.5</option>
-			       	<option value="1">1</option>
-			       	<option value="0.5">0.5</option>
-			       	<option value="0">0</option>
+			       평점등록 : <select id="selectScore" name="selectScore" class="selectField">
+			       	<option value="5"${dto.score==5 ? "selectred='selected'":""}>5</option>
+			       	<option value="4.5"${dto.score==4.5 ? "selectred='selected'":""}>4.5</option>
+			       	<option value="4"${dto.score==4 ? "selectred='selected'":""}>4</option>
+			       	<option value="3.5"${dto.score==3.5 ? "selectred='selected'":""}>3.5</option>
+			       	<option value="3"${dto.score==3 ? "selectred='selected'":""}>3</option>
+			       	<option value="2.5"${dto.score==2.5 ? "selectred='selected'":""}>2.5</option>
+			       	<option value="2"${dto.score==2 ? "selectred='selected'":""}>2</option>
+			       	<option value="1.5"${dto.score==1.5 ? "selectred='selected'":""}>1.5</option>
+			       	<option value="1"${dto.score==1 ? "selectred='selected'":""}>1</option>
+			       	<option value="0.5"${dto.score==0.5 ? "selectred='selected'":""}>0.5</option>
+			       	<option value="0"${dto.score==0 ? "selectred='selected'":""}>0</option>
 			       </select>
-			       <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/store/score.do?num=${dto.num}&page=${page}';}">확인</button>
+			       <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/store/score.do?num=${dto.num}&page=${page}';">확인</button>
 			    </td>
 			</tr>
+			</c:when>
+			</c:choose>
 
-			<tr height="35" style="border-bottom: 1px solid #cccccc;">
+			<tr height="35" style="border-bottom: 1px solid #cccccc; border-top: 1px solid #cccccc">
 			    <td colspan="2" align="left" style="padding-left: 5px;">
-			       이전글 : 	       
+			       이전글 : <c:if test="${not empty preReadDto}">
+						<a href="${pageContext.request.contextPath}/photo/article.do?num=${preReadDto.num}&${query}">${preReadDto.subject}</a>
+						</c:if>	      
 			    </td>
 			</tr>
 			
 			<tr height="35" style="border-bottom: 1px solid #cccccc;">
 			    <td colspan="2" align="left" style="padding-left: 5px;">
-			       다음글 : 
+			       다음글 : <c:if	test="${not empty nextReadDto}">
+						<a href="${pageContext.request.contextPath}/photo/article.do?num=${nextReadDto.num}&${query}">${nextReadDto.subject}</a>
+					</c:if>
 			       
 			    </td>
 			</tr>

@@ -205,13 +205,17 @@ public class StoreServlet extends MyUploadServlet{
 		HttpSession session = req.getSession();
 		SessionInfo info = (SessionInfo)session.getAttribute("member");
 		try {
-			dto.setNum(0);
+			dto.setNum(Integer.parseInt(req.getParameter("num")));
 			dto.setUserId(info.getUserId());
-			dto.setScore(Double.parseDouble(req.getParameter("score")));
-			
-			dao.updateScore(dto);
+			dto.setScore(Double.parseDouble(req.getParameter("selectScore")));
+			if(dao.RecCheck(dto)) {
+				dao.updateScore(dto);
+			}
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		resp.sendRedirect(cp+"/store/list.do?page="+page);
+		return;	
 	}
 }
