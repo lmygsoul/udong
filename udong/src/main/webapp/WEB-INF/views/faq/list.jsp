@@ -15,6 +15,13 @@
 		var f=document.searchForm;
 		f.submit();
 	}
+	
+	function listFaq() {
+	    var f=document.faqListForm;
+	    f.page.value="1";
+	    f.action="${pageContext.request.contextPath}/faq/list.do";
+	    f.submit();
+	}
 </script>
 </head>
 <body>
