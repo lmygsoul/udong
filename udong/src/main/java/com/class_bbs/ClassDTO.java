@@ -1,6 +1,6 @@
 package com.class_bbs;
 
-public class classDTO {
+public class ClassDTO {
 	int num;
 	String userId;
 	String subject;

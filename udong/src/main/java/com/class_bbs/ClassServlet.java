@@ -1,4 +1,4 @@
-package com.qa_bbs;
+package com.class_bbs;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.util.DBConn;
 
-public class qaServlet extends HttpServlet {
+public class ClassServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
 	Connection conn = DBConn.getConnection();
