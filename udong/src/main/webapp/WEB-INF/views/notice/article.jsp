@@ -11,14 +11,16 @@
 <jsp:include page="/WEB-INF/views/layout/staticHeader.jsp"/>
 
 <script type="text/javascript">
-<c:if test="${sessionScope.member.userId=='admin'}">
-function deleteNotice(num) {
-	if(confirm("게시물을 삭제 하시겠습니까 ?")) {
-		var url="${pageContext.request.contextPath}/notice/delete.do?num="+num+"&${query}";
-		location.href=url;
-	}
+<c:if test="${sessionScope.member.userId==dto.userId || sessionScope.member.userId=='admin'}">
+function deleteBoard(num) {
+    var query = "num="+num+"&${query}";
+    var url = "${pageContext.request.contextPath}/notice/delete.do?" + query;
+
+    if(confirm("위 자료를 삭제 하시 겠습니까 ? ")) {
+    	location.href=url;
+    }
 }
-</c:if>
+</c:if>    
 </script>
 </head>
 <body>
@@ -30,7 +32,7 @@ function deleteNotice(num) {
 <div class="container">
     <div class="body-container" style="width: 700px;">
         <div class="body-title">
-            <h3><i class="far fa-clipboard"></i> 공지사항 </h3>
+            <h3><i class="fas fa-graduation-cap"></i> 공지사항 </h3>
         </div>
         
         <div>
@@ -56,14 +58,16 @@ function deleteNotice(num) {
 			   </td>
 			</tr>
 			
-			<c:forEach var="vo" items="${listFile}">
-				<tr height="35" style="border-bottom: 1px solid #cccccc;">
-				    <td colspan="2" align="left" style="padding-left: 5px;">
-				       첨&nbsp;&nbsp;부 :
-	                   <a href="${pageContext.request.contextPath}/notice/download.do?fileNum=${vo.fileNum}">${vo.originalFilename}</a>
-				    </td>
-				</tr>
-			</c:forEach>
+			<tr height="35" style="border-bottom: 1px solid #cccccc;">
+			    <td colspan="2" align="left" style="padding-left: 5px;">
+			       첨&nbsp;&nbsp;부 :
+		           <c:if test="${not empty dto.saveFilename}">
+		                   <a href="${pageContext.request.contextPath}/notice/download.do?num=${dto.num}">${dto.originalFilename}</a>
+		                    (<fmt:formatNumber value="${dto.fileSize/1024}" pattern="0.00"/> kb)
+		           </c:if>
+			    </td>
+			</tr>
+			
 			<tr height="35" style="border-bottom: 1px solid #cccccc;">
 			    <td colspan="2" align="left" style="padding-left: 5px;">
 			       이전글 :
@@ -86,12 +90,23 @@ function deleteNotice(num) {
 			<table style="width: 100%; margin: 0px auto 20px; border-spacing: 0px;">
 			<tr height="45">
 			    <td width="300" align="left">
-			       <c:if test="${sessionScope.member.userId==dto.userId}">				    
-			          <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/notice/update.do?num=${dto.num}&page=${page}&rows=${rows}';">수정</button>
-			       </c:if>
-			       <c:if test="${sessionScope.member.userId=='admin'}">				    
-			          <button type="button" class="btn" onclick="deleteNotice('${dto.num}');">삭제</button>
-			       </c:if>
+			    	<c:choose>
+			    		<c:when test="${sessionScope.member.userId==dto.userId}">
+			    			<button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/notice/update.do?num=${dto.num}&page=${page}';">수정</button>
+			    		</c:when>
+			    		<c:otherwise>
+			    			<button type="button" class="btn" disabled="disabled">수정</button>
+			    		</c:otherwise>
+			    	</c:choose>
+			    	
+			    	<c:choose>
+			    		<c:when test="${sessionScope.member.userId==dto.userId || sessionScope.member.userId=='admin'}">
+			    			<button type="button" class="btn" onclick="deleteBoard('${dto.num}');">삭제</button>
+			    		</c:when>
+			    		<c:otherwise>
+			    			<button type="button" class="btn" disabled="disabled">삭제</button>
+			    		</c:otherwise>
+			    	</c:choose>
 			    </td>
 			
 			    <td align="right">
@@ -100,7 +115,7 @@ function deleteNotice(num) {
 			</tr>
 			</table>
         </div>
-        
+
     </div>
 </div>
 

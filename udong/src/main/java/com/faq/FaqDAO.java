@@ -95,7 +95,7 @@ public class FaqDAO {
 		String sql;
 		
 		try {
-			sql = "SELECT num, b.userName, subject, "
+			sql = "SELECT num, m.userName, subject, "
 					+ "TO_CHAR(created, 'YYYY-MM-DD') created "
 					+ " FROM faq b "
 					+ " JOIN member1 m ON b.userId = m.userId"
@@ -299,7 +299,7 @@ public class FaqDAO {
 		String sql;
 		
 		try {
-			sql = "SELECT num, b.userId, b.userName, subject, content, created "
+			sql = "SELECT num, b.userId, m.userName, subject, content, created "
 					+ " FROM faq b "
 					+ " JOIN member1 m ON b.userId = m.userId "
 					+ " WHERE num = ? ";
