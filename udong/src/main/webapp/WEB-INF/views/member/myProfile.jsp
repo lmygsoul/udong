@@ -148,9 +148,10 @@ function hidden(){
 	    					<label style="font-weight: bold;">아이디</label>
 	    				</td>
 	    				<td>
-	    					<input type="text" name="userId" id="userId" maxlength="10" value="${dto.userId }"  ${mode=="update" ? "readonly='readonly' ":""}
+	    					<input type="text" name="userId" id="userId" maxlength="10" value="${dto.userId }"
+	    						${mode!="member" ? "readonly='readonly' ":""}
 			                   placeholder="아이디" class="memberForm" style="width: 400px; margin-left: 80px; margin-bottom: 5px;">
-			                 <p style="margin-left: 80px;"> ${mode=="update" ? "*아이디는 수정되지 않습니다*":"아이디는 7~15자 이내이며, 영어와 숫자를 조합하여 작성해야합니다."}
+			                 <p style="margin-left: 80px;">아이디는 7~15자 이내이며, 영어와 숫자를 조합하여 작성해야합니다.
 	    				</td>
 	    			</tr>
 	    			<tr  id="hidden">
@@ -158,7 +159,7 @@ function hidden(){
 	    					<label style="font-weight: bold;">비밀번호</label>
 	    				</td>
 	    				<td>
-	    					<input type="password" name="userPwd" maxlength="10"  value="${dto.userPwd }"
+	    					<input type="password" name="userPwd" maxlength="10"  value="${dto.userPwd }" ${mode!="member" ? "readonly='readonly' ":""}
 			                   placeholder="비밀번호" class="memberForm" style="width: 400px; margin-left: 80px; margin-bottom: 5px;">
 			                	<p style="margin-left: 80px;">비밀번호는 5~10자 이내이며, 영어와 숫자를 조합 입력해야합니다.
 	    				</td>
@@ -168,7 +169,7 @@ function hidden(){
 	    					<label style="font-weight: bold;">비밀번호 확인</label>
 	    				</td>
 	    				<td>
-	    					<input type="password" name="userPwd_check" maxlength="10" 
+	    					<input type="password" name="userPwd_check" maxlength="10" ${mode!="member" ? "readonly='readonly' ":""}
 			                   placeholder="비밀번호 확인" class="memberForm" style="width: 400px; margin-left: 80px; margin-bottom: 5px;">
 			                 <p style="margin-left: 80px;">비밀번호를 동일하게 입력해야합니다. 비밀번호는 5~10자 이내이며, 영어와 숫자를 조합 입력해야합니다.
 	    				</td>
@@ -178,9 +179,8 @@ function hidden(){
 	    					<label style="font-weight: bold;">이름</label>
 	    				</td>
 	    				<td>
-	    					<input type="text" name="userName"maxlength="10" value="${dto.userName }"  ${mode=="update" ? "readonly='readonly' ":""}
+	    					<input type="text" name="userName"maxlength="10" value="${dto.userName }" ${mode!="member" ? "readonly='readonly' ":""}
 			                   class="memberForm" style="width: 200px; margin-left: 80px; margin-bottom: 5px;">
-			                 <p style="margin-left: 80px;"> ${mode=="update" ? "*이름은 수정되지 않습니다*":""}
 	    				</td>
 	    			</tr>
 	    			<tr>
@@ -188,7 +188,7 @@ function hidden(){
 	    					<label style="font-weight: bold;">닉네임</label>
 	    				</td>
 	    				<td>
-	    					<input type="text" name="nickName" maxlength="10" value="${dto.nickName }" 
+	    					<input type="text" name="nickName" maxlength="10" value="${dto.nickName }" ${mode=="myProfile" ? "readonly='readonly' ":""}
 			                   class="memberForm" style="width: 200px; margin-left: 80px; margin-bottom: 5px;">
 	    				</td>
 	    			</tr>
@@ -197,9 +197,9 @@ function hidden(){
 	    					<label style="font-weight: bold;">개인/사업자</label>
 	    				</td>
 	    				<td>
-	    					<label><input type="radio" name="type1" class="memberForm" value="1"  
+	    					<label><input type="radio" name="type1" class="memberForm" value="1"  ${dto.type=="1" ? "selected='selected'" : ""}
 	    					style="width: 50px; height:30px; margin-left: 70px;" >개인</label>
-	    					<label><input type="radio" name="type2" class="memberForm" value="2" 
+	    					<label><input type="radio" name="type2" class="memberForm" value="2" ${dto.type=="2" ? "selected='selected'" : ""} 
 	    					style="width: 50px; height:30px; margin-left: 70px;" >사업자</label>
 	    					<p style="margin-left: 80px;">*선택하지 않을시 개인으로 선택됩니다.
 	    				</td>
@@ -209,8 +209,8 @@ function hidden(){
 	    					<label style="font-weight: bold;">생년월일</label>
 	    				</td>
 	    				<td>
-	    					<input type="text" name="birth"  value="${dto.birth }"  ${mode=="update" ? "readonly='readonly' ":""}
- 			                   class="memberForm" style="width: 400px; margin-left: 80px; margin-bottom: 5px;" value="${dto.birth }">
+	    					<input type="text" name="birth" ${mode!="member" ? "readonly='readonly' ":""}
+			                   class="memberForm" style="width: 400px; margin-left: 80px; margin-bottom: 5px;" value="${dto.birth }">
 			                 <p style="margin-left: 80px;">생년월일의 작성 예시) 1111-22-33 형식으로 입력합니다.
 	    				</td>
 	    			</tr>
@@ -227,9 +227,9 @@ function hidden(){
 			                	 <option value="gmail.com" ${dto.email2=="gmail.com" ? "selected='selected'" : ""}>지 메일</option>
 			                	 <option value="direct">직접입력</option>
 			            	</select>
-			            <input type="text" name="email1" value="${dto.email1}" size="13" maxlength="30"  class="boxTF">
+			            <input type="text" name="email1" value="${dto.email1}" ${mode=="myProfile" ? "readonly='readonly' ":""} size="13" maxlength="30"  class="boxTF">
 			            @
-			            <input type="text" name="email2" value="${dto.email2}" size="13"maxlength="30"  class="boxTF" readonly="readonly">
+			            <input type="text" name="email2" value="${dto.email2}" ${mode=="myProfile" ? "readonly='readonly' ":""} size="13"maxlength="30"  class="boxTF" readonly="readonly">
 	    				</td>
 	    			</tr>
 	    			<tr>
@@ -247,9 +247,9 @@ function hidden(){
 			                <option value="019" ${dto.tel1=="019" ? "selected='selected'" : ""}>019</option>
 			            </select>
 			            -
-			            <input type="text" name="tel2" value="${dto.tel2}" size="13" maxlength="4"  class="boxTF">
+			            <input type="text" name="tel2" value="${dto.tel2}" ${mode=="myProfile" ? "readonly='readonly' ":""} size="13" maxlength="4"  class="boxTF">
 			            -
-			            <input type="text" name="tel3" value="${dto.tel3}" size="13" maxlength="4"  class="boxTF" >
+			            <input type="text" name="tel3" value="${dto.tel3}" ${mode=="myProfile" ? "readonly='readonly' ":""} size="13" maxlength="4"  class="boxTF" >
 	    				</td>
 	    			</tr>
 	    			<tr>
@@ -257,7 +257,7 @@ function hidden(){
 	    					<label style="font-weight: bold;">우편번호</label>
 	    				</td>
 	    				<td>
-	    					<input type="text" name="zipcode" id="zipCode" value="${dto.zipCode}"
+	    					<input type="text" name="zipcode" id="zipCode" value="${dto.zipCode}" ${mode=="myProfile" ? "readonly='readonly' ":""}
 			                       class="boxTF" readonly="readonly"  style="width: 30%; height:30px; margin-left: 80px; margin-bottom: 5px;">
 			            	<button type="button" onclick="daumPostcode();" style="width: 10%; height:30px; margin-bottom: 5px;">우편번호</button>      
 	    				</td>
@@ -267,10 +267,10 @@ function hidden(){
 	    					<label style="font-weight: bold;">주소</label>
 	    				</td>
 			      		 <td>
-			            	<input type="text" name="addr1" id="addr1" value="${dto.addr1}" maxlength="50" class="boxTF" 
+			            	<input type="text" name="addr1" id="addr1" value="${dto.addr1}" ${mode=="myProfile" ? "readonly='readonly' ":""} maxlength="50" class="boxTF" 
 			                        style="width: 70%; height:50px; margin-left: 80px; margin-bottom: 5px; " placeholder="기본 주소" readonly="readonly">
 			       
-			           		 <input type="text" name="addr2" id="addr2" value="${dto.addr2}" maxlength="50" 
+			           		 <input type="text" name="addr2" id="addr2" value="${dto.addr2}" ${mode=="myProfile" ? "readonly='readonly' ":""} maxlength="50" 
 			                       style="width: 70%; height:50px; margin-left: 80px; margin-bottom: 5px; " placeholder="나머지 주소">
 			     		 </td>
 			 		</tr>
@@ -281,7 +281,7 @@ function hidden(){
 	    				<td>
 	    					<input type="text" name="myComment" 
 			                   placeholder="하고싶은 말 한마디 적으세요" class="memberForm" style="width: 700px; height:50px; margin-left: 80px; margin-bottom: 5px;"
-			                   value="${dto.myComment }" >
+			                   value="${dto.myComment }" ${mode=="myProfile" ? "readonly='readonly' ":""} >
 	    				</td>
 	    			</tr>
 	    		</table>
@@ -289,9 +289,7 @@ function hidden(){
 	    		<table style="width:100%; margin: 0px auto; border-spacing: 0px;">
 			     	<tr height="45"> 
 			      		<td align="center" >
-			        		<button type="button" name="sendButton" class="btn" onclick="memberOk()">${mode=="member"?"회원가입":"정보수정"}</button>
-			        		<button type="reset" class="btn" ${mode!="myProfile" ? "visible='hidden' ":""}>다시입력</button>
-			        		<button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/';">${mode=="member"?"가입취소":"수정취소"}</button>
+			      			<button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/member/update.do?';">수정하기</button>
 			      		</td>
 			   		</tr>
 			    </table>

@@ -88,6 +88,8 @@ public class MemberDAO {
 			pstmt.setString(2, dto.getUserPwd());
 			pstmt.setString(3, dto.getUserName());
 			pstmt.setString(4, dto.getNickName());
+			if(dto.getType()==null)
+				dto.setType("1");
 			pstmt.setString(5, dto.getType());
 			result=pstmt.executeUpdate();
 			pstmt.close();
