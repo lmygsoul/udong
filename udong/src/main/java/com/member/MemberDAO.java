@@ -120,4 +120,49 @@ public class MemberDAO {
 		
 		return result;
 	}
+	public int updateMember(MemberDTO dto) throws SQLException {
+		int result=0;
+		PreparedStatement pstmt=null;
+		String sql;
+		
+		try {
+			sql = "UPDATE member1 SET userPwd=?, nickName= ?, type=?  WHERE userId=?";
+			pstmt=conn.prepareStatement(sql);
+			
+			pstmt.setString(1, dto.getUserPwd());
+			pstmt.setString(2, dto.getNickName());
+			if(dto.getType()==null)
+				dto.setType("1");
+			pstmt.setString(3, dto.getType());
+			pstmt.setString(4, dto.getUserId());
+			
+			result=pstmt.executeUpdate();
+			pstmt.close();
+			pstmt=null;
+			
+			sql = "UPDATE member2 SET email=?, tel=?, zipCode=?, addr1=?, addr2=?, myComment = ? WHERE userId=?";
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setString(1, dto.getEmail());
+			pstmt.setString(2, dto.getTel());
+			pstmt.setString(3, dto.getZipCode());
+			pstmt.setString(4, dto.getAddr1());
+			pstmt.setString(5, dto.getAddr2());
+			pstmt.setString(6, dto.getMyComment());
+			pstmt.setString(7, dto.getUserId());
+			
+			result+=pstmt.executeUpdate();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+		return result;
+	}
 }

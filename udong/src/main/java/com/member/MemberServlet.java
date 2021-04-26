@@ -62,6 +62,7 @@ public class MemberServlet extends MyServlet{
 				SessionInfo info = new SessionInfo();
 				info.setUserId(dto.getUserId());
 				info.setUserName(dto.getUserName());
+				info.setType(dto.getType());
 				
 				// 세션에 member로 저장
 				session.setAttribute("member", info);
@@ -115,7 +116,7 @@ public class MemberServlet extends MyServlet{
 			String email1 = req.getParameter("email1");
 			String email2 = req.getParameter("email2");
 			dto.setEmail(email1+"@"+email2);
-			String tel1 = req.getParameter("tel1");
+			String tel1 = req.getParameter("selectTel");
 			String tel2 = req.getParameter("tel2");
 			String tel3 = req.getParameter("tel3");
 			dto.setTel(tel1+"-"+tel2+"-"+tel3);
@@ -195,7 +196,7 @@ public class MemberServlet extends MyServlet{
 			String email1 = req.getParameter("email1");
 			String email2 = req.getParameter("email2");
 			dto.setEmail(email1+"@"+email2);
-			String tel1 = req.getParameter("tel1");
+			String tel1 = req.getParameter("selectTel");
 			String tel2 = req.getParameter("tel2");
 			String tel3 = req.getParameter("tel3");
 			dto.setTel(tel1+"-"+tel2+"-"+tel3);
@@ -204,7 +205,7 @@ public class MemberServlet extends MyServlet{
 			dto.setAddr2(req.getParameter("addr2"));
 			dto.setMyComment(req.getParameter("myComment"));
 			
-			dao.insertMember(dto);
+			dao.updateMember(dto);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
