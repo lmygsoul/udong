@@ -195,7 +195,7 @@ public class QaDAO {
 		StringBuffer sb=new StringBuffer();
 		
 		try {
-			sb.append("SELECT boardNum, b.userId, m.nickName,");
+			sb.append("SELECT boardNum, b.userId, nickName,");
 			sb.append("       subject, groupNum, orderNo, depth, hitCount,");
 			sb.append("       TO_CHAR(created, 'YYYY-MM-DD') created ");
 			sb.append(" FROM qaBoard b  ");
@@ -254,7 +254,7 @@ public class QaDAO {
         StringBuffer sb = new StringBuffer();
 
         try {
-			sb.append("SELECT boardNum, b.userId, m.nickName, ");
+			sb.append("SELECT boardNum, b.userId, nickName, ");
 			sb.append("       subject, groupNum, orderNo, depth, hitCount,  ");
 			sb.append("       TO_CHAR(created, 'YYYY-MM-DD') created  ");
 			sb.append(" FROM qaBoard b  ");
@@ -328,7 +328,7 @@ public class QaDAO {
 		StringBuffer sb=new StringBuffer();
 		
 		try {
-			sb.append("SELECT boardNum, b.userId, m.nickName, subject, ");
+			sb.append("SELECT boardNum, b.userId, nickName, subject, ");
 			sb.append("    content, created, hitCount, groupNum, depth, orderNo, parent  ");
 			sb.append(" FROM qaBoard b  ");
 			sb.append(" JOIN member1 m ON b.userId=m.userId  ");
@@ -434,7 +434,7 @@ public class QaDAO {
 		String sql;
 		
 		try {
-			sql="DELETE FROM qaBoard WHERE boardNum IN (SELECT boardNum FROM qaBoard START WITH  boardNum = ? CONNECT BY PRIOR boardNum = parent)";
+			sql="DELETE FROM qaBoard WHERE boardNum IN (SELECT boardNum FROM board START WITH  boardNum = ? CONNECT BY PRIOR boardNum = parent)";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, boardNum);
 			result = pstmt.executeUpdate();
@@ -452,164 +452,4 @@ public class QaDAO {
 		
 		return result;
 	}
-	
-    // 이전글
-    public QaDTO preReadBoard(int groupNum, int orderNo, String condition, String keyword) {
-        QaDTO dto=null;
-
-        PreparedStatement pstmt=null;
-        ResultSet rs=null;
-        StringBuffer sb = new StringBuffer();
-
-        try {
-            if(keyword!=null && keyword.length() != 0) {
-                sb.append("SELECT boardNum, subject  ");
-    			sb.append(" FROM qaBoard b  ");
-    			sb.append(" JOIN member1 m ON b.userId=m.userId  ");
-    			if(condition.equals("created")) {
-    				keyword = keyword.replaceAll("(\\-|\\/|\\.)", "");
-    				sb.append(" WHERE (TO_CHAR(created, 'YYYYMMDD') = ? ) AND  ");
-    			} else if(condition.equals("all")) {
-    				sb.append(" WHERE ( INSTR(subject, ?) >= 1 OR INSTR(content, ?) >= 1 ) AND  ");
-    			} else {
-    				sb.append(" WHERE (INSTR(" + condition + ", ?) >= 1 ) AND  ");
-            	}
-                sb.append("         (( groupNum = ? AND orderNo < ?) OR (groupNum > ? ))  ");
-                sb.append(" ORDER BY groupNum ASC, orderNo DESC ");
-                sb.append(" FETCH  FIRST  1  ROWS  ONLY");
-
-                pstmt=conn.prepareStatement(sb.toString());
-                
-                if(condition.equals("all")) {
-                    pstmt.setString(1, keyword);
-                    pstmt.setString(2, keyword);
-                    pstmt.setInt(3, groupNum);
-                    pstmt.setInt(4, orderNo);
-                    pstmt.setInt(5, groupNum);
-                } else {
-                    pstmt.setString(1, keyword);
-                    pstmt.setInt(2, groupNum);
-                    pstmt.setInt(3, orderNo);
-                    pstmt.setInt(4, groupNum);
-                }
-			} else {
-                sb.append("SELECT boardNum, subject FROM qaBoard b JOIN member1 m ON b.userId=m.userId  ");                
-                sb.append(" WHERE (groupNum = ? AND orderNo < ?) OR (groupNum > ? )  ");
-                sb.append(" ORDER BY groupNum ASC, orderNo DESC  ");
-                sb.append(" FETCH  FIRST  1  ROWS  ONLY");
-
-                pstmt=conn.prepareStatement(sb.toString());
-                pstmt.setInt(1, groupNum);
-                pstmt.setInt(2, orderNo);
-                pstmt.setInt(3, groupNum);
-			}
-
-            rs=pstmt.executeQuery();
-
-            if(rs.next()) {
-                dto=new QaDTO();
-                dto.setBoardNum(rs.getInt("boardNum"));
-                dto.setSubject(rs.getString("subject"));
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-			if(rs!=null) {
-				try {
-					rs.close();
-				} catch (SQLException e) {
-				}
-			}
-				
-			if(pstmt!=null) {
-				try {
-					pstmt.close();
-				} catch (SQLException e) {
-				}
-			}
-		}
-    
-        return dto;
-    }
-
-    // 다음글
-    public QaDTO nextReadBoard(int groupNum, int orderNo, String condition, String keyword) {
-        QaDTO dto=null;
-
-        PreparedStatement pstmt=null;
-        ResultSet rs=null;
-        StringBuffer sb = new StringBuffer();
-
-        try {
-            if(keyword!=null && keyword.length() != 0) {
-                sb.append("SELECT boardNum, subject  ");
-    			sb.append(" FROM qaBoard b  ");
-    			sb.append(" JOIN member1 m ON b.userId=m.userId  ");
-    			if(condition.equals("created")) {
-    				keyword = keyword.replaceAll("(\\-|\\/|\\.)", "");
-    				sb.append(" WHERE (TO_CHAR(created, 'YYYYMMDD') = ? ) AND  ");
-    			} else if(condition.equals("all")) {
-    				sb.append(" WHERE ( INSTR(subject, ?) >= 1 OR INSTR(content, ?) >= 1 ) AND  ");
-    			} else {
-    				sb.append(" WHERE (INSTR(" + condition + ", ?) >= 1) AND  ");
-    			}
-                sb.append("          (( groupNum = ? AND orderNo > ?) OR (groupNum < ? ))  ");
-                sb.append(" ORDER BY groupNum DESC, orderNo ASC  ");
-                sb.append(" FETCH  FIRST  1  ROWS  ONLY");
-
-                pstmt=conn.prepareStatement(sb.toString());
-                if(condition.equals("all")) {
-                    pstmt.setString(1, keyword);
-                    pstmt.setString(2, keyword);
-                    pstmt.setInt(3, groupNum);
-                    pstmt.setInt(4, orderNo);
-                    pstmt.setInt(5, groupNum);
-                } else {
-                    pstmt.setString(1, keyword);
-                    pstmt.setInt(2, groupNum);
-                    pstmt.setInt(3, orderNo);
-                    pstmt.setInt(4, groupNum);
-                }
-
-			} else {
-                sb.append("SELECT boardNum, subject FROM qaBoard b JOIN member1 m ON b.userId=m.userId  ");
-                sb.append(" WHERE (groupNum = ? AND orderNo > ?) OR (groupNum < ? )  ");
-                sb.append(" ORDER BY groupNum DESC, orderNo ASC  ");
-                sb.append(" FETCH  FIRST  1  ROWS  ONLY");
-
-                pstmt=conn.prepareStatement(sb.toString());
-                pstmt.setInt(1, groupNum);
-                pstmt.setInt(2, orderNo);
-                pstmt.setInt(3, groupNum);
-            }
-
-            rs=pstmt.executeQuery();
-
-            if(rs.next()) {
-                dto=new QaDTO();
-                dto.setBoardNum(rs.getInt("boardNum"));
-                dto.setSubject(rs.getString("subject"));
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-			if(rs!=null) {
-				try {
-					rs.close();
-				} catch (SQLException e) {
-				}
-			}
-				
-			if(pstmt!=null) {
-				try {
-					pstmt.close();
-				} catch (SQLException e) {
-				}
-			}
-		}
-
-        return dto;
-    }
 }

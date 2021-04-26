@@ -356,19 +356,20 @@ public class QaServlet extends HttpServlet {
 				return;
 			}
 			
+			// dto.setContent(dto.getContent().replaceAll("\n", "<br>"));
 			MyUtil util=new MyUtil();
 			dto.setContent(util.htmlSymbols(dto.getContent()));
 			
-			
-			QaDTO preReadDto=dao.preReadBoard(dto.getGroupNum(),
+			/*
+			QadDTO preReadDto=dao.preReadBoard(dto.getGroupNum(),
 					dto.getOrderNo(), condition, keyword);
 			QaDTO nextReadDto=dao.nextReadBoard(dto.getGroupNum(),
 					dto.getOrderNo(), condition, keyword);
-			
+			*/
 		
 			req.setAttribute("dto", dto);
-			req.setAttribute("preReadDto", preReadDto);
-			req.setAttribute("nextReadDto", nextReadDto);
+			// req.setAttribute("preReadDto", preReadDto);
+			// req.setAttribute("nextReadDto", nextReadDto);
 			req.setAttribute("query", query);
 			req.setAttribute("page", page);
 			
