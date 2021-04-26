@@ -249,7 +249,6 @@ private Connection conn = DBConn.getConnection();
 			pstmt.setString(2, dto.getContent());
 			pstmt.setString(3, dto.getImageFileName());
 			pstmt.setInt(4, dto.getNum());
-			pstmt.setString(5, dto.getUserId());
 			
 			result = pstmt.executeUpdate();
 			
@@ -291,7 +290,7 @@ private Connection conn = DBConn.getConnection();
 		return result;
 	}
 	
-	public int deleteStore(int num, String userId) throws SQLException {
+	public int deleteStore(int num) throws SQLException {
 		int result = 0;
 		PreparedStatement pstmt = null;
 		String sql;
@@ -302,10 +301,10 @@ private Connection conn = DBConn.getConnection();
 			result = pstmt.executeUpdate();
 			pstmt.close();
 			
-			sql = "DELETE FROM store_bbs WHERE num=? AND userID = ?";
+				
+			sql = "DELETE FROM store_bbs WHERE num=?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, num);
-			pstmt.setString(2, userId);
 			result = pstmt.executeUpdate();
 			
 		} catch (SQLException e) {

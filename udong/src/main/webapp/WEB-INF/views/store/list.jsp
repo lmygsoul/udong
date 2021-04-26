@@ -62,7 +62,7 @@
 			      <td align="left" width="100">
 			          <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/store/list.do';">새로고침</button>
 			      </td>
-			      <c:if test="${sessionScope.member.userId!=null}">
+			      <c:if test="${sessionScope.member.type!=1}">
 			      	<td align="right" width="100">
 			          	<button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/store/created.do';">글올리기</button>
 			      	</td>

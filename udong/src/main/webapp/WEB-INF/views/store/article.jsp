@@ -67,7 +67,7 @@ function score(){
 			</tr>
 			<tr >
 			  <td colspan="2" align="left" style="padding: 10px 5px;" valign="top" height="200">
-			      내용
+			      ${dto.content}
 			   </td>
 			</tr>
 			  	<c:choose>
@@ -100,7 +100,7 @@ function score(){
 			<tr height="35" style="border-bottom: 1px solid #cccccc; border-top: 1px solid #cccccc">
 			    <td colspan="2" align="left" style="padding-left: 5px;">
 			       이전글 : <c:if test="${not empty preReadDto}">
-						<a href="${pageContext.request.contextPath}/photo/article.do?num=${preReadDto.num}&${query}">${preReadDto.subject}</a>
+						<a href="${pageContext.request.contextPath}/store/article.do?num=${preReadDto.num}&${query}">${preReadDto.subject}</a>
 						</c:if>	      
 			    </td>
 			</tr>
@@ -108,7 +108,7 @@ function score(){
 			<tr height="35" style="border-bottom: 1px solid #cccccc;">
 			    <td colspan="2" align="left" style="padding-left: 5px;">
 			       다음글 : <c:if	test="${not empty nextReadDto}">
-						<a href="${pageContext.request.contextPath}/photo/article.do?num=${nextReadDto.num}&${query}">${nextReadDto.subject}</a>
+						<a href="${pageContext.request.contextPath}/store/article.do?num=${nextReadDto.num}&${query}">${nextReadDto.subject}</a>
 					</c:if>
 			       
 			    </td>
@@ -116,7 +116,7 @@ function score(){
 			<tr height="45">
 			    <td>
 					<c:choose>
-			    			<c:when test="${sessionScope.member.userId==dto.userId}">
+			    			<c:when test="${sessionScope.member.userId==dto.userId || sessionScope.member.type==0}">
 			         			<button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/store/update.do?num=${dto.num}&page=${page}';">수정</button>
 			          			<button type="button" class="btn" onclick="deleteStore('1');">삭제</button>
 			    			</c:when>

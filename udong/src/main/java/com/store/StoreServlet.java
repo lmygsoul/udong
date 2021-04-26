@@ -226,8 +226,10 @@ public class StoreServlet extends MyUploadServlet{
 		String cp = req.getContextPath();
 		String page = req.getParameter("page");
 		try {
-			int num = Integer.parseInt(req.getParameter("num"));
-			dao.deleteStore(num, info.getUserId());
+			if(info.getUserId().equals(req.getParameter("userId")) || info.getType().equals("0"));{
+				int num = Integer.parseInt(req.getParameter("num"));
+				dao.deleteStore(num);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
