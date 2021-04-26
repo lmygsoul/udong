@@ -85,7 +85,7 @@ private Connection conn = DBConn.getConnection();
 			sb.append(" SELECT s.num, s.userid, nickname, subject, content, imageFileName, created, score ");
 			sb.append(" FROM store_bbs s");
 			sb.append(" LEFT OUTER JOIN member1 m ON s.userid=m.userid");
-			sb.append(" LEFT OUTER JOIN (SELECT num, AVG(star) score FROM store_rec GROUP BY num) r ON s.num=r.num");
+			sb.append(" LEFT OUTER JOIN (SELECT num, ROUND(AVG(score),2) score FROM store_rec GROUP BY num) r ON s.num=r.num");
 			sb.append(" ORDER BY num DESC ");
 			sb.append(" OFFSET ? ROWS FETCH FIRST ? ROW ONLY");
 			
@@ -121,7 +121,7 @@ private Connection conn = DBConn.getConnection();
 			sb.append(" SELECT s.num, s.userid, nickname, subject, content, imageFileName, created, score ");
 			sb.append(" FROM store_bbs s");
 			sb.append(" LEFT OUTER JOIN member1 m ON s.userid=m.userid");
-			sb.append(" LEFT OUTER JOIN (SELECT num, AVG(star) score FROM store_rec GROUP BY num) r ON s.num=r.num");
+			sb.append(" LEFT OUTER JOIN (SELECT num, ROUND(AVG(score),2) score FROM store_rec GROUP BY num) r ON s.num=r.num");
 			sb.append(" WHERE s.num=?");
 			pstmt = conn.prepareStatement(sb.toString());
 			pstmt.setInt(1, num);
@@ -238,16 +238,18 @@ private Connection conn = DBConn.getConnection();
 		return dto;
 	}
 
-	public int updateScore(StoreDTO dto) {
+	public int updateStore(StoreDTO dto) {
 		int result = 0;
 		PreparedStatement pstmt = null;
 		String sql;
 		try {
-			sql = "INSERT INTO store_rec(num, rec_id, score) VALUES(?,?,?)";
+			sql = "UPDATE store_bbs SET subject = ?, content = ?, imageFileName = ? WHERE num = ?";
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, dto.num);
-			pstmt.setString(2, dto.userId);
-			pstmt.setDouble(3, dto.score);
+			pstmt.setString(1, dto.getSubject());
+			pstmt.setString(2, dto.getContent());
+			pstmt.setString(3, dto.getImageFileName());
+			pstmt.setInt(4, dto.getNum());
+			pstmt.setString(5, dto.getUserId());
 			
 			result = pstmt.executeUpdate();
 			
@@ -264,19 +266,73 @@ private Connection conn = DBConn.getConnection();
 		return result;
 	}
 	
+	public int updateScore(StoreDTO dto) {
+		int result = 0;
+		PreparedStatement pstmt = null;
+		String sql;
+		try {
+			sql = "INSERT INTO store_rec(num, rec_id, score) VALUES(?,?,?)";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, dto.getNum());
+			pstmt.setString(2, dto.getUserId());
+			pstmt.setDouble(3, dto.getScore());
+			result = pstmt.executeUpdate();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+		}
+		return result;
+	}
+	
+	public int deleteStore(int num, String userId) throws SQLException {
+		int result = 0;
+		PreparedStatement pstmt = null;
+		String sql;
+		try {
+			sql = "DELETE FROM store_rec WHERE num=?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, num);
+			result = pstmt.executeUpdate();
+			pstmt.close();
+			
+			sql = "DELETE FROM store_bbs WHERE num=? AND userID = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, num);
+			pstmt.setString(2, userId);
+			result = pstmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+		}
+		return result;
+	}
 	public boolean RecCheck(StoreDTO dto) {
 		PreparedStatement pstmt = null;
 		String sql;
 		ResultSet rs = null;
-		boolean rec=false;
+		boolean is_rec=false;
 		try {
-			sql = "SELECT score FROM store_rec WHERE num=? AND userId=?";
+			sql = "SELECT score FROM store_rec WHERE num=? AND rec_id=?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, dto.getNum());
 			pstmt.setString(2, dto.getUserId());
 			rs = pstmt.executeQuery();
-			if(rs.next()==true) {
-				rec=true;
+			if(!rs.next()) {
+				is_rec=true;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -294,7 +350,7 @@ private Connection conn = DBConn.getConnection();
 				}
 			}
 		}
-		return rec;
+		return is_rec;
 	}
 
 
