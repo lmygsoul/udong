@@ -19,92 +19,8 @@
   	border-radius:4px;
   	font-family:"Noto Sans KR", "Malgun Gothic", "맑은 고딕", NanumGothic, 나눔고딕, 돋움, sans-serif;
 }
-.hidden{
-	display: none;
-}
 </style>
 <script type="text/javascript">
-function memberOk(){
-	var f = document.memberForm;
-	var str;
-	
-	str = f.userId.value;
-	str = str.trim();
-	if(!str){
-		alert("아이디를 입력하세요.");
-		f.userId.focus();
-		return;
-	} else if(!/^[a-z0-9][a-z0-9]{6,14}$/i.test(str)){
-		alert("아이디는 7~15자입니다.");
-		f.userId.focus();
-		return;
-	}
-	str = f.userPwd.value;
-	str = str.trim();
-	if(!str){
-		alert("비밀번호를 입력하세요.");
-		f.userId.focus();
-		return;
-	} else if(!/^[a-z0-9][a-z0-9]{4,9}$/i.test(str)){
-		alert("비밀번호는 5~10자리 입니다.영어와 숫자를 조합해서 입력하세요");
-		f.userId.focus();
-		return;
-	}
-	if(str!=f.userPwd_check.value){
-		alert("비밀번호가 동일하게 입력되지 않았습니다.");
-		f.userPwd_check.focus();
-		return;
-	}
-	str = f.nickName.value;
-	str = str.trim();
-	if(!str){
-		alert("닉네임을 입력하세요");
-		f.nickName.focus();
-		return
-	} else if(!/^[a-zA-Z가-힣]{0,4}$/i.test(str)){
-		alert("닉네임은 5자리이하로 작성하세요.");
-		return;
-	}
-	str= f.birth.value;
-	str= str.trim();
-	if(!str || !isValidDateFormat(str)){
-		alert("생년월일을 입력하세요");
-		return;
-	}
-	str = f.selectTel.value;
-	str = str.trim();
-	if(!str){
-		alert("앞자리 전화번호를 선택하세요.");
-		return;
-	}
-	str = f.tel2.value;
-	str = str.trim();
-	if(!str){
-		alert("가운데 전화번호를 입력하세요");
-		return;
-	}
-	str = f.tel3.value;
-	str = str.trim();
-	if(!str){
-		alert("마지막 전화번호를 입력하세요");
-		return;
-	}
-	str = f.email1.value;
-	str = str.trim();
-	if(!str){
-		alert("이메일 앞부분을 입력하세요");
-		return;
-	}
-	str = f.email2.value;
-	str = str.trim();
-	if(!str){
-		alert("도메인을 선택하세요");
-		return;
-	}
-	
-	f.action = "${pageContext.request.contextPath}/member/${mode}_ok.do";
-    f.submit();
-}
 function changeEmail() {
     var f = document.memberForm;
 	    
@@ -119,13 +35,6 @@ function changeEmail() {
         f.email2.readOnly = false;
         f.email1.focus();
     }
-}
-function hidden(){
-	HttpServletRequest req;
-	String mode= req.getParameter("mode");
-	if(mode.equals("myProfile")){
-		document.getElementById("hidden").style.display="none";
-	}
 }
 </script>
 <jsp:include page="/WEB-INF/views/layout/staticHeader.jsp"/>
@@ -151,27 +60,6 @@ function hidden(){
 	    					<input type="text" name="userId" id="userId" maxlength="10" value="${dto.userId }"
 	    						${mode!="member" ? "readonly='readonly' ":""}
 			                   placeholder="아이디" class="memberForm" style="width: 400px; margin-left: 80px; margin-bottom: 5px;">
-			                 <p style="margin-left: 80px;">아이디는 7~15자 이내이며, 영어와 숫자를 조합하여 작성해야합니다.
-	    				</td>
-	    			</tr>
-	    			<tr  id="hidden">
-	    				<td width="100" valign="middle" style="text-align: right;">
-	    					<label style="font-weight: bold;">비밀번호</label>
-	    				</td>
-	    				<td>
-	    					<input type="password" name="userPwd" maxlength="10"  value="${dto.userPwd }" ${mode!="member" ? "readonly='readonly' ":""}
-			                   placeholder="비밀번호" class="memberForm" style="width: 400px; margin-left: 80px; margin-bottom: 5px;">
-			                	<p style="margin-left: 80px;">비밀번호는 5~10자 이내이며, 영어와 숫자를 조합 입력해야합니다.
-	    				</td>
-	    			</tr>
-	    			<tr>
-	    				<td width="100" valign="middle" style="text-align: right;">
-	    					<label style="font-weight: bold;">비밀번호 확인</label>
-	    				</td>
-	    				<td>
-	    					<input type="password" name="userPwd_check" maxlength="10" ${mode!="member" ? "readonly='readonly' ":""}
-			                   placeholder="비밀번호 확인" class="memberForm" style="width: 400px; margin-left: 80px; margin-bottom: 5px;">
-			                 <p style="margin-left: 80px;">비밀번호를 동일하게 입력해야합니다. 비밀번호는 5~10자 이내이며, 영어와 숫자를 조합 입력해야합니다.
 	    				</td>
 	    			</tr>
 	    			<tr>
@@ -201,7 +89,6 @@ function hidden(){
 	    					style="width: 50px; height:30px; margin-left: 70px;" >개인</label>
 	    					<label><input type="radio" name="type2" class="memberForm" value="2" ${dto.type=="2" ? "selected='selected'" : ""} 
 	    					style="width: 50px; height:30px; margin-left: 70px;" >사업자</label>
-	    					<p style="margin-left: 80px;">*선택하지 않을시 개인으로 선택됩니다.
 	    				</td>
 	    			</tr>
 	    			<tr>
@@ -211,7 +98,6 @@ function hidden(){
 	    				<td>
 	    					<input type="text" name="birth" ${mode!="member" ? "readonly='readonly' ":""}
 			                   class="memberForm" style="width: 400px; margin-left: 80px; margin-bottom: 5px;" value="${dto.birth }">
-			                 <p style="margin-left: 80px;">생년월일의 작성 예시) 1111-22-33 형식으로 입력합니다.
 	    				</td>
 	    			</tr>
 	    			<tr>
@@ -282,6 +168,16 @@ function hidden(){
 	    					<input type="text" name="myComment" 
 			                   placeholder="하고싶은 말 한마디 적으세요" class="memberForm" style="width: 700px; height:50px; margin-left: 80px; margin-bottom: 5px;"
 			                   value="${dto.myComment }" ${mode=="myProfile" ? "readonly='readonly' ":""} >
+	    				</td>
+	    			</tr>
+	    			<tr >
+	    				<td width="100" height="50" valign="middle" style="text-align: right;">
+	    					<label style="font-weight: bold;">가입일</label>
+	    				</td>
+	    				<td>
+	    					<input type="text" name="created_date" 
+			                   class="memberForm" style="width: 100px; height:50px; margin-left: 80px; margin-bottom: 5px;"
+			                   value="${dto.created_date }" ${mode=="myProfile" ? "readonly='readonly' ":""} >
 	    				</td>
 	    			</tr>
 	    		</table>

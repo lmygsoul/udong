@@ -19,9 +19,6 @@
   	border-radius:4px;
   	font-family:"Noto Sans KR", "Malgun Gothic", "맑은 고딕", NanumGothic, 나눔고딕, 돋움, sans-serif;
 }
-.hidden{
-	display: none;
-}
 </style>
 <script type="text/javascript">
 function memberOk(){
@@ -120,13 +117,6 @@ function changeEmail() {
         f.email1.focus();
     }
 }
-function hidden(){
-	HttpServletRequest req;
-	String mode= req.getParameter("mode");
-	if(mode.equals("myProfile")){
-		document.getElementById("hidden").style.display="none";
-	}
-}
 </script>
 <jsp:include page="/WEB-INF/views/layout/staticHeader.jsp"/>
 </head>
@@ -153,7 +143,7 @@ function hidden(){
 			                 <p style="margin-left: 80px;"> ${mode=="update" ? "*아이디는 수정되지 않습니다*":"아이디는 7~15자 이내이며, 영어와 숫자를 조합하여 작성해야합니다."}
 	    				</td>
 	    			</tr>
-	    			<tr  id="hidden">
+	    			<tr>
 	    				<td width="100" valign="middle" style="text-align: right;">
 	    					<label style="font-weight: bold;">비밀번호</label>
 	    				</td>
