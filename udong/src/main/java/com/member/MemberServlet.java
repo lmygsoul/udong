@@ -36,6 +36,10 @@ public class MemberServlet extends MyServlet{
 			update(req,resp);
 		} else if(uri.indexOf("update_ok.do")!=-1) {
 			updateForm(req,resp);
+		} else if(uri.indexOf("sm_article.do")!=-1) {
+			sendMessage(req,resp);
+		} else if(uri.indexOf("sm_list.do")!=-1) {
+			sendMessageList(req,resp);
 		}
 		
 	}
@@ -151,7 +155,14 @@ public class MemberServlet extends MyServlet{
 		try {
 			SessionInfo info=(SessionInfo)session.getAttribute("member");
 			MemberDTO dto = dao.readMember(info.getUserId());
+			String[] telNum = dto.getTel().split("-");
+			String tel1 = telNum[0];
+			String tel2 = telNum[1];
+			String tel3 = telNum[2];
 			
+			dto.setTel1(tel1);
+			dto.setTel2(tel2);
+			dto.setTel3(tel3);
 			req.setAttribute("title", "마이프로필");
 			req.setAttribute("mode", "myProfile");
 			req.setAttribute("dto", dto);
@@ -210,5 +221,39 @@ public class MemberServlet extends MyServlet{
 			e.printStackTrace();
 		}
 		resp.sendRedirect(cp);
+	}
+
+	private void sendMessage(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
+		MemberDAO dao=new MemberDAO();
+		MemberDTO dto = new MemberDTO();
+		SendMessageDAO mdao = new SendMessageDAO();
+		MessageDTO mdto = new MessageDTO();
+		HttpSession session=req.getSession();
+		try {
+			SessionInfo info=(SessionInfo)session.getAttribute("member");
+			mdto.setSendUser(info.getUserId());
+			dto = dao.readMember(req.getParameter("userId"));
+			
+			mdao.insertMessage(dto, mdto);
+			
+			req.setAttribute("title", "쪽지 보내기");
+			req.setAttribute("mode", "sendMessage");
+			req.setAttribute("dto", dto);
+			req.setAttribute("mdto", mdto);
+			
+			forward(req, resp, "/WEB-INF/views/member/sm_article.jsp");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+
+	private void sendMessageList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
+		
+		req.setAttribute("title", "보낸쪽지함");
+		req.setAttribute("mode", "member");
+		
+		forward(req, resp, "/WEB-INF/views/member/sm_list.jsp");
+		
 	}
 }

@@ -85,10 +85,12 @@ function changeEmail() {
 	    					<label style="font-weight: bold;">개인/사업자</label>
 	    				</td>
 	    				<td>
-	    					<label><input type="radio" name="type1" class="memberForm" value="1"  ${dto.type=="1" ? "selected='selected'" : ""}
-	    					style="width: 50px; height:30px; margin-left: 70px;" >개인</label>
-	    					<label><input type="radio" name="type2" class="memberForm" value="2" ${dto.type=="2" ? "selected='selected'" : ""} 
-	    					style="width: 50px; height:30px; margin-left: 70px;" >사업자</label>
+	    					<select name="type" style="margin-left: 80px; margin-top: 10px;">
+			               	 	 <option value="">선 택</option>
+			                	 <option value="1" ${dto.type=="1" ? "selected='selected'" : ""}>개인</option>
+			              		 <option value="2" ${dto.type=="2" ? "selected='selected'" : ""}>사업자</option>
+			            	</select>
+	    					<p style="margin-left: 80px;">*여기서 바꿔도 안됨
 	    				</td>
 	    			</tr>
 	    			<tr>
@@ -126,7 +128,7 @@ function changeEmail() {
 	    					<select name="selectTel" style="margin-left: 80px; margin-top: 10px;">
 			                <option value="">선 택</option>
 			                <option value="010" ${dto.tel1=="010" ? "selected='selected'" : ""}>010</option>
-			                <option value="011" ${dto.tel1=="010" ? "selected='selected'" : ""}>011</option>
+			                <option value="011" ${dto.tel1=="011" ? "selected='selected'" : ""}>011</option>
 			                <option value="016" ${dto.tel1=="016" ? "selected='selected'" : ""}>016</option>
 			                <option value="017" ${dto.tel1=="017" ? "selected='selected'" : ""}>017</option>
 			                <option value="018" ${dto.tel1=="018" ? "selected='selected'" : ""}>018</option>

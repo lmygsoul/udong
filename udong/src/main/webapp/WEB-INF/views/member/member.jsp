@@ -187,10 +187,11 @@ function changeEmail() {
 	    					<label style="font-weight: bold;">개인/사업자</label>
 	    				</td>
 	    				<td>
-	    					<label><input type="radio" name="type1" class="memberForm" value="1"  
-	    					style="width: 50px; height:30px; margin-left: 70px;" >개인</label>
-	    					<label><input type="radio" name="type2" class="memberForm" value="2" 
-	    					style="width: 50px; height:30px; margin-left: 70px;" >사업자</label>
+	    					<select name="type" style="margin-left: 80px; margin-top: 10px;">
+			               	 	 <option value="">선 택</option>
+			                	 <option value="1" ${dto.type=="1" ? "selected='selected'" : ""}>개인</option>
+			              		 <option value="2" ${dto.type=="2" ? "selected='selected'" : ""}>사업자</option>
+			            	</select>
 	    					<p style="margin-left: 80px;">*선택하지 않을시 개인으로 선택됩니다.
 	    				</td>
 	    			</tr>
@@ -247,7 +248,7 @@ function changeEmail() {
 	    					<label style="font-weight: bold;">우편번호</label>
 	    				</td>
 	    				<td>
-	    					<input type="text" name="zipcode" id="zipCode" value="${dto.zipCode}"
+	    					<input type="text" id="zipCode" value="${dto.zipCode}" name="zipCode"
 			                       class="boxTF" readonly="readonly"  style="width: 30%; height:30px; margin-left: 80px; margin-bottom: 5px;">
 			            	<button type="button" onclick="daumPostcode();" style="width: 10%; height:30px; margin-bottom: 5px;">우편번호</button>      
 	    				</td>
