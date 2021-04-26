@@ -253,7 +253,7 @@ public class GreetingDAO {
 				String sql;
 				
 				try {
-					sql = "UPDATE bbs SET hitCount = hitCount + 1 WHERE num = ?";
+					sql = "UPDATE greeting SET hitCount = hitCount + 1 WHERE num = ?";
 					pstmt = conn.prepareStatement(sql);
 					pstmt.setInt(1, num);  //해당되는 num일 경우 hitCount+1을 줘야함
 					result = pstmt.executeUpdate();

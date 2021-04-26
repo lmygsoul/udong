@@ -48,7 +48,7 @@ $(function(){
 <div class="menu">
     <ul class="nav">
         <li>
-            <a href="#"><span>중고거래</span></a>
+            <a href="${pageContext.request.contextPath}/used/list.do"><span>중고거래</span></a>
         </li>
 			
         <li>
