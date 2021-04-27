@@ -15,7 +15,7 @@
 <c:if test="${dto.userId == sessionScope.member.userId || sessionScope.member.userId == 'admin'}">
 function deleteBoard(num) {
 	if(confirm("게시물을 삭제 하시겠습니까 ?")) {
-		var url="${pageContext.request.contextPath}/notice/delete.do?num="+num+"&${query}";
+		var url="${pageContext.request.contextPath}/used/delete.do?num="+num+"&${query}";
 		location.href=url;
 	}
 }
@@ -31,26 +31,52 @@ function deleteBoard(num) {
 <div class="container">
     <div class="body-container" style="width: 700px;">
         <div class="body-title" style="margin: 0;">
-            <h3><span style="font-family: Webdings">4</span> 공지사항 </h3>
+            <h3><span style="font-family: Webdings">4</span> 중고거래 </h3>
         </div>
         
         <div>
 			<table style="width: 100%; margin: 0 auto; border-spacing: 0px; border-collapse: collapse;">
 			<tr height="35" class="row-3">
-			    <td colspan="2" align="left" class="col-1">
-				   ${dto.subject}
+			    <td width="50%" align="left" class="col-2">
+			        ${dto.subject}
+			    </td>
+			     <td width="50%" align="right" class="col-2">
+			       관심클릭 이미지 넣기?
 			    </td>
 			</tr>
 			
 			<tr height="35" class="row-2">
 			    <td width="50%" align="left" class="col-2">
-			       이름 : ${dto.userName}
+			       작성자 : ${dto.nickName} 
 			    </td>
 			    <td width="50%" align="right" class="col-2">
-			        ${dto.created} | 조회 ${dto.hitCount}
+			        ${dto.created}
 			    </td>
 			</tr>
 			
+			<tr class="row-2">
+			  <td  rowspan="4" height="50">
+			    <img src="${pageContext.request.contextPath}/uploads/used/${dto.imageFilename}" style="max-width:100%; height:auto; resize:both;">
+			   </td>
+			    <td  height="50">
+			   카테고리: ${dto.category}
+			   </td>
+			</tr>
+			<tr class="row-2">
+			    <td  height="50">
+			   동네: ${dto.area}
+			   </td>
+			</tr>
+			<tr class="row-2">
+			    <td  height="50">
+			    ${dto.price} 원
+			   </td>
+			</tr>
+			<tr class="row-2">
+			    <td  height="50">
+			   관심: 관심도 숫자 넣기
+			   </td>
+			</tr>
 			<tr class="row-2">
 			  <td colspan="2" align="left" class="artiBox" valign="top" height="200">
 			      ${dto.content}
@@ -60,8 +86,8 @@ function deleteBoard(num) {
 			<tr height="35" class="row-2">
 			    <td colspan="2" align="left" class="col-3">
 			       이전글 : 
-					<c:if test="${not empty preReadDto}">
-						<a href="${pageContext.request.contextPath}/notice/article.do?num=${preReadDto.num}&${query}">${preReadDto.subject}</a>
+					<c:if test="${not empty preReadUsed}">
+						<a href="${pageContext.request.contextPath}/used/article.do?num=${preReadUsed.num}&${query}">${preReadUsed.subject}</a>
 					</c:if>
 			    </td>
 			</tr>
@@ -69,8 +95,8 @@ function deleteBoard(num) {
 			<tr height="35" class="row-2">
 			    <td colspan="2" align="left" class="col-3">
 			       다음글 :
-					<c:if test="${not empty nextReadDto}">
-						<a href="${pageContext.request.contextPath}/notice/article.do?num=${nextReadDto.num}&${query}">${nextReadDto.subject}</a>
+					<c:if test="${not empty nextReadUsed}">
+						<a href="${pageContext.request.contextPath}/used/article.do?num=${nextReadUsed.num}&${query}">${nextReadUsed.subject}</a>
 					</c:if>
 			    </td>
 			</tr>
@@ -78,7 +104,7 @@ function deleteBoard(num) {
 			    <td class="col-4">
 			    	<c:choose>
 			    		<c:when test="${dto.userId == sessionScope.member.userId}">
-			          		<button type="button" class="btn" style="margin-right: 3px;" onclick="javascript:location.href='${pageContext.request.contextPath}/notice/update.do?num=${dto.num}&page=${page}';">수정</button>
+			          		<button type="button" class="btn" style="margin-right: 3px;" onclick="javascript:location.href='${pageContext.request.contextPath}/used/update.do?num=${dto.num}&page=${page}';">수정</button>
 			    		</c:when>
 			    		<c:otherwise>
 			    			<button type="button" class="btn" disabled="disabled">수정</button>
@@ -97,7 +123,7 @@ function deleteBoard(num) {
 			    </td>
 			
 			    <td align="right" class="col-4">
-			        <button type="button" class="btn btnList" onclick="javascript:location.href='${pageContext.request.contextPath}/notice/list.do?${query}';">리스트</button>
+			        <button type="button" class="btn btnList" onclick="javascript:location.href='${pageContext.request.contextPath}/used/list.do?${query}';">리스트</button>
 			    </td>
 			</tr>
 			</table>

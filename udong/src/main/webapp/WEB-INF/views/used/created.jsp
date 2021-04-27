@@ -54,7 +54,28 @@
             f.subject.focus();
             return;
         }
-
+		
+        str = f.category.value;
+		if(!str) {
+    		alert("카테고리를 입력하세요. ");
+    		f.category.focus();
+    		return;
+		}
+        
+        str = f.area.value;
+		if(!str) {
+    		alert("지역을 입력하세요. ");
+    		f.area.focus();
+    		return;
+		}
+    	
+		str = f.price.value;
+		if(!str) {
+    		alert("가격을 입력하세요. ");
+    		f.price.focus();
+    		return;
+		}
+    	
     	str = f.content.value;
         if(!str) {
             alert("설명을 입력하세요. ");
@@ -135,7 +156,7 @@
         </div>
         
         <div>
-			<form name="tableNameForm" method="post" class="formBox">
+			<form name="photoForm" method="post" class="formBox" enctype="multipart/form-data">
 			  <table style="width: 100%; margin: 0 auto; border-spacing: 0px; border-collapse: collapse;">
 			  
 			  <tr align="left" height="43" style="border-bottom: 1px solid #ccc; border-top: 1px solid #ccc;"> 
@@ -148,23 +169,22 @@
 			  <tr align="left" height="43" style="border-bottom: 1px solid #ccc;"> 
 			      <td width="100" style="text-align: center;">작성자</td>
 			      <td style="padding-left:10px;"> 
-			          ${sessionScope.member.userName}
+			          ${sessionScope.member.userId}
 			      </td>
 			  </tr>
 			  		  
 			  <tr align="left" height="43" style="border-bottom: 1px solid #ccc; border-top: 1px solid #ccc;">
 				<td width="100" style="text-align: center;">카테고리</td>
 				<td style="padding-left:10px;"> 
-						  <select name="selectArea" class="selectField">
+						  <select name="category" class="selectField">
 								<option value="">선 택</option>
-								<option value="electronic" <c:if test="${dto.category}">selected="selected"</c:if>>전자/가전</option>
-								<option value="furniture" <c:if test="${dto.category}">selected="selected"</c:if>>가구/인테리어</option>
-								<option value="sports" <c:if test="${dto.category}">selected="selected"</c:if>>스포츠/레저</option>
-								<option value="health" <c:if test="${dto.category}">selected="selected"</c:if>>생활/건강</option>
-								<option value="cloths" <c:if test="${dto.category}">selected="selected"</c:if>>의류/잡화</option>
-								<option value="food" <c:if test="${dto.category}">selected="selected"</c:if>>식품</option>
-								<option value="etc" <c:if test="${dto.category}">selected="selected"</c:if>>기타</option>
-								<option value="test">테스트</option>							
+								<option value="전자/가전"<c:if test="${category == '전자/가전'}">selected</c:if>>전자/가전</option>
+								<option value="가구/인테리어"<c:if test="${category == '가구/인테리어'}">selected</c:if>>가구/인테리어</option>
+								<option value="스포츠/레저"<c:if test="${category == '스포츠/레저'}">selected</c:if>>스포츠/레저</option>
+								<option value="생활/건강"<c:if test="${category == '생활/건강'}">selected</c:if>>생활/건강</option>
+								<option value="의류/잡화"<c:if test="${category == '의류/잡화'}">selected</c:if>>의류/잡화</option>
+								<option value="식품"<c:if test="${category == '식품'}">selected</c:if>>식품</option>
+								<option value="기타"<c:if test="${category == '기타'}">selected</c:if>>기타</option>						
 						  </select>
 				</td>
 			</tr>
@@ -172,14 +192,14 @@
 			  <tr align="left" height="43" style="border-bottom: 1px solid #ccc; border-top: 1px solid #ccc;"> 
 			      <td width="100" style="text-align: center;">지&nbsp;&nbsp;&nbsp;&nbsp;역</td>
 			      <td style="padding-left:10px;"> 
-			        <input type="text" name="subject" maxlength="100" class="boxTF" style="width: 20%;" value="${dto.area}">
+			        <input type="text" name="area" maxlength="100" class="boxTF" style="width: 20%;" value="${dto.area}">
 			      </td>
 			  </tr>
 			  
 			  <tr align="left" height="43" style="border-bottom: 1px solid #ccc; border-top: 1px solid #ccc;"> 
 			      <td width="100" style="text-align: center;">가&nbsp;&nbsp;&nbsp;&nbsp;격</td>
 			      <td style="padding-left:10px;"> 
-			        <input type="text" id="price" name="subject" maxlength="30" class="boxTF" style="width: 20%;" onkeyup="inputNumberFormat(this)" value="${dto.price}"><span> 원</span>
+			        <input type="text" id="price" name="price" maxlength="30" class="boxTF" style="width: 20%;" onkeyup="inputNumberFormat(this)" value="${dto.price}"><span> 원</span>
 			      </td> 
 			  </tr>	
 			  
@@ -194,15 +214,13 @@
 			 <tr align="left" height="40" style="border-bottom: 1px solid #cccccc;">
 			      <td width="100" style="text-align: center;">이미지</td>
 			      <td style="padding-left:10px;"> 
-			           <input type="file" name="selectFile" accept="image/*" multiple="multiple"
-			                      class="boxTF" size="53" style="height: 25px;">
+			           <input type="file" name="selectFile" accept="image/*" class="boxTF" size="53" style="height: 25px;">
 			       </td>
 			  </tr>
 			      
 			      <!-- 수정 모드일 때 -> 글번호, 페이지 번호를 넘긴다 (*page는 dto 안에 없음) -->
 			   <c:if test="${mode=='update'}">
 				  <tr align="left" height="40" style="border-bottom: 1px solid #cccccc;">
-				      <td width="100" bgcolor="#eeeeee" style="text-align: center;">등록이미지</td>
 				      <td style="padding-left:10px;">
 				      	<div class="imgLayout">
 					        <c:forEach var="vo" items="${listFile}">
