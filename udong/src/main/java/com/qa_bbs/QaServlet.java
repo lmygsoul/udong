@@ -159,7 +159,7 @@ public class QaServlet extends HttpServlet {
 	protected void createdSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String cp=req.getContextPath();
 		if(req.getMethod().equalsIgnoreCase("GET")) {
-			resp.sendRedirect(cp+"/board/list.do");
+			resp.sendRedirect(cp+"/qa/list.do");
 			return;
 		}
 		
@@ -242,7 +242,7 @@ public class QaServlet extends HttpServlet {
 		
 		String cp=req.getContextPath();
 		if(req.getMethod().equalsIgnoreCase("GET")) {
-			resp.sendRedirect(cp+"/board/list.do");
+			resp.sendRedirect(cp+"/qa/list.do");
 			return;
 		}
 		
