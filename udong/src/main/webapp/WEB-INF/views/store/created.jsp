@@ -81,8 +81,14 @@
 			          <textarea name="content" rows="12" class="boxTA" style="width: 95%;">${dto.content}</textarea>
 			      </td>
 			  </tr>
-			  
-						  <tr align="left" height="40" style="border-bottom: 1px solid #cccccc;">
+			  <tr align="left" height="40" style="border-bottom: 1px solid #cccccc;">
+			  		<td width="100" bgcolor="#eeeeee" style="text-align: center; padding-top:5px;" valign="top">주&nbsp;&nbsp;&nbsp;&nbsp;소</td>
+			  	    <td style="padding-left:10px;"> 
+	    				<input type="text" name="address" id="address" value="${dto.addr}" class="boxTF" readonly="readonly"  style="width: 70%; height:20px;">
+			        	<button type="button" onclick="daumPostcode();" style="width: 10%; height:25px;">검색</button>      
+	    			</td>
+	    	  </tr>
+			  <tr align="left" height="40" style="border-bottom: 1px solid #cccccc;">
 			      <td width="100" bgcolor="#eeeeee" style="text-align: center;">이미지</td>
 			      <td style="padding-left:10px;"> 
 			           <input type="file" name="selectFile" accept="image/*"
@@ -129,6 +135,35 @@
 	</div>
 	
 <jsp:include page="/WEB-INF/views/layout/staticFooter.jsp"/>
+	<script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
+<script>
+    function daumPostcode() {
+        new daum.Postcode({
+            oncomplete: function(data) {
+                var fullAddr = ''; // 최종 주소 변수
+                var extraAddr = ''; // 조합형 주소 변수
 
+                if (data.userSelectedType === 'R') {
+                    fullAddr = data.roadAddress;
+
+                } else {
+                    fullAddr = data.jibunAddress;
+                }
+
+                if(data.userSelectedType === 'R'){
+                    if(data.bname !== ''){
+                        extraAddr += data.bname;
+                    }
+                    if(data.buildingName !== ''){
+                        extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+                    }
+                    fullAddr += (extraAddr !== '' ? ' ('+ extraAddr +')' : '');
+                }
+
+                document.getElementById('address').value = fullAddr;
+            }
+        }).open();
+    }
+</script>    
 </body>
 </html>

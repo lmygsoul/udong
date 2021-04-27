@@ -9,6 +9,11 @@ public class StoreDTO {
 	String imageFileName;
 	String created;
 	double score;
+	String addr;
+	String addrsub;
+	public String getAddrsub() {
+		return addrsub;
+	}
 	public int getNum() {
 		return num;
 	}
@@ -57,4 +62,11 @@ public class StoreDTO {
 	public void setScore(double score) {
 		this.score = score;
 	}	
+	public String getAddr() {
+		return addr;
+	}
+	public void setAddr(String addr) {
+		this.addr = addr;
+		addrsub = addr.substring(0,2);
+	}
 }
