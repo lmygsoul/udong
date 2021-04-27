@@ -30,6 +30,16 @@ public class MemberServlet extends MyServlet{
 			memberForm(req,resp);
 		} else if(uri.indexOf("member_ok.do")!=-1) {
 			memberSubmit(req,resp);
+		} else if(uri.indexOf("myProfile.do")!=-1) {
+			myProfile(req,resp);
+		} else if(uri.indexOf("update.do")!=-1) {
+			update(req,resp);
+		} else if(uri.indexOf("update_ok.do")!=-1) {
+			updateForm(req,resp);
+		} else if(uri.indexOf("sm_article.do")!=-1) {
+			sendMessage(req,resp);
+		} else if(uri.indexOf("sm_list.do")!=-1) {
+			sendMessageList(req,resp);
 		}
 		
 	}
@@ -56,6 +66,7 @@ public class MemberServlet extends MyServlet{
 				SessionInfo info = new SessionInfo();
 				info.setUserId(dto.getUserId());
 				info.setUserName(dto.getUserName());
+				info.setType(dto.getType());
 				
 				// 세션에 member로 저장
 				session.setAttribute("member", info);
@@ -109,7 +120,7 @@ public class MemberServlet extends MyServlet{
 			String email1 = req.getParameter("email1");
 			String email2 = req.getParameter("email2");
 			dto.setEmail(email1+"@"+email2);
-			String tel1 = req.getParameter("tel1");
+			String tel1 = req.getParameter("selectTel");
 			String tel2 = req.getParameter("tel2");
 			String tel3 = req.getParameter("tel3");
 			dto.setTel(tel1+"-"+tel2+"-"+tel3);
@@ -137,5 +148,112 @@ public class MemberServlet extends MyServlet{
 		req.setAttribute("mode", "member");
 		req.setAttribute("message", message);
 		forward(req, resp, "/WEB-INF/views/member/member.jsp");
+	}
+	private void myProfile(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
+		MemberDAO dao = new MemberDAO();
+		HttpSession session=req.getSession();
+		try {
+			SessionInfo info=(SessionInfo)session.getAttribute("member");
+			MemberDTO dto = dao.readMember(info.getUserId());
+			String[] telNum = dto.getTel().split("-");
+			String tel1 = telNum[0];
+			String tel2 = telNum[1];
+			String tel3 = telNum[2];
+			
+			dto.setTel1(tel1);
+			dto.setTel2(tel2);
+			dto.setTel3(tel3);
+			req.setAttribute("title", "마이프로필");
+			req.setAttribute("mode", "myProfile");
+			req.setAttribute("dto", dto);
+			
+			forward(req, resp, "/WEB-INF/views/member/myProfile.jsp");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void update(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
+		MemberDAO dao = new MemberDAO();
+		HttpSession session=req.getSession();
+		try {
+			SessionInfo info=(SessionInfo)session.getAttribute("member");
+			MemberDTO dto = dao.readMember(info.getUserId());
+			
+			req.setAttribute("title", "회원 수정");
+			req.setAttribute("mode", "update");
+			req.setAttribute("dto", dto);
+			
+			forward(req, resp, "/WEB-INF/views/member/member.jsp");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+	private void updateForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
+		String cp=req.getContextPath();
+		MemberDAO dao=new MemberDAO();
+		MemberDTO dto = new MemberDTO();
+		try {
+			
+			dto.setUserId(req.getParameter("userId"));
+			dto.setUserPwd(req.getParameter("userPwd"));
+			dto.setUserName(req.getParameter("userName"));
+			dto.setNickName(req.getParameter("nickName"));
+			dto.setType(req.getParameter("type"));
+			
+			String birth = req.getParameter("birth").replaceAll("(\\.|\\-|\\/)", "");
+			dto.setBirth(birth);
+			String email1 = req.getParameter("email1");
+			String email2 = req.getParameter("email2");
+			dto.setEmail(email1+"@"+email2);
+			String tel1 = req.getParameter("selectTel");
+			String tel2 = req.getParameter("tel2");
+			String tel3 = req.getParameter("tel3");
+			dto.setTel(tel1+"-"+tel2+"-"+tel3);
+			dto.setZipCode(req.getParameter("zipCode"));
+			dto.setAddr1(req.getParameter("addr1"));
+			dto.setAddr2(req.getParameter("addr2"));
+			dto.setMyComment(req.getParameter("myComment"));
+			
+			dao.updateMember(dto);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		resp.sendRedirect(cp);
+	}
+
+	private void sendMessage(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
+		MemberDAO dao=new MemberDAO();
+		MemberDTO dto = new MemberDTO();
+		SendMessageDAO mdao = new SendMessageDAO();
+		MessageDTO mdto = new MessageDTO();
+		HttpSession session=req.getSession();
+		try {
+			SessionInfo info=(SessionInfo)session.getAttribute("member");
+			mdto.setSendUser(info.getUserId());
+			dto = dao.readMember(req.getParameter("userId"));
+			
+			mdao.insertMessage(dto, mdto);
+			
+			req.setAttribute("title", "쪽지 보내기");
+			req.setAttribute("mode", "sendMessage");
+			req.setAttribute("dto", dto);
+			req.setAttribute("mdto", mdto);
+			
+			forward(req, resp, "/WEB-INF/views/member/sm_article.jsp");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+
+	private void sendMessageList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
+		
+		req.setAttribute("title", "보낸쪽지함");
+		req.setAttribute("mode", "member");
+		
+		forward(req, resp, "/WEB-INF/views/member/sm_list.jsp");
+		
 	}
 }

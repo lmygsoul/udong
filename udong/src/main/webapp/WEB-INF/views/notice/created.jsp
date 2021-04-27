@@ -11,8 +11,8 @@
 <jsp:include page="/WEB-INF/views/layout/staticHeader.jsp"/>
 
 <script type="text/javascript">
-    function sendNotice() {
-        var f = document.noticeForm;
+    function sendBoard() {
+        var f = document.boardForm;
 
     	var str = f.subject.value;
         if(!str) {
@@ -29,21 +29,16 @@
         }
 
    		f.action="${pageContext.request.contextPath}/notice/${mode}_ok.do";
-
         f.submit();
     }
     
 <c:if test="${mode=='update'}">
-    function deleteFile(fileNum) {
-    	if(! confirm("파일을 삭제 하시겠습니까 ?")) {
-    		return;
-    	}
-    	
-		var url="${pageContext.request.contextPath}/notice/deleteFile.do?num=${dto.num}&fileNum="+fileNum+"&page=${page}&rows=${rows}";
-		location.href=url;
+    function deleteFile(num) {
+  	  var url="${pageContext.request.contextPath}/notice/deleteFile.do?num="+num+"&page=${page}";
+  	  location.href=url;
     }
 </c:if>
-   
+    
 </script>
 </head>
 <body>
@@ -55,11 +50,11 @@
 <div class="container">
     <div class="body-container" style="width: 700px;">
         <div class="body-title">
-            <h3><i class="far fa-clipboard"></i> 공지사항 </h3>
+            <h3><i class="fas fa-graduation-cap"></i> 공지사항 </h3>
         </div>
         
         <div>
-			<form name="noticeForm" method="post" enctype="multipart/form-data">
+			<form name="boardForm" method="post" enctype="multipart/form-data">
 			  <table style="width: 100%; margin: 20px auto 0px; border-spacing: 0px; border-collapse: collapse;">
 			  <tr align="left" height="40" style="border-top: 1px solid #cccccc; border-bottom: 1px solid #cccccc;"> 
 			      <td width="100" bgcolor="#eeeeee" style="text-align: center;">제&nbsp;&nbsp;&nbsp;&nbsp;목</td>
@@ -67,13 +62,13 @@
 			        <input type="text" name="subject" maxlength="100" class="boxTF" style="width: 95%;" value="${dto.subject}">
 			      </td>
 			  </tr>
-
+			  
 			  <tr align="left" height="40" style="border-bottom: 1px solid #cccccc;"> 
 			      <td width="100" bgcolor="#eeeeee" style="text-align: center;">공지여부</td>
 			      <td style="padding-left:10px;"> 
 			        <input type="checkbox" name="notice" value="1" ${dto.notice==1 ? "checked='checked' ":"" } > 공지
 			      </td>
-			  </tr>
+			  </tr>			  
 			
 			  <tr align="left" height="40" style="border-bottom: 1px solid #cccccc;"> 
 			      <td width="100" bgcolor="#eeeeee" style="text-align: center;">작성자</td>
@@ -88,44 +83,47 @@
 			        <textarea name="content" rows="12" class="boxTA" style="width: 95%;">${dto.content}</textarea>
 			      </td>
 			  </tr>
-			  
+
 			  <tr align="left" height="40" style="border-bottom: 1px solid #cccccc;">
 			      <td width="100" bgcolor="#eeeeee" style="text-align: center;">첨&nbsp;&nbsp;&nbsp;&nbsp;부</td>
 			      <td style="padding-left:10px;"> 
-			           <input type="file" name="selectFile" class="boxTF" size="53" style="height: 25px;" multiple="multiple">
+			           <input type="file" name="selectFile" class="boxTF" size="53" style="height: 25px;">
 			       </td>
 			  </tr> 
 
 			  <c:if test="${mode=='update'}">
-			  	<c:forEach var="vo" items="${listFile}">
 				  <tr align="left" height="40" style="border-bottom: 1px solid #cccccc;">
 				      <td width="100" bgcolor="#eeeeee" style="text-align: center;">첨부된파일</td>
 				      <td style="padding-left:10px;"> 
-				            <a href="javascript:deleteFile('${vo.fileNum}');"><i class="far fa-trash-alt"></i></a>
-				           ${vo.originalFilename}
+				         <c:if test="${not empty dto.saveFilename}">
+				             <a href="javascript:deleteFile('${dto.num}');"><i class="far fa-trash-alt"></i></a>
+				             ${dto.originalFilename}
+				         </c:if>     
 				       </td>
-				   </tr>
-				 </c:forEach> 
+				  </tr> 
 			  </c:if>
+			  
 			  </table>
 			
 			  <table style="width: 100%; margin: 0px auto; border-spacing: 0px;">
 			     <tr height="45"> 
 			      <td align="center" >
-			        <button type="button" class="btn" onclick="sendNotice();">${mode=='update'?'수정완료':'등록하기'}</button>
+			        <button type="button" class="btn" onclick="sendBoard();">${mode=='update'?'수정완료':'등록하기'}</button>
 			        <button type="reset" class="btn">다시입력</button>
-			        <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/notice/list.do?rows=${rows}';">${mode=='update'?'수정취소':'등록취소'}</button>
-			        <c:if test="${mode=='update'}">
+			        <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/notice/list.do';">${mode=='update'?'수정취소':'등록취소'}</button>
+			         <c:if test="${mode=='update'}">
 			         	 <input type="hidden" name="num" value="${dto.num}">
 			        	 <input type="hidden" name="page" value="${page}">
+			        	 <input type="hidden" name="fileSize" value="${dto.fileSize}">
+			        	 <input type="hidden" name="saveFilename" value="${dto.saveFilename}">
+			        	 <input type="hidden" name="originalFilename" value="${dto.originalFilename}">
 			        </c:if>
-			        <input type="hidden" name="rows" value="${rows}">
 			      </td>
 			    </tr>
 			  </table>
 			</form>
         </div>
-        
+
     </div>
 </div>
 

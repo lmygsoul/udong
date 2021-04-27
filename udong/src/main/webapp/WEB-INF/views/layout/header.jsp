@@ -39,7 +39,7 @@ $(function(){
                     &nbsp;|&nbsp;
                     <a href="${pageContext.request.contextPath}/member/logout.do">로그아웃</a>
                     &nbsp;|&nbsp;
-                    <a href="${pageContext.request.contextPath}/member/pwd.do?mode=update">정보수정</a>
+                    <a href="${pageContext.request.contextPath}/member/myProfile.do?mode=myProfile">정보수정</a>
             </c:if>
         </div>
     </div>
@@ -92,7 +92,8 @@ $(function(){
         <li>
             <a href="#"><span>마이페이지</span></a>
             <ul>
-                <li><a href="#" style="margin-left:480px; " onmouseover="this.style.marginLeft='480px';">쪽지</a></li>
+                <li><a href="${pageContext.request.contextPath}/member/sm_list.do" style="margin-left:480px; " onmouseover="this.style.marginLeft='480px';">보낸 쪽지함</a></li>
+                <li><a href="#">받은 쪽지함</a></li>
                 <li><a href="#">내가쓴글</a></li>
                 <li><a href="#">찜한목록</a></li>
             </ul>

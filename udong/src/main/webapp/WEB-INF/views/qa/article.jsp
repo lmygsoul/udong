@@ -15,7 +15,7 @@
 <c:if test="${dto.userId == sessionScope.member.userId || sessionScope.member.userId == 'admin'}">
 function deleteBoard(boardNum) {
 	if(confirm("게시물을 삭제 하시겠습니까 ?")) {
-		var url="${pageContext.request.contextPath}/qa/delete.do?boardNnum="+boardNum+"&${query}";
+		var url="${pageContext.request.contextPath}/qa/delete.do?boardNum="+boardNum+"&${query}";
 		location.href=url;
 	}
 }
@@ -80,7 +80,7 @@ function deleteBoard(boardNum) {
 			    	<button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/qa/reply.do?boardNum=${dto.boardNum}&page=${page}';">답변</button>
 			    	<c:choose>
 			    		<c:when test="${dto.userId == sessionScope.member.userId}">
-			          		<button type="button" class="btn" style="margin-right: 3px;" onclick="javascript:location.href='${pageContext.request.contextPath}/qa/update.do?boardNum=${dto.boardNum}&page=${page}';">수정</button>
+			          		<button type="button" class="btn" style="margin-right: 3px;" onclick="javascript:location.href='${pageContext.request.contextPath}/qa/update.do?boardNum=${dto.boardNum}&${query}';">수정</button>
 			    		</c:when>
 			    		<c:otherwise>
 			    			<button type="button" class="btn" disabled="disabled">수정</button>

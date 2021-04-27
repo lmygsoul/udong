@@ -82,12 +82,24 @@
 			      </td>
 			  </tr>
 			  
-			  <tr align="left" height="40" style="border-bottom: 1px solid #cccccc;">
+						  <tr align="left" height="40" style="border-bottom: 1px solid #cccccc;">
 			      <td width="100" bgcolor="#eeeeee" style="text-align: center;">이미지</td>
 			      <td style="padding-left:10px;"> 
-			          <input type="file" name="selectFile" class="boxTF" size="53" style="height: 25px;">
+			           <input type="file" name="selectFile" accept="image/*"
+			                      class="boxTF" size="53" style="height: 25px;">
 			       </td>
-			  </tr> 
+			  </tr>
+
+			  <c:if test="${mode=='update'}">
+				  <tr align="left" height="40" style="border-bottom: 1px solid #cccccc;">
+				      <td width="100" bgcolor="#eeeeee" style="text-align: center;">등록이미지</td>
+				      <td style="padding-left:10px;"> 
+				         <img src="${pageContext.request.contextPath}/uploads/photo/${dto.imageFileName}"
+				                     width="30" height="30" border="0" style="vertical-align: middle;" >
+				         <span style="vertical-align: middle; font-size: 11px; color: #333;">(새로운 이미지가 등록되면 기존 이미지는 삭제 됩니다.)</span>
+				       </td>
+				  </tr> 
+			  </c:if>
 			  </table>
 			
 			  <table style="width: 100%; margin: 0px auto; border-spacing: 0px;">
