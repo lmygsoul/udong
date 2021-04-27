@@ -51,7 +51,7 @@
 			  <tr align="left" height="43" style="border-bottom: 1px solid #ccc; border-top: 1px solid #ccc;"> 
 			      <td width="100" style="text-align: center;">제&nbsp;&nbsp;&nbsp;&nbsp;목</td>
 			      <td style="padding-left:10px;"> 
-			        <input type="text" name="subject" maxlength="100" class="boxTF" style="width: 97%;" value="${dto.subject}">
+			        <input type="text" name="subject" maxlength="100" class="boxTF" style="width: 96%;" value="${dto.subject}">
 			      </td>
 			  </tr>
 			
@@ -65,7 +65,7 @@
 			  <tr align="left" style="border-bottom: 1px solid #ccc;"> 
 			      <td width="100" style="text-align: center; padding-top:10px;" valign="top">내&nbsp;&nbsp;&nbsp;&nbsp;용</td>
 			      <td valign="top" style="padding:10px 0px 5px 10px;"> 
-			        <textarea name="content" rows="12" class="boxTA" style="width: 97%;">${dto.content}</textarea>
+			        <textarea name="content" rows="12" class="boxTA" style="width: 96%;">${dto.content}</textarea>
 			      </td>
 			  </tr>
 			  </table>

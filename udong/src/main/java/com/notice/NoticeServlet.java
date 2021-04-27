@@ -34,14 +34,15 @@ public class NoticeServlet extends MyUploadServlet {
 			throws ServletException, IOException {
 		req.setCharacterEncoding("utf-8");
 		
+		String cp = req.getContextPath();
 		String uri=req.getRequestURI();
 		
 		// 세션 정보
 		HttpSession session=req.getSession();
 		SessionInfo info=(SessionInfo)session.getAttribute("member");
 		
-		if(info==null) {
-			forward(req, resp, "/WEB-INF/views/member/login.jsp");
+		if(uri.indexOf("list.do") == -1 && info == null ) {
+			resp.sendRedirect(cp+"/member/login.do");
 			return;
 		}
 		
@@ -541,7 +542,6 @@ public class NoticeServlet extends MyUploadServlet {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
 		resp.sendRedirect(cp+"/notice/list.do?"+query);
 	}
 }

@@ -56,9 +56,9 @@
 </div>
 	
 <div class="container">
-    <div class="body-container" style="width: 700px;">
+    <div class="body-container">
         <div class="body-title">
-            <h3><i class="fas fa-graduation-cap"></i> 공지사항 </h3>
+            <h3><i class="fas fa-flag"></i><span>&nbsp;&nbsp;공지사항</span></h3>
         </div>
         
         <div class="body-board">
@@ -68,6 +68,7 @@
 			      <td align="left" width="50%">
 			         <c:if test="${sessionScope.member.userId=='admin'}">
 			          	<button type="button" class="btn" id="btnDeleteList" style="margin: 0 5px 5px 0;">삭제</button>
+			          	<input type="hidden" name="page" value="${page}">  <!-- 삭제할때도 page 번호를 넘겨야함  -->
 			          </c:if>
 			          	${dataCount}개(${page}/${total_page} 페이지)
 			      </td>
@@ -75,6 +76,7 @@
 			          &nbsp;
 			      </td>
 			   </tr>
+			   
 			</table>
 			
 			<table style="width: 100%; margin: 0px auto; border-spacing: 0px; border-collapse: collapse;">

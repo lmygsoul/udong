@@ -31,7 +31,7 @@ function deleteNotice(num) {
 <div class="container">
     <div class="body-container" style="width: 700px;">
         <div class="body-title" style="margin: 0;">
-            <h3><i class="fas fa-graduation-cap"></i> 공지사항 </h3>
+            <h3><i class="fas fa-flag"></i><span>&nbsp;&nbsp;공지사항</span></h3>
         </div>
         
         <div>
@@ -58,13 +58,13 @@ function deleteNotice(num) {
 			</tr>
 			
 			<tr height="35" class="row-2">
-			    <td colspan="2" align="left" class="col-3">
+			    <td colspan="2" align="left" class="col-3" style="position: relative;">
 			       첨&nbsp;&nbsp;부 :
 		           <c:if test="${not empty dto.saveFilename}">
 		                   ${dto.originalFilename}
 		                    (<fmt:formatNumber value="${dto.fileSize/1024}" pattern="0.00"/> kb)
 		                   <a href="${pageContext.request.contextPath}/notice/download.do?num=${dto.num}">
-		                   		<img src="${pageContext.request.contextPath}/resource/images/logo2.png" style="height: 35px;">
+		                   		<img src="${pageContext.request.contextPath}/resource/images/download_icon.png" style="height: 22px;position: absolute;left: 253px;top: 8px;border: 1px solid #bbb;border-radius: 4px;">
 		                   </a>
 		           </c:if>
 			    </td>
@@ -82,7 +82,7 @@ function deleteNotice(num) {
 			<tr height="35" class="row-2">
 			    <td colspan="2" align="left" class="col-3">
 			       다음글 :
-					<c:if test="${not empty nextReadDto}">
+			       	<c:if test="${not empty nextReadDto}">
 						<a href="${pageContext.request.contextPath}/notice/article.do?num=${nextReadDto.num}&${query}">${nextReadDto.subject}</a>
 					</c:if>
 			    </td>
@@ -110,7 +110,7 @@ function deleteNotice(num) {
 			    </td>
 			
 			   <td align="right" class="col-4">
-			        <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/notice/list.do?${query}';">리스트</button>
+			        <button type="button" class="btn btnCreate" onclick="javascript:location.href='${pageContext.request.contextPath}/notice/list.do?${query}';">리스트</button>
 			    </td>
 			</tr>
 			</table>

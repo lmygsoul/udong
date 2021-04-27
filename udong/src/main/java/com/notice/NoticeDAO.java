@@ -387,77 +387,7 @@ public class NoticeDAO {
 	
     // 이전글
     public NoticeDTO preReadNotice(int num, String condition, String keyword) {
-        NoticeDTO dto=null;
-
-        PreparedStatement pstmt=null;
-        ResultSet rs=null;
-        StringBuffer sb = new StringBuffer();
-
-        try {
-            if(keyword!=null && keyword.length() != 0) {
-                sb.append("SELECT num, subject FROM notice_bbs b JOIN member1 m ON b.userId = m.userId ");
-                if(condition.equals("all")) {
-    				sb.append(" WHERE ( INSTR(subject, ?) >= 1 OR INSTR(content, ?) >= 1 ) ");
-                } else if(condition.equals("created")) {
-                	keyword = keyword.replaceAll("(\\-|\\/|\\.)", "");
-                    sb.append(" WHERE (TO_CHAR(created, 'YYYYMMDD') = ?) ");
-                } else {
-                    sb.append(" WHERE ( INSTR("+condition+", ?) >= 1) ");
-                }
-                sb.append("            AND (num > ? ) ");
-                sb.append(" ORDER BY num ASC ");
-                sb.append(" FETCH  FIRST  1  ROWS  ONLY ");
-
-                pstmt=conn.prepareStatement(sb.toString());
-                if(condition.equals("all")) {
-                    pstmt.setString(1, keyword);
-                    pstmt.setString(2, keyword);
-                   	pstmt.setInt(3, num);
-                } else {
-                    pstmt.setString(1, keyword);
-                   	pstmt.setInt(2, num);
-                }
-            } else {
-                sb.append("SELECT num, subject FROM notice_bbs ");
-                sb.append(" WHERE num > ? ");
-                sb.append(" ORDER BY num ASC ");
-                sb.append(" FETCH  FIRST  1  ROWS  ONLY ");
-
-                pstmt=conn.prepareStatement(sb.toString());
-                pstmt.setInt(1, num);
-            }
-
-            rs=pstmt.executeQuery();
-
-            if(rs.next()) {
-                dto=new NoticeDTO();
-                dto.setNum(rs.getInt("num"));
-                dto.setSubject(rs.getString("subject"));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            if(rs!=null) {
-                try {
-                    rs.close();
-                } catch (SQLException e) {
-                }
-            }
-                
-            if(pstmt!=null) {
-                try {
-                    pstmt.close();
-                } catch (SQLException e) {
-                }
-            }
-        }
-    
-        return dto;
-    }
-
-    // 다음글
-    public NoticeDTO nextReadNotice(int num, String condition, String keyword) {
-        NoticeDTO dto=null;
+    	NoticeDTO dto=null;
 
         PreparedStatement pstmt=null;
         ResultSet rs=null;
@@ -522,6 +452,76 @@ public class NoticeDAO {
             }
         }
 
+        return dto;
+    }
+
+    // 다음글
+    public NoticeDTO nextReadNotice(int num, String condition, String keyword) {
+    	NoticeDTO dto=null;
+
+        PreparedStatement pstmt=null;
+        ResultSet rs=null;
+        StringBuffer sb = new StringBuffer();
+
+        try {
+            if(keyword!=null && keyword.length() != 0) {
+                sb.append("SELECT num, subject FROM notice_bbs b JOIN member1 m ON b.userId = m.userId ");
+                if(condition.equals("all")) {
+    				sb.append(" WHERE ( INSTR(subject, ?) >= 1 OR INSTR(content, ?) >= 1 ) ");
+                } else if(condition.equals("created")) {
+                	keyword = keyword.replaceAll("(\\-|\\/|\\.)", "");
+                    sb.append(" WHERE (TO_CHAR(created, 'YYYYMMDD') = ?) ");
+                } else {
+                    sb.append(" WHERE ( INSTR("+condition+", ?) >= 1) ");
+                }
+                sb.append("            AND (num > ? ) ");
+                sb.append(" ORDER BY num ASC ");
+                sb.append(" FETCH  FIRST  1  ROWS  ONLY ");
+
+                pstmt=conn.prepareStatement(sb.toString());
+                if(condition.equals("all")) {
+                    pstmt.setString(1, keyword);
+                    pstmt.setString(2, keyword);
+                   	pstmt.setInt(3, num);
+                } else {
+                    pstmt.setString(1, keyword);
+                   	pstmt.setInt(2, num);
+                }
+            } else {
+                sb.append("SELECT num, subject FROM notice_bbs ");
+                sb.append(" WHERE num > ? ");
+                sb.append(" ORDER BY num ASC ");
+                sb.append(" FETCH  FIRST  1  ROWS  ONLY ");
+
+                pstmt=conn.prepareStatement(sb.toString());
+                pstmt.setInt(1, num);
+            }
+
+            rs=pstmt.executeQuery();
+
+            if(rs.next()) {
+                dto=new NoticeDTO();
+                dto.setNum(rs.getInt("num"));
+                dto.setSubject(rs.getString("subject"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if(rs!=null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                }
+            }
+                
+            if(pstmt!=null) {
+                try {
+                    pstmt.close();
+                } catch (SQLException e) {
+                }
+            }
+        }
+    
         return dto;
     }
 	
