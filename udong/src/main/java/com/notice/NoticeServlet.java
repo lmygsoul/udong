@@ -134,12 +134,22 @@ public class NoticeServlet extends MyUploadServlet {
 		for(NoticeDTO dto:list) {
 			listNum=dataCount-(offset+n);
 			dto.setListNum(listNum);
+			
+			try {
+				Date date=sdf.parse(dto.getCreated());
+				
+				// gap = (curDate.getTime() - date.getTime()) /(1000*60*60*24); // 일자
+				gap = (curDate.getTime() - date.getTime()) /(1000*60*60); // 시간 
+				dto.setGap(gap);
+			} catch (Exception e) {
+			}
+			dto.setCreated(dto.getCreated().substring(0, 10));
 			n++;
 		}
 		
 		String query="";
 		if(keyword.length()!=0) {
-			query="condition="+condition+ "&keyword="+URLEncoder.encode(keyword, "utf-8");
+			query="condition="+condition+"&keyword="+URLEncoder.encode(keyword,"utf-8");
 		}
 		
 		// 페이징 처리
@@ -201,6 +211,10 @@ public class NoticeServlet extends MyUploadServlet {
 			
 			// userId는 세션에 저장된 정보
 			dto.setUserId(info.getUserId());
+			
+		    if(req.getParameter("notice")!=null) {
+		    	dto.setNotice(Integer.parseInt(req.getParameter("notice")));
+		    }
 			
 			// 파라미터
 			dto.setSubject(req.getParameter("subject"));
@@ -334,6 +348,9 @@ public class NoticeServlet extends MyUploadServlet {
 			
 			NoticeDTO dto=new NoticeDTO();
 			dto.setNum(Integer.parseInt(req.getParameter("num")));
+			if(req.getParameter("notice")!=null) {
+		    	dto.setNotice(Integer.parseInt(req.getParameter("notice")));
+		    }
 			dto.setSubject(req.getParameter("subject"));
 			dto.setContent(req.getParameter("content"));
 			dto.setSaveFilename(req.getParameter("saveFilename"));

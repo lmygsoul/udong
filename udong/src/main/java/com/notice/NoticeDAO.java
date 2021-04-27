@@ -263,8 +263,8 @@ public class NoticeDAO {
 			StringBuilder sb=new StringBuilder();
 			
 			try {
-				sb.append("SELECT num, userName, subject, ");
-				sb.append("       hitCount, TO_CHAR(created, 'YYYY-MM-DD') created  ");
+				sb.append("SELECT num, userName, subject, saveFilename, hitCount, ");
+				sb.append("      TO_CHAR(created, 'YYYY-MM-DD') created  ");
 				sb.append(" FROM notice_bbs n JOIN member1 m ON n.userId=m.userId  ");
 				sb.append(" WHERE notice=1  ");
 				sb.append(" ORDER BY num DESC ");
@@ -279,6 +279,7 @@ public class NoticeDAO {
 					dto.setNum(rs.getInt("num"));
 					dto.setUserName(rs.getString("userName"));
 					dto.setSubject(rs.getString("subject"));
+					dto.setSaveFilename(rs.getString("saveFilename"));
 					dto.setHitCount(rs.getInt("hitCount"));
 					dto.setCreated(rs.getString("created"));
 					
