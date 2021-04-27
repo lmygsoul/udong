@@ -2,6 +2,7 @@ package com.store;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.Map;
 
@@ -71,11 +72,17 @@ public class StoreServlet extends MyUploadServlet{
 		String cp = req.getContextPath();
 		
 		String page = req.getParameter("page");
+		String keyword=req.getParameter("keyword");
 		int current_page = 1;
 		if (page != null) {
 			current_page = Integer.parseInt(page);
 		}
-		int dataCount = dao.dataCount();
+		
+		int dataCount;
+		if(keyword==null || keyword.equals("ALL"))
+			dataCount=dao.dataCount();
+		else
+			dataCount=dao.dataCount(keyword);
 		
 		int rows = 6;
 		int total_page = util.pageCount(rows, dataCount);
@@ -86,11 +93,18 @@ public class StoreServlet extends MyUploadServlet{
 		int offset = (current_page - 1) * rows;
 		if (offset < 0)
 			offset = 0;
+		List<StoreDTO> list = null;
 		
-		List<StoreDTO> list = dao.listStore(offset, rows);
-		
+		if(keyword==null || keyword.equals("ALL")) {
+			list = dao.listStore(offset, rows);
+		} else {
+			list = dao.listStore(offset, rows, keyword);
+		}
 		
 		String query = "";
+		if(keyword!=null && !keyword.equals("ALL")) {
+			query="keyword="+URLEncoder.encode(keyword, "utf-8");
+		}
 		String listUrl = cp + "/store/list.do";
 		String articleUrl = cp + "/store/article.do?page=" + current_page;
 		if(query.length() !=0) {
@@ -105,7 +119,7 @@ public class StoreServlet extends MyUploadServlet{
 		req.setAttribute("dataCount", dataCount);
 		req.setAttribute("total_page", total_page);
 		req.setAttribute("articleUrl", articleUrl);
-		req.setAttribute("mode", "created");
+		req.setAttribute("keyword", keyword);
 		
 		forward(req,resp, "/WEB-INF/views/store/list.jsp");
 		
@@ -128,6 +142,7 @@ public class StoreServlet extends MyUploadServlet{
 			dto.setUserId(info.getUserId());
 			dto.setSubject(req.getParameter("subject"));
 			dto.setContent(req.getParameter("content"));
+			dto.setAddr(req.getParameter("address"));
 			
 			String filename = null;
 			Part p = req.getPart("selectFile");
@@ -169,26 +184,6 @@ public class StoreServlet extends MyUploadServlet{
 	}
 
 	protected void updateSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-/*
-			
-			dto.setUserId(info.getUserId());
-			dto.setSubject(req.getParameter("subject"));
-			dto.setContent(req.getParameter("content"));
-			
-			String filename = null;
-			Part p = req.getPart("selectFile");
-			Map<String, String> map = doFileUpload(p, pathname);
-			if (map != null) {
-				filename = map.get("saveFilename");
-			}
-			if(filename != null) {
-				dto.setImageFileName(filename);
-				dao.insertStore(dto);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		resp.sendRedirect(cp+"/store/list.do");  */
 		StoreDAO dao = new StoreDAO();
 		StoreDTO dto = new StoreDTO();
 		String cp = req.getContextPath();
@@ -200,6 +195,7 @@ public class StoreServlet extends MyUploadServlet{
 			dto.setSubject(req.getParameter("subject"));
 			dto.setContent(req.getParameter("content"));
 			dto.setNum(Integer.parseInt(req.getParameter("num")));
+			dto.setAddr(req.getParameter("address"));
 			
 			String imageFileName = req.getParameter("imageFileName");
 			Part p = req.getPart("selectFile");

@@ -11,8 +11,7 @@
 <jsp:include page="/WEB-INF/views/layout/staticHeader.jsp"/>
 
 <script type="text/javascript">
-// 관리자이거나 글 작성자가 아니면, 스크립트가 보이지 않게 역할에 맞게 안보이게 하는것 필요
-<c:if test="${dto.userId == sessionScope.member.userId || sessionScope.member.userId == 'admin'}">
+<c:if test="${dto.userId == sessionScope.member.userId || sessionScope.member.type == '0'}">
 function deleteBoard(boardNum) {
 	if(confirm("게시물을 삭제 하시겠습니까 ?")) {
 		var url="${pageContext.request.contextPath}/qa/delete.do?boardNum="+boardNum+"&${query}";

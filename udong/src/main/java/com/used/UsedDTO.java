@@ -7,15 +7,10 @@ public class UsedDTO {
 	private String content;
 	private String area;
 	private String price;
-	private String created;
-	private String done;
+	private String created;	
 	private String category;
-	
-	private int likeCount;
-	
-	private int fileNum;
 	private String imageFilename;
-	private String[] imageFiles;
+	
 	
 	public int getNum() {
 		return num;
@@ -71,29 +66,11 @@ public class UsedDTO {
 	public void setCreated(String created) {
 		this.created = created;
 	}
-	public String getDone() {
-		return done;
-	}
-	public void setDone(String done) {
-		this.done = done;
-	}
 	public String getCategory() {
 		return category;
 	}
 	public void setCategory(String category) {
 		this.category = category;
-	}
-	public int getLikeCount() {
-		return likeCount;
-	}
-	public void setLikeCount(int likeCount) {
-		this.likeCount = likeCount;
-	}
-	public int getFileNum() {
-		return fileNum;
-	}
-	public void setFileNum(int fileNum) {
-		this.fileNum = fileNum;
 	}
 	public String getImageFilename() {
 		return imageFilename;
@@ -101,13 +78,6 @@ public class UsedDTO {
 	public void setImageFilename(String imageFilename) {
 		this.imageFilename = imageFilename;
 	}
-	public String[] getImageFiles() {
-		return imageFiles;
-	}
-	public void setImageFiles(String[] imageFiles) {
-		this.imageFiles = imageFiles;
-	}
-	
 	
 	
 }

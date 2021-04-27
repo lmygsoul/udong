@@ -263,8 +263,8 @@ public class NoticeDAO {
 			StringBuilder sb=new StringBuilder();
 			
 			try {
-				sb.append("SELECT num, userName, subject, ");
-				sb.append("       hitCount, TO_CHAR(created, 'YYYY-MM-DD') created  ");
+				sb.append("SELECT num, userName, subject, saveFilename, hitCount, ");
+				sb.append("      TO_CHAR(created, 'YYYY-MM-DD') created  ");
 				sb.append(" FROM notice_bbs n JOIN member1 m ON n.userId=m.userId  ");
 				sb.append(" WHERE notice=1  ");
 				sb.append(" ORDER BY num DESC ");
@@ -279,6 +279,7 @@ public class NoticeDAO {
 					dto.setNum(rs.getInt("num"));
 					dto.setUserName(rs.getString("userName"));
 					dto.setSubject(rs.getString("subject"));
+					dto.setSaveFilename(rs.getString("saveFilename"));
 					dto.setHitCount(rs.getInt("hitCount"));
 					dto.setCreated(rs.getString("created"));
 					
@@ -569,13 +570,16 @@ public class NoticeDAO {
 				pstmt = conn.prepareStatement(sql);
 				pstmt.setInt(1, num);
 				result = pstmt.executeUpdate();
-			}else {
+			}
+			/*
+			else {
 				sql="DELETE FROM notice_bbs WHERE num=? AND userId=?";
 				pstmt = conn.prepareStatement(sql);
 				pstmt.setInt(1, num);
 				pstmt.setString(2, userId);
 				result = pstmt.executeUpdate();
 			}
+			*/
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -590,4 +594,40 @@ public class NoticeDAO {
 		}		
 		return result;
 	}
+	
+	// 체크한 게시물 삭제
+	public int deleteNoticeList(int[] nums) throws SQLException{
+		int result=0;
+		PreparedStatement pstmt=null;
+		String sql;
+		
+		try {
+			sql = "DELETE FROM notice_bbs WHERE num IN (";
+			for(int i=0; i<nums.length; i++) {
+				sql += "?,";
+			}
+			sql = sql.substring(0, sql.length()-1) + ")";
+			
+			pstmt=conn.prepareStatement(sql);
+			for(int i=0; i<nums.length; i++) {
+				pstmt.setInt(i+1, nums[i]);
+			}
+			
+			result = pstmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e2) {
+				}
+			}
+		}
+		
+		return result;
+	}
+	
 }

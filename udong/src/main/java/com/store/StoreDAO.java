@@ -18,14 +18,15 @@ private Connection conn = DBConn.getConnection();
 		PreparedStatement pstmt = null;
 		
 		try {
-			sql = "INSERT INTO store_bbs(num, userId, subject, content, imageFileName, Created)"
-					+ " VALUES(store_seq.NEXTVAL, ?, ?, ?, ?, SYSDATE)";
+			sql = "INSERT INTO store_bbs(num, userId, subject, content, imageFileName, Created, addr)"
+					+ " VALUES(store_seq.NEXTVAL, ?, ?, ?, ?, SYSDATE, ?)";
 			pstmt = conn.prepareStatement(sql);
 			
 			pstmt.setString(1, dto.getUserId());
 			pstmt.setString(2, dto.getSubject());
 			pstmt.setString(3, dto.getContent());
 			pstmt.setString(4, dto.getImageFileName());
+			pstmt.setString(5, dto.getAddr());
 			
 			result = pstmt.executeUpdate();
 		} catch (Exception e) {
@@ -74,7 +75,50 @@ private Connection conn = DBConn.getConnection();
 		}
 		return result;
 	}
-
+	
+	public int dataCount(String keyword){
+		int result = 0;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		try {
+			if(keyword.equals("기타")) {
+				sql = "SELECT NVL(COUNT(*), 0) FROM store_bbs"
+					+ " WHERE INSTR(addr, ?) < 1 AND INSTR(addr, ?) < 1 AND INSTR(addr, ?) < 1";
+			} else {
+			sql = "SELECT NVL(COUNT(*), 0) FROM store_bbs WHERE INSTR(addr, ?) >= 1";
+			}
+			
+			pstmt = conn.prepareStatement(sql);
+			if(keyword.equals("기타")) {
+				pstmt.setString(1, "서울");
+				pstmt.setString(2, "인천");
+				pstmt.setString(3, "경기");	
+			} else {
+				pstmt.setString(1, keyword);
+			}
+			rs=pstmt.executeQuery();
+			if(rs.next()) {
+				result=rs.getInt(1);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if(rs!=null) {
+				try {
+					rs.close();					
+				} catch (Exception e2) {
+				}
+			}
+			if(pstmt!=null) {
+				try {
+					pstmt.close();					
+				} catch (Exception e2) {
+				}
+			}
+		}
+		return result;
+	}
 	public List<StoreDTO> listStore(int offset, int rows) {
 		List<StoreDTO> list = new ArrayList<StoreDTO>();
 		PreparedStatement pstmt = null;
@@ -82,7 +126,7 @@ private Connection conn = DBConn.getConnection();
 		StringBuilder sb = new StringBuilder();
 		
 		try {
-			sb.append(" SELECT s.num, s.userid, nickname, subject, content, imageFileName, created, score ");
+			sb.append(" SELECT s.num, s.userid, nickname, subject, content, imageFileName, created, score, addr ");
 			sb.append(" FROM store_bbs s");
 			sb.append(" LEFT OUTER JOIN member1 m ON s.userid=m.userid");
 			sb.append(" LEFT OUTER JOIN (SELECT num, ROUND(AVG(score),2) score FROM store_rec GROUP BY num) r ON s.num=r.num");
@@ -104,6 +148,7 @@ private Connection conn = DBConn.getConnection();
 				dto.setImageFileName(rs.getString("imageFileName"));
 				dto.setCreated(rs.getString("created"));
 				dto.setScore(rs.getDouble("score"));
+				dto.setAddr(rs.getString("addr"));
 				list.add(dto);
 			}
 		} catch (Exception e) {
@@ -112,13 +157,65 @@ private Connection conn = DBConn.getConnection();
 		return list;
 	}
 
+	public List<StoreDTO> listStore(int offset, int rows, String keyword) {
+		List<StoreDTO> list = new ArrayList<StoreDTO>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		StringBuilder sb = new StringBuilder();
+		
+		try {
+			sb.append(" SELECT s.num, s.userid, nickname, subject, content, imageFileName, created, score, addr ");
+			sb.append(" FROM store_bbs s");
+			sb.append(" LEFT OUTER JOIN member1 m ON s.userid=m.userid");
+			sb.append(" LEFT OUTER JOIN (SELECT num, ROUND(AVG(score),2) score FROM store_rec GROUP BY num) r ON s.num=r.num");
+			if(keyword.equals("기타")) {
+				sb.append(" WHERE INSTR(addr, ?) < 1 AND INSTR(addr, ?) < 1 AND INSTR(addr, ?) < 1 ");
+				sb.append(" ORDER BY num DESC ");
+				sb.append(" OFFSET ? ROWS FETCH FIRST ? ROW ONLY");	
+			}else {
+				sb.append(" WHERE INSTR(addr, ?) >= 1 ");
+				sb.append(" ORDER BY num DESC ");
+				sb.append(" OFFSET ? ROWS FETCH FIRST ? ROW ONLY");
+			}
+			pstmt = conn.prepareStatement(sb.toString());
+			if(keyword.equals("기타")) {
+				pstmt.setString(1, "서울");
+				pstmt.setString(2, "경기");
+				pstmt.setString(3, "인천");
+				pstmt.setInt(4, offset);
+				pstmt.setInt(5, rows);	
+			} else {
+				pstmt.setString(1, keyword);
+				pstmt.setInt(2, offset);
+				pstmt.setInt(3, rows);
+			}
+			rs=pstmt.executeQuery();
+			while(rs.next()) {
+				StoreDTO dto = new StoreDTO();
+				dto.setNum(rs.getInt("num"));
+				dto.setUserId(rs.getString("userId"));
+				dto.setNickname(rs.getString("nickname"));
+				dto.setSubject(rs.getString("subject"));
+				dto.setContent(rs.getString("content"));
+				dto.setImageFileName(rs.getString("imageFileName"));
+				dto.setAddr(rs.getString("addr"));
+				dto.setCreated(rs.getString("created"));
+				dto.setScore(rs.getDouble("score"));
+				list.add(dto);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+	
 	public StoreDTO readStore(int num) {
 		StoreDTO dto =null;
 		PreparedStatement pstmt = null;
 		StringBuilder sb = new StringBuilder();
 		ResultSet rs = null;
 		try {
-			sb.append(" SELECT s.num, s.userid, nickname, subject, content, imageFileName, created, score ");
+			sb.append(" SELECT s.num, s.userid, nickname, subject, content, imageFileName, created, score, addr ");
 			sb.append(" FROM store_bbs s");
 			sb.append(" LEFT OUTER JOIN member1 m ON s.userid=m.userid");
 			sb.append(" LEFT OUTER JOIN (SELECT num, ROUND(AVG(score),2) score FROM store_rec GROUP BY num) r ON s.num=r.num");
@@ -137,6 +234,7 @@ private Connection conn = DBConn.getConnection();
 				dto.setImageFileName(rs.getString("imageFileName"));
 				dto.setCreated(rs.getString("created"));
 				dto.setScore(rs.getDouble("score"));
+				dto.setAddr(rs.getString("addr"));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -243,12 +341,13 @@ private Connection conn = DBConn.getConnection();
 		PreparedStatement pstmt = null;
 		String sql;
 		try {
-			sql = "UPDATE store_bbs SET subject = ?, content = ?, imageFileName = ? WHERE num = ?";
+			sql = "UPDATE store_bbs SET subject = ?, content = ?, imageFileName = ?, addr = ? WHERE num = ?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, dto.getSubject());
 			pstmt.setString(2, dto.getContent());
 			pstmt.setString(3, dto.getImageFileName());
-			pstmt.setInt(4, dto.getNum());
+			pstmt.setString(4, dto.getAddr());
+			pstmt.setInt(5, dto.getNum());
 			
 			result = pstmt.executeUpdate();
 			

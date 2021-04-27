@@ -56,7 +56,7 @@ $(function(){
             <ul>
                 <li><a href="#" style="margin-left:124px; " onmouseover="this.style.marginLeft='124px';">우동자랑</a></li>
                 <li><a href="${pageContext.request.contextPath}/store/list.do">우동홍보</a></li>
-                <li><a href="#">우동클래스</a></li>
+                <li><a href="${pageContext.request.contextPath}/dayclass/list.do">우동클래스</a></li>
             </ul>
         </li>
 

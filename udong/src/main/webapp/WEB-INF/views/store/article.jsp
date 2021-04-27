@@ -59,6 +59,11 @@ function score(){
 			        ${dto.created} | 평점 : ${dto.score}/5.0
 			    </td>
 			</tr>
+			<tr height="35" style="border-bottom: 1px solid #cccccc;">
+			    <td colspan="2" align="left" style="padding-left: 5px;">
+			       주소 : ${dto.addr}
+			    </td>
+			</tr>
 			
 			<tr>
 				<td colspan="2" align="left" style="padding: 10px 5px;">

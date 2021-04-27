@@ -11,6 +11,7 @@ public class NoticeDTO {
 	private String saveFilename;
 	private String originalFilename;
 	private long fileSize;
+	private long gap;
 	
 	public int getListNum() {
 		return listNum;
@@ -106,5 +107,13 @@ public class NoticeDTO {
 
 	public void setNotice(int notice) {
 		this.notice = notice;
+	}
+
+	public long getGap() {
+		return gap;
+	}
+
+	public void setGap(long gap) {
+		this.gap = gap;
 	}
 }
