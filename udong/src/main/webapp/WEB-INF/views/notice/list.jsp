@@ -61,17 +61,15 @@
             <h3><i class="fas fa-graduation-cap"></i> 공지사항 </h3>
         </div>
         
-        <div>
+        <div class="body-board">
         	<form name="noticeListForm" method="post">
 			<table style="width: 100%; margin: 20px auto 0px; border-spacing: 0px;">
 			   <tr height="35">
 			      <td align="left" width="50%">
 			         <c:if test="${sessionScope.member.userId=='admin'}">
-			          	<button type="button" class="btn" id="btnDeleteList">삭제</button>
+			          	<button type="button" class="btn" id="btnDeleteList" style="margin: 0 5px 5px 0;">삭제</button>
 			          </c:if>
-			      	  <c:if test="${sessionScope.member.userId!='admin'}">
 			          	${dataCount}개(${page}/${total_page} 페이지)
-			          </c:if>
 			      </td>
 			      <td align="right">
 			          &nbsp;
@@ -80,7 +78,7 @@
 			</table>
 			
 			<table style="width: 100%; margin: 0px auto; border-spacing: 0px; border-collapse: collapse;">
-			  <tr align="center" bgcolor="#eeeeee" height="35" style="border-top: 1px solid #cccccc; border-bottom: 1px solid #cccccc;"> 
+			  <tr align="center" height="35" style="border-top: 1px solid #cccccc; border-bottom: 1px solid #cccccc;"> 
 			      <c:if test="${sessionScope.member.userId=='admin'}">
 				  	  <th width="40" style="color: #787878;">
 				  	  	<input type="checkbox" name="chkAll" id="chkAll" style="margin-top: 3px;">
@@ -173,7 +171,9 @@
 			        </form>
 			      </td>
 			      <td align="right" width="100">
-			          <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/notice/created.do';">글올리기</button>
+			      	<c:if test="${sessionScope.member.userId=='admin'}">
+			          <button type="button" class="btn btnCreate" onclick="javascript:location.href='${pageContext.request.contextPath}/notice/created.do';">글쓰기</button>
+			         </c:if>
 			      </td>
 			   </tr>
 			</table>

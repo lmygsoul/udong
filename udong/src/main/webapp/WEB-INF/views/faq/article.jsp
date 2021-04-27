@@ -13,11 +13,12 @@
 <script type="text/javascript">
 // 관리자이거나 글 작성자가 아니면, 스크립트가 보이지 않게.
 <c:if test="${dto.userId == sessionScope.member.userId || sessionScope.member.userId == 'admin'}">
-function deleteBoard(num) {
-	if(confirm("게시물을 삭제 하시겠습니까 ?")) {
-		var url="${pageContext.request.contextPath}/faq/delete.do?num="+num+"&${query}";
-		location.href=url;
-	}
+function deleteFaq(num) {
+    var query = "num="+num+"&${query}";
+    var url = "${pageContext.request.contextPath}/faq/delete.do?" + query;
+    if(confirm("게시물을 삭제하시겠습니까 ? ")) {
+    	location.href=url;
+    }
 }
 </c:if>
 </script>
@@ -87,7 +88,7 @@ function deleteBoard(num) {
 			    	
 			    	<c:choose>
 			    		<c:when test="${dto.userId == sessionScope.member.userId || sessionScope.member.userId=='admin'}">
-				        	<button type="button" class="btn" onclick="deleteBoard('${dto.num}');">삭제</button>
+				        	<button type="button" class="btn" onclick="deleteFaq('${dto.num}');">삭제</button>
 			    		</c:when>
 			    		<c:otherwise>
 			    			<button type="button" class="btn" disabled="disabled">삭제</button>

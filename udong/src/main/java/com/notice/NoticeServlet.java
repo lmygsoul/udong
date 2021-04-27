@@ -68,6 +68,8 @@ public class NoticeServlet extends MyUploadServlet {
 			delete(req, resp);
 		} else if(uri.indexOf("download.do")!=-1) {
 			download(req, resp);
+		} else if(uri.indexOf("deleteList.do")!=-1) {
+			deleteList(req, resp);
 		}
 	}
 
@@ -500,5 +502,46 @@ public class NoticeServlet extends MyUploadServlet {
 			PrintWriter out=resp.getWriter();
 			out.print("<script>alert('파일다운로드가 실패 했습니다.');history.back();</script>");
 		}	
+	}
+	
+	private void deleteList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		HttpSession session=req.getSession();
+		SessionInfo info=(SessionInfo)session.getAttribute("member");
+		String cp=req.getContextPath();
+		
+		if(! info.getUserId().equals("admin")) {
+			resp.sendRedirect(cp+"/notice/list.do");
+			return;
+		}
+		
+		String page=req.getParameter("page");
+		String query="page="+page;
+		
+		String condition=req.getParameter("condition");
+		String keyword=req.getParameter("keyword");
+		
+		try {
+			if(keyword!=null && keyword.length()!=0) {
+				query+="&condition="+condition+"&keyword="+
+			               URLEncoder.encode(keyword, "UTF-8");
+			}
+			
+			String []nn=req.getParameterValues("nums");
+			int nums[]=null;
+			nums=new int[nn.length];
+			for(int i=0; i<nn.length; i++) {
+				nums[i]=Integer.parseInt(nn[i]);
+			}
+			
+			NoticeDAO dao=new NoticeDAO();
+			
+			// 게시글 삭제
+			dao.deleteNoticeList(nums);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		resp.sendRedirect(cp+"/notice/list.do?"+query);
 	}
 }

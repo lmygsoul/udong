@@ -12,11 +12,10 @@
 
 <script type="text/javascript">
 <c:if test="${sessionScope.member.userId==dto.userId || sessionScope.member.userId=='admin'}">
-function deleteBoard(num) {
+function deleteNotice(num) {
     var query = "num="+num+"&${query}";
     var url = "${pageContext.request.contextPath}/notice/delete.do?" + query;
-
-    if(confirm("위 자료를 삭제 하시 겠습니까 ? ")) {
+    if(confirm("게시물을 삭제하시겠습니까 ? ")) {
     	location.href=url;
     }
 }
@@ -31,65 +30,66 @@ function deleteBoard(num) {
 	
 <div class="container">
     <div class="body-container" style="width: 700px;">
-        <div class="body-title">
+        <div class="body-title" style="margin: 0;">
             <h3><i class="fas fa-graduation-cap"></i> 공지사항 </h3>
         </div>
         
         <div>
-			<table style="width: 100%; margin: 20px auto 0px; border-spacing: 0px; border-collapse: collapse;">
-			<tr height="35" style="border-top: 1px solid #cccccc; border-bottom: 1px solid #cccccc;">
-			    <td colspan="2" align="center">
+			<table style="width: 100%; margin: 0 auto; border-spacing: 0px; border-collapse: collapse;">
+			<tr height="35" class="row-3">
+			    <td colspan="2" align="left" class="col-1">
 				   ${dto.subject}
 			    </td>
 			</tr>
 			
-			<tr height="35" style="border-bottom: 1px solid #cccccc;">
-			    <td width="50%" align="left" style="padding-left: 5px;">
+			<tr height="35" class="row-2">
+			    <td width="50%" align="left" class="col-2">
 			       이름 : ${dto.userName}
 			    </td>
-			    <td width="50%" align="right" style="padding-right: 5px;">
+			    <td width="50%" align="right" class="col-2">
 			        ${dto.created} | 조회 ${dto.hitCount}
 			    </td>
 			</tr>
 			
-			<tr style="border-bottom: 1px solid #cccccc;">
-			  <td colspan="2" align="left" style="padding: 10px 5px;" valign="top" height="200">
+			<tr class="row-2">
+			  <td colspan="2" align="left" class="artiBox" valign="top" height="200">
 			      ${dto.content}
 			   </td>
 			</tr>
 			
-			<tr height="35" style="border-bottom: 1px solid #cccccc;">
-			    <td colspan="2" align="left" style="padding-left: 5px;">
+			<tr height="35" class="row-2">
+			    <td colspan="2" align="left" class="col-3">
 			       첨&nbsp;&nbsp;부 :
 		           <c:if test="${not empty dto.saveFilename}">
-		                   <a href="${pageContext.request.contextPath}/notice/download.do?num=${dto.num}">${dto.originalFilename}</a>
+		                   ${dto.originalFilename}
 		                    (<fmt:formatNumber value="${dto.fileSize/1024}" pattern="0.00"/> kb)
+		                   <a href="${pageContext.request.contextPath}/notice/download.do?num=${dto.num}">
+		                   		<img src="${pageContext.request.contextPath}/resource/images/logo2.png" style="height: 35px;">
+		                   </a>
 		           </c:if>
 			    </td>
 			</tr>
 			
-			<tr height="35" style="border-bottom: 1px solid #cccccc;">
-			    <td colspan="2" align="left" style="padding-left: 5px;">
-			       이전글 :
-			         <c:if test="${not empty preReadDto}">
-			              <a href="${pageContext.request.contextPath}/notice/article.do?${query}&num=${preReadDto.num}">${preReadDto.subject}</a>
-			        </c:if>
+			<tr height="35" class="row-2">
+			    <td colspan="2" align="left" class="col-3">
+			       이전글 : 
+					<c:if test="${not empty preReadDto}">
+						<a href="${pageContext.request.contextPath}/notice/article.do?num=${preReadDto.num}&${query}">${preReadDto.subject}</a>
+					</c:if>
 			    </td>
 			</tr>
 			
-			<tr height="35" style="border-bottom: 1px solid #cccccc;">
-			    <td colspan="2" align="left" style="padding-left: 5px;">
-			    다음글 :
-			         <c:if test="${not empty nextReadDto}">
-			              <a href="${pageContext.request.contextPath}/notice/article.do?${query}&num=${nextReadDto.num}">${nextReadDto.subject}</a>
-			        </c:if>
+			<tr height="35" class="row-2">
+			    <td colspan="2" align="left" class="col-3">
+			       다음글 :
+					<c:if test="${not empty nextReadDto}">
+						<a href="${pageContext.request.contextPath}/notice/article.do?num=${nextReadDto.num}&${query}">${nextReadDto.subject}</a>
+					</c:if>
 			    </td>
 			</tr>
-			</table>
 			
-			<table style="width: 100%; margin: 0px auto 20px; border-spacing: 0px;">
 			<tr height="45">
-			    <td width="300" align="left">
+			    <td class="col-4">
 			    	<c:choose>
 			    		<c:when test="${sessionScope.member.userId==dto.userId}">
 			    			<button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/notice/update.do?num=${dto.num}&page=${page}';">수정</button>
@@ -101,7 +101,7 @@ function deleteBoard(num) {
 			    	
 			    	<c:choose>
 			    		<c:when test="${sessionScope.member.userId==dto.userId || sessionScope.member.userId=='admin'}">
-			    			<button type="button" class="btn" onclick="deleteBoard('${dto.num}');">삭제</button>
+			    			<button type="button" class="btn" onclick="deleteNotice('${dto.num}');">삭제</button>
 			    		</c:when>
 			    		<c:otherwise>
 			    			<button type="button" class="btn" disabled="disabled">삭제</button>
@@ -109,7 +109,7 @@ function deleteBoard(num) {
 			    	</c:choose>
 			    </td>
 			
-			    <td align="right">
+			   <td align="right" class="col-4">
 			        <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/notice/list.do?${query}';">리스트</button>
 			    </td>
 			</tr>

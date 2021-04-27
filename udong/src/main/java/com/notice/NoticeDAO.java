@@ -570,13 +570,16 @@ public class NoticeDAO {
 				pstmt = conn.prepareStatement(sql);
 				pstmt.setInt(1, num);
 				result = pstmt.executeUpdate();
-			}else {
+			}
+			/*
+			else {
 				sql="DELETE FROM notice_bbs WHERE num=? AND userId=?";
 				pstmt = conn.prepareStatement(sql);
 				pstmt.setInt(1, num);
 				pstmt.setString(2, userId);
 				result = pstmt.executeUpdate();
 			}
+			*/
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -591,4 +594,40 @@ public class NoticeDAO {
 		}		
 		return result;
 	}
+	
+	// 체크한 게시물 삭제
+	public int deleteNoticeList(int[] nums) throws SQLException{
+		int result=0;
+		PreparedStatement pstmt=null;
+		String sql;
+		
+		try {
+			sql = "DELETE FROM notice_bbs WHERE num IN (";
+			for(int i=0; i<nums.length; i++) {
+				sql += "?,";
+			}
+			sql = sql.substring(0, sql.length()-1) + ")";
+			
+			pstmt=conn.prepareStatement(sql);
+			for(int i=0; i<nums.length; i++) {
+				pstmt.setInt(i+1, nums[i]);
+			}
+			
+			result = pstmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e2) {
+				}
+			}
+		}
+		
+		return result;
+	}
+	
 }
