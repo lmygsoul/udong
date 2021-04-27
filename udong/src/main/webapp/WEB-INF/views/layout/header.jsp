@@ -39,7 +39,7 @@ $(function(){
                     &nbsp;|&nbsp;
                     <a href="${pageContext.request.contextPath}/member/logout.do">로그아웃</a>
                     &nbsp;|&nbsp;
-                    <a href="${pageContext.request.contextPath}/member/pwd.do?mode=update">정보수정</a>
+                    <a href="${pageContext.request.contextPath}/member/myProfile.do?mode=myProfile">정보수정</a>
             </c:if>
         </div>
     </div>
@@ -56,7 +56,7 @@ $(function(){
             <ul>
                 <li><a href="#" style="margin-left:124px; " onmouseover="this.style.marginLeft='124px';">우동자랑</a></li>
                 <li><a href="${pageContext.request.contextPath}/store/list.do">우동홍보</a></li>
-                <li><a href="#">우동클래스</a></li>
+                <li><a href="${pageContext.request.contextPath}/dayclass/list.do">우동클래스</a></li>
             </ul>
         </li>
 
@@ -67,7 +67,7 @@ $(function(){
                 <li><a href="${pageContext.request.contextPath}/greeting/list.do">가입인사</a></li>
                 <li><a href="${pageContext.request.contextPath}/udong/list.do">우동이야기</a></li>
                 <li><a href="#">우동사진</a></li>
-                <li><a href="#">우동지식</a></li>
+                <li><a href="${pageContext.request.contextPath}/qa/list.do">우동지식</a></li>
             </ul>
         </li>
         
@@ -92,7 +92,8 @@ $(function(){
         <li>
             <a href="#"><span>마이페이지</span></a>
             <ul>
-                <li><a href="#" style="margin-left:480px; " onmouseover="this.style.marginLeft='480px';">쪽지</a></li>
+                <li><a href="${pageContext.request.contextPath}/member/sm_list.do" style="margin-left:480px; " onmouseover="this.style.marginLeft='480px';">보낸 쪽지함</a></li>
+                <li><a href="#">받은 쪽지함</a></li>
                 <li><a href="#">내가쓴글</a></li>
                 <li><a href="#">찜한목록</a></li>
             </ul>

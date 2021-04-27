@@ -21,87 +21,6 @@
 }
 </style>
 <script type="text/javascript">
-function memberOk(){
-	var f = document.memberForm;
-	var str;
-	
-	str = f.userId.value;
-	str = str.trim();
-	if(!str){
-		alert("아이디를 입력하세요.");
-		f.userId.focus();
-		return;
-	} else if(!/^[a-z0-9][a-z0-9]{6,14}$/i.test(str)){
-		alert("아이디는 7~15자입니다.");
-		f.userId.focus();
-		return;
-	}
-	str = f.userPwd.value;
-	str = str.trim();
-	if(!str){
-		alert("비밀번호를 입력하세요.");
-		f.userId.focus();
-		return;
-	} else if(!/^[a-z0-9][a-z0-9]{4,9}$/i.test(str)){
-		alert("비밀번호는 5~10자리 입니다.영어와 숫자를 조합해서 입력하세요");
-		f.userId.focus();
-		return;
-	}
-	if(str!=f.userPwd_check.value){
-		alert("비밀번호가 동일하게 입력되지 않았습니다.");
-		f.userPwd_check.focus();
-		return;
-	}
-	str = f.nickName.value;
-	str = str.trim();
-	if(!str){
-		alert("닉네임을 입력하세요");
-		f.nickName.focus();
-		return
-	} else if(!/^[a-zA-Z가-힣]{0,4}$/i.test(str)){
-		alert("닉네임은 5자리이하로 작성하세요.");
-		return;
-	}
-	str= f.birth.value;
-	str= str.trim();
-	if(!str || !isValidDateFormat(str)){
-		alert("생년월일을 입력하세요");
-		return;
-	}
-	str = f.selectTel.value;
-	str = str.trim();
-	if(!str){
-		alert("앞자리 전화번호를 선택하세요.");
-		return;
-	}
-	str = f.tel2.value;
-	str = str.trim();
-	if(!str){
-		alert("가운데 전화번호를 입력하세요");
-		return;
-	}
-	str = f.tel3.value;
-	str = str.trim();
-	if(!str){
-		alert("마지막 전화번호를 입력하세요");
-		return;
-	}
-	str = f.email1.value;
-	str = str.trim();
-	if(!str){
-		alert("이메일 앞부분을 입력하세요");
-		return;
-	}
-	str = f.email2.value;
-	str = str.trim();
-	if(!str){
-		alert("도메인을 선택하세요");
-		return;
-	}
-	
-	f.action = "${pageContext.request.contextPath}/member/${mode}_ok.do";
-    f.submit();
-}
 function changeEmail() {
     var f = document.memberForm;
 	    
@@ -138,29 +57,9 @@ function changeEmail() {
 	    					<label style="font-weight: bold;">아이디</label>
 	    				</td>
 	    				<td>
-	    					<input type="text" name="userId" id="userId" maxlength="10" value="${dto.userId }"  ${mode=="update" ? "readonly='readonly' ":""}
+	    					<input type="text" name="userId" id="userId" maxlength="10" value="${dto.userId }"
+	    						${mode!="member" ? "readonly='readonly' ":""}
 			                   placeholder="아이디" class="memberForm" style="width: 400px; margin-left: 80px; margin-bottom: 5px;">
-			                 <p style="margin-left: 80px;"> ${mode=="update" ? "*아이디는 수정되지 않습니다*":"아이디는 7~15자 이내이며, 영어와 숫자를 조합하여 작성해야합니다."}
-	    				</td>
-	    			</tr>
-	    			<tr>
-	    				<td width="100" valign="middle" style="text-align: right;">
-	    					<label style="font-weight: bold;">비밀번호</label>
-	    				</td>
-	    				<td>
-	    					<input type="password" name="userPwd" maxlength="10"  value="${dto.userPwd }"
-			                   placeholder="비밀번호" class="memberForm" style="width: 400px; margin-left: 80px; margin-bottom: 5px;">
-			                	<p style="margin-left: 80px;">비밀번호는 5~10자 이내이며, 영어와 숫자를 조합 입력해야합니다.
-	    				</td>
-	    			</tr>
-	    			<tr>
-	    				<td width="100" valign="middle" style="text-align: right;">
-	    					<label style="font-weight: bold;">비밀번호 확인</label>
-	    				</td>
-	    				<td>
-	    					<input type="password" name="userPwd_check" maxlength="10" 
-			                   placeholder="비밀번호 확인" class="memberForm" style="width: 400px; margin-left: 80px; margin-bottom: 5px;">
-			                 <p style="margin-left: 80px;">비밀번호를 동일하게 입력해야합니다. 비밀번호는 5~10자 이내이며, 영어와 숫자를 조합 입력해야합니다.
 	    				</td>
 	    			</tr>
 	    			<tr>
@@ -168,9 +67,8 @@ function changeEmail() {
 	    					<label style="font-weight: bold;">이름</label>
 	    				</td>
 	    				<td>
-	    					<input type="text" name="userName"maxlength="10" value="${dto.userName }"  ${mode=="update" ? "readonly='readonly' ":""}
+	    					<input type="text" name="userName"maxlength="10" value="${dto.userName }" ${mode!="member" ? "readonly='readonly' ":""}
 			                   class="memberForm" style="width: 200px; margin-left: 80px; margin-bottom: 5px;">
-			                 <p style="margin-left: 80px;"> ${mode=="update" ? "*이름은 수정되지 않습니다*":""}
 	    				</td>
 	    			</tr>
 	    			<tr>
@@ -178,7 +76,7 @@ function changeEmail() {
 	    					<label style="font-weight: bold;">닉네임</label>
 	    				</td>
 	    				<td>
-	    					<input type="text" name="nickName" maxlength="10" value="${dto.nickName }" 
+	    					<input type="text" name="nickName" maxlength="10" value="${dto.nickName }" ${mode=="myProfile" ? "readonly='readonly' ":""}
 			                   class="memberForm" style="width: 200px; margin-left: 80px; margin-bottom: 5px;">
 	    				</td>
 	    			</tr>
@@ -192,7 +90,7 @@ function changeEmail() {
 			                	 <option value="1" ${dto.type=="1" ? "selected='selected'" : ""}>개인</option>
 			              		 <option value="2" ${dto.type=="2" ? "selected='selected'" : ""}>사업자</option>
 			            	</select>
-	    					<p style="margin-left: 80px;">*선택하지 않을시 개인으로 선택됩니다.
+	    					<p style="margin-left: 80px;">*여기서 바꿔도 안됨
 	    				</td>
 	    			</tr>
 	    			<tr>
@@ -200,9 +98,8 @@ function changeEmail() {
 	    					<label style="font-weight: bold;">생년월일</label>
 	    				</td>
 	    				<td>
-	    					<input type="text" name="birth"  value="${dto.birth }"  ${mode=="update" ? "readonly='readonly' ":""}
- 			                   class="memberForm" style="width: 400px; margin-left: 80px; margin-bottom: 5px;" value="${dto.birth }">
-			                 <p style="margin-left: 80px;">생년월일의 작성 예시) 1111-22-33 형식으로 입력합니다.
+	    					<input type="text" name="birth" ${mode!="member" ? "readonly='readonly' ":""}
+			                   class="memberForm" style="width: 400px; margin-left: 80px; margin-bottom: 5px;" value="${dto.birth }">
 	    				</td>
 	    			</tr>
 	    			<tr>
@@ -218,9 +115,9 @@ function changeEmail() {
 			                	 <option value="gmail.com" ${dto.email2=="gmail.com" ? "selected='selected'" : ""}>지 메일</option>
 			                	 <option value="direct">직접입력</option>
 			            	</select>
-			            <input type="text" name="email1" value="${dto.email1}" size="13" maxlength="30"  class="boxTF">
+			            <input type="text" name="email1" value="${dto.email1}" ${mode=="myProfile" ? "readonly='readonly' ":""} size="13" maxlength="30"  class="boxTF">
 			            @
-			            <input type="text" name="email2" value="${dto.email2}" size="13"maxlength="30"  class="boxTF" readonly="readonly">
+			            <input type="text" name="email2" value="${dto.email2}" ${mode=="myProfile" ? "readonly='readonly' ":""} size="13"maxlength="30"  class="boxTF" readonly="readonly">
 	    				</td>
 	    			</tr>
 	    			<tr>
@@ -231,16 +128,16 @@ function changeEmail() {
 	    					<select name="selectTel" style="margin-left: 80px; margin-top: 10px;">
 			                <option value="">선 택</option>
 			                <option value="010" ${dto.tel1=="010" ? "selected='selected'" : ""}>010</option>
-			                <option value="011" ${dto.tel1=="010" ? "selected='selected'" : ""}>011</option>
+			                <option value="011" ${dto.tel1=="011" ? "selected='selected'" : ""}>011</option>
 			                <option value="016" ${dto.tel1=="016" ? "selected='selected'" : ""}>016</option>
 			                <option value="017" ${dto.tel1=="017" ? "selected='selected'" : ""}>017</option>
 			                <option value="018" ${dto.tel1=="018" ? "selected='selected'" : ""}>018</option>
 			                <option value="019" ${dto.tel1=="019" ? "selected='selected'" : ""}>019</option>
 			            </select>
 			            -
-			            <input type="text" name="tel2" value="${dto.tel2}" size="13" maxlength="4"  class="boxTF">
+			            <input type="text" name="tel2" value="${dto.tel2}" ${mode=="myProfile" ? "readonly='readonly' ":""} size="13" maxlength="4"  class="boxTF">
 			            -
-			            <input type="text" name="tel3" value="${dto.tel3}" size="13" maxlength="4"  class="boxTF" >
+			            <input type="text" name="tel3" value="${dto.tel3}" ${mode=="myProfile" ? "readonly='readonly' ":""} size="13" maxlength="4"  class="boxTF" >
 	    				</td>
 	    			</tr>
 	    			<tr>
@@ -248,7 +145,7 @@ function changeEmail() {
 	    					<label style="font-weight: bold;">우편번호</label>
 	    				</td>
 	    				<td>
-	    					<input type="text" id="zipCode" value="${dto.zipCode}" name="zipCode"
+	    					<input type="text" name="zipcode" id="zipCode" value="${dto.zipCode}" ${mode=="myProfile" ? "readonly='readonly' ":""}
 			                       class="boxTF" readonly="readonly"  style="width: 30%; height:30px; margin-left: 80px; margin-bottom: 5px;">
 			            	<button type="button" onclick="daumPostcode();" style="width: 10%; height:30px; margin-bottom: 5px;">우편번호</button>      
 	    				</td>
@@ -258,10 +155,10 @@ function changeEmail() {
 	    					<label style="font-weight: bold;">주소</label>
 	    				</td>
 			      		 <td>
-			            	<input type="text" name="addr1" id="addr1" value="${dto.addr1}" maxlength="50" class="boxTF" 
+			            	<input type="text" name="addr1" id="addr1" value="${dto.addr1}" ${mode=="myProfile" ? "readonly='readonly' ":""} maxlength="50" class="boxTF" 
 			                        style="width: 70%; height:50px; margin-left: 80px; margin-bottom: 5px; " placeholder="기본 주소" readonly="readonly">
 			       
-			           		 <input type="text" name="addr2" id="addr2" value="${dto.addr2}" maxlength="50" 
+			           		 <input type="text" name="addr2" id="addr2" value="${dto.addr2}" ${mode=="myProfile" ? "readonly='readonly' ":""} maxlength="50" 
 			                       style="width: 70%; height:50px; margin-left: 80px; margin-bottom: 5px; " placeholder="나머지 주소">
 			     		 </td>
 			 		</tr>
@@ -272,7 +169,17 @@ function changeEmail() {
 	    				<td>
 	    					<input type="text" name="myComment" 
 			                   placeholder="하고싶은 말 한마디 적으세요" class="memberForm" style="width: 700px; height:50px; margin-left: 80px; margin-bottom: 5px;"
-			                   value="${dto.myComment }" >
+			                   value="${dto.myComment }" ${mode=="myProfile" ? "readonly='readonly' ":""} >
+	    				</td>
+	    			</tr>
+	    			<tr >
+	    				<td width="100" height="50" valign="middle" style="text-align: right;">
+	    					<label style="font-weight: bold;">가입일</label>
+	    				</td>
+	    				<td>
+	    					<input type="text" name="created_date" 
+			                   class="memberForm" style="width: 100px; height:50px; margin-left: 80px; margin-bottom: 5px;"
+			                   value="${dto.created_date }" ${mode=="myProfile" ? "readonly='readonly' ":""} >
 	    				</td>
 	    			</tr>
 	    		</table>
@@ -280,9 +187,7 @@ function changeEmail() {
 	    		<table style="width:100%; margin: 0px auto; border-spacing: 0px;">
 			     	<tr height="45"> 
 			      		<td align="center" >
-			        		<button type="button" name="sendButton" class="btn" onclick="memberOk()">${mode=="member"?"회원가입":"정보수정"}</button>
-			        		<button type="reset" class="btn" ${mode!="myProfile" ? "visible='hidden' ":""}>다시입력</button>
-			        		<button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/';">${mode=="member"?"가입취소":"수정취소"}</button>
+			      			<button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/member/update.do?';">수정하기</button>
 			      		</td>
 			   		</tr>
 			    </table>

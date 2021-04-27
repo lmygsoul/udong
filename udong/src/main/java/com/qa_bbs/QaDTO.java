@@ -1,29 +1,44 @@
 package com.qa_bbs;
 
-public class qaDTO {
-	int boradNum;
-	String userId;
-	String subject;
-	String content;
-	int groupNum;
-	int dept;
-	int orderNo;
-	int parent;
-	int hitCount;
-	String created;
+public class QaDTO {
+	private int listNum;
+	private int boardNum;
+	private String userId;
+	private String nickName;
+	private String subject;
+	private String content;
+	private int groupNum;
+	private int depth;
+	private int orderNo;
+	private int parent;
+	private int hitCount;
+	private String created;
 	
 	
-	public int getBoradNum() {
-		return boradNum;
+	
+	public int getListNum() {
+		return listNum;
 	}
-	public void setBoradNum(int boradNum) {
-		this.boradNum = boradNum;
+	public void setListNum(int listNum) {
+		this.listNum = listNum;
+	}
+	public int getBoardNum() {
+		return boardNum;
+	}
+	public void setBoardNum(int boardNum) {
+		this.boardNum = boardNum;
 	}
 	public String getUserId() {
 		return userId;
 	}
 	public void setUserId(String userId) {
 		this.userId = userId;
+	}
+	public String getNickName() {
+		return nickName;
+	}
+	public void setNickName(String nickName) {
+		this.nickName = nickName;
 	}
 	public String getSubject() {
 		return subject;
@@ -43,11 +58,11 @@ public class qaDTO {
 	public void setGroupNum(int groupNum) {
 		this.groupNum = groupNum;
 	}
-	public int getDept() {
-		return dept;
+	public int getDepth() {
+		return depth;
 	}
-	public void setDept(int dept) {
-		this.dept = dept;
+	public void setDepth(int depth) {
+		this.depth = depth;
 	}
 	public int getOrderNo() {
 		return orderNo;

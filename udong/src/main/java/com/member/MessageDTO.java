@@ -1,18 +1,17 @@
 package com.member;
 
 public class MessageDTO {
-	private int noteNum;
-	private String receiveUser;
 	private String sendUser;
-	private String myContent;
+	private String receiveUser;
+	private String subject;
+	private String content;
 	private String sendTime;
-	private String receiveTime;
-	
-	public int getNoteNum() {
-		return noteNum;
+	private String messageType;
+	public String getSendUser() {
+		return sendUser;
 	}
-	public void setNoteNum(int noteNum) {
-		this.noteNum = noteNum;
+	public void setSendUser(String sendUser) {
+		this.sendUser = sendUser;
 	}
 	public String getReceiveUser() {
 		return receiveUser;
@@ -20,17 +19,17 @@ public class MessageDTO {
 	public void setReceiveUser(String receiveUser) {
 		this.receiveUser = receiveUser;
 	}
-	public String getSendUser() {
-		return sendUser;
+	public String getSubject() {
+		return subject;
 	}
-	public void setSendUser(String sendUser) {
-		this.sendUser = sendUser;
+	public void setSubject(String subject) {
+		this.subject = subject;
 	}
-	public String getMyContent() {
-		return myContent;
+	public String getContent() {
+		return content;
 	}
-	public void setMyContent(String myContent) {
-		this.myContent = myContent;
+	public void setContent(String content) {
+		this.content = content;
 	}
 	public String getSendTime() {
 		return sendTime;
@@ -38,11 +37,11 @@ public class MessageDTO {
 	public void setSendTime(String sendTime) {
 		this.sendTime = sendTime;
 	}
-	public String getReceiveTime() {
-		return receiveTime;
+	public String getMessageType() {
+		return messageType;
 	}
-	public void setReceiveTime(String receiveTime) {
-		this.receiveTime = receiveTime;
+	public void setMessageType(String messageType) {
+		this.messageType = messageType;
 	}
 	
 	

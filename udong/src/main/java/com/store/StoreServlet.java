@@ -14,6 +14,7 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 
 import com.member.SessionInfo;
+import com.util.FileManager;
 import com.util.MyUploadServlet;
 import com.util.MyUtil;
 
@@ -38,7 +39,6 @@ public class StoreServlet extends MyUploadServlet{
 		req.setCharacterEncoding("utf-8");
 		
 		String uri = req.getRequestURI();
-		String cp = req.getContextPath();
 		HttpSession session = req.getSession();
 
 		String root = session.getServletContext().getRealPath("/");
@@ -87,15 +87,8 @@ public class StoreServlet extends MyUploadServlet{
 		if (offset < 0)
 			offset = 0;
 		
-		List<StoreDTO> list = null;
-		list = dao.listStore(offset, rows);
+		List<StoreDTO> list = dao.listStore(offset, rows);
 		
-		int listNum, n = 0;
-		for (StoreDTO dto : list) {
-			listNum = dataCount - (offset + n);
-			dto.setNum(listNum);
-			n++;
-		}
 		
 		String query = "";
 		String listUrl = cp + "/store/list.do";
@@ -154,15 +147,94 @@ public class StoreServlet extends MyUploadServlet{
 	}
 
 	protected void updateForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-	
+		StoreDAO dao = new StoreDAO();
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		String page = req.getParameter("page");
+		try {
+			int num = Integer.parseInt(req.getParameter("num"));
+			StoreDTO dto = dao.readStore(num);
+			if(dto!=null && dto.getUserId().equals(info.getUserId())){
+				req.setAttribute("dto", dto);
+				req.setAttribute("page", page);
+				req.setAttribute("mode", "update");
+				forward(req, resp, "/WEB-INF/views/store/created.jsp");
+				return;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		String cp = req.getContextPath();
+		resp.sendRedirect(cp+"/store/list.do?page="+page);
 	}
 
 	protected void updateSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-	
+/*
+			
+			dto.setUserId(info.getUserId());
+			dto.setSubject(req.getParameter("subject"));
+			dto.setContent(req.getParameter("content"));
+			
+			String filename = null;
+			Part p = req.getPart("selectFile");
+			Map<String, String> map = doFileUpload(p, pathname);
+			if (map != null) {
+				filename = map.get("saveFilename");
+			}
+			if(filename != null) {
+				dto.setImageFileName(filename);
+				dao.insertStore(dto);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		resp.sendRedirect(cp+"/store/list.do");  */
+		StoreDAO dao = new StoreDAO();
+		StoreDTO dto = new StoreDTO();
+		String cp = req.getContextPath();
+		String page = req.getParameter("page");
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		try {
+			dto.setUserId(info.getUserId());
+			dto.setSubject(req.getParameter("subject"));
+			dto.setContent(req.getParameter("content"));
+			dto.setNum(Integer.parseInt(req.getParameter("num")));
+			
+			String imageFileName = req.getParameter("imageFileName");
+			Part p = req.getPart("selectFile");
+			Map<String, String> map = doFileUpload(p, pathname);
+			if(map !=null) {
+				String fileName= map.get("saveFilename");
+				FileManager.doFiledelete(pathname, imageFileName);
+				dto.setImageFileName(fileName);
+			} else {
+				dto.setImageFileName(imageFileName);
+			}
+			dao.updateStore(dto);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		resp.sendRedirect(cp+"/store/list.do?page="+page);
+		
 	}
 
 	protected void delete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-	
+		StoreDAO dao = new StoreDAO();
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		String cp = req.getContextPath();
+		String page = req.getParameter("page");
+		try {
+			if(info.getUserId().equals(req.getParameter("userId")) || info.getType().equals("0"));{
+				int num = Integer.parseInt(req.getParameter("num"));
+				dao.deleteStore(num);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		resp.sendRedirect(cp+"/store/list.do?page="+page);
+				
 	}
 
 	protected void article(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -170,6 +242,9 @@ public class StoreServlet extends MyUploadServlet{
 		String cp = req.getContextPath();
 		String page = req.getParameter("page");
 		String query = "page="+page;
+		boolean isGrade = true;
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
 		try {
 			int num = Integer.parseInt(req.getParameter("num"));
 			StoreDTO dto = dao.readStore(num);
@@ -189,6 +264,14 @@ public class StoreServlet extends MyUploadServlet{
 			req.setAttribute("preReadDto", preReadDto);
 			req.setAttribute("nextReadDto", nextReadDto);
 			
+			if (info != null) {
+				StoreDTO grade = new StoreDTO();
+				grade.setNum(num);
+				grade.setUserId(info.getUserId());
+				isGrade = dao.RecCheck(grade);
+				req.setAttribute("isGrade", isGrade);
+			}
+			
 			forward(req, resp, "/WEB-INF/views/store/article.jsp");
 			return;
 		} catch (Exception e) {
@@ -204,18 +287,19 @@ public class StoreServlet extends MyUploadServlet{
 		String page = req.getParameter("page");
 		HttpSession session = req.getSession();
 		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		
 		try {
 			dto.setNum(Integer.parseInt(req.getParameter("num")));
 			dto.setUserId(info.getUserId());
 			dto.setScore(Double.parseDouble(req.getParameter("selectScore")));
 			if(dao.RecCheck(dto)) {
 				dao.updateScore(dto);
-			}
-
+			} 
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		resp.sendRedirect(cp+"/store/list.do?page="+page);
+		resp.sendRedirect(cp+"/store/article.do?page="+page+"&num="+dto.getNum());
 		return;	
 	}
 }

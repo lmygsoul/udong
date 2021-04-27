@@ -18,15 +18,14 @@ public class FaqDAO {
 		String sql;
 		
 		try {
-			sql = "INSERT INTO faq(num, subject, content, userId, userName, created) "
-					+ " VALUES(faq_seq.NEXTVAL,?,?,?,?,SYSDATE)";
+			sql = "INSERT INTO faq(num, subject, content, userId, created) "
+					+ " VALUES(faq_seq.NEXTVAL,?,?,?,SYSDATE)";
 			
 			pstmt = conn.prepareStatement(sql);
 			
 			pstmt.setString(1, dto.getSubject());
 			pstmt.setString(2, dto.getContent());
 			pstmt.setString(3, dto.getUserId());
-			pstmt.setString(4, dto.getUserName());
 			
 			result = pstmt.executeUpdate();
 			
@@ -95,7 +94,7 @@ public class FaqDAO {
 		String sql;
 		
 		try {
-			sql = "SELECT num, b.userName, subject, "
+			sql = "SELECT num, m.userName, subject, "
 					+ "TO_CHAR(created, 'YYYY-MM-DD') created "
 					+ " FROM faq b "
 					+ " JOIN member1 m ON b.userId = m.userId"
@@ -205,7 +204,7 @@ public class FaqDAO {
 		String sql;
 		
 		try {
-			sql = "SELECT num, userName, subject, "
+			sql = "SELECT num, m.userName, subject, "
 					+ "TO_CHAR(created, 'YYYY-MM-DD') created "
 					+ " FROM faq b "
 					+ " JOIN member1 m ON b.userId = m.userId";
@@ -299,7 +298,7 @@ public class FaqDAO {
 		String sql;
 		
 		try {
-			sql = "SELECT num, b.userId, b.userName, subject, content, created "
+			sql = "SELECT num, b.userId, m.userName, subject, content, created "
 					+ " FROM faq b "
 					+ " JOIN member1 m ON b.userId = m.userId "
 					+ " WHERE num = ? ";
