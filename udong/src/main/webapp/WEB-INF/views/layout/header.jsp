@@ -66,7 +66,7 @@ $(function(){
                 <li><a href="#" style="margin-left:235px; " onmouseover="this.style.marginLeft='235px';">출석체크</a></li>
                 <li><a href="${pageContext.request.contextPath}/greeting/list.do">가입인사</a></li>
                 <li><a href="${pageContext.request.contextPath}/udong/list.do">우동이야기</a></li>
-                <li><a href="#">우동사진</a></li>
+                <li><a href="${pageContext.request.contextPath}/udongphoto/list.do">우동사진</a></li>
                 <li><a href="${pageContext.request.contextPath}/qa/list.do">우동지식</a></li>
             </ul>
         </li>
