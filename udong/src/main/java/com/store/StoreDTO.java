@@ -9,8 +9,15 @@ public class StoreDTO {
 	String imageFileName;
 	String created;
 	double score;
+	int recnum;
 	String addr;
 	String addrsub;
+	public int getRecnum() {
+		return recnum;
+	}
+	public void setRecnum(int recnum) {
+		this.recnum = recnum;
+	}
 	public String getAddrsub() {
 		return addrsub;
 	}

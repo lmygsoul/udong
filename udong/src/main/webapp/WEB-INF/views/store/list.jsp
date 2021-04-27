@@ -51,7 +51,7 @@
         			<div class="imgLayout">
         				<img src="${pageContext.request.contextPath}/uploads/photo/${dto.imageFileName}" width="230" height="230"><br>
         				<span class="subject">[${dto.addrsub}] ${dto.subject}</span><br>
-        				<span class="subject">평점 ${dto.score} / 5.0</span>
+        				<span class="subject">평점 ${dto.score} / 5.0 (참여 ${dto.recnum})</span>
         			</div>
         		</td>
         	</c:forEach>

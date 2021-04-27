@@ -126,10 +126,10 @@ private Connection conn = DBConn.getConnection();
 		StringBuilder sb = new StringBuilder();
 		
 		try {
-			sb.append(" SELECT s.num, s.userid, nickname, subject, content, imageFileName, created, score, addr ");
+			sb.append(" SELECT s.num, s.userid, nickname, subject, content, imageFileName, created, score, addr, recnum");
 			sb.append(" FROM store_bbs s");
 			sb.append(" LEFT OUTER JOIN member1 m ON s.userid=m.userid");
-			sb.append(" LEFT OUTER JOIN (SELECT num, ROUND(AVG(score),2) score FROM store_rec GROUP BY num) r ON s.num=r.num");
+			sb.append(" LEFT OUTER JOIN (SELECT num, ROUND(AVG(score),2) score, COUNT(*) recnum FROM store_rec GROUP BY num) r ON s.num=r.num");
 			sb.append(" ORDER BY num DESC ");
 			sb.append(" OFFSET ? ROWS FETCH FIRST ? ROW ONLY");
 			
@@ -149,6 +149,7 @@ private Connection conn = DBConn.getConnection();
 				dto.setCreated(rs.getString("created"));
 				dto.setScore(rs.getDouble("score"));
 				dto.setAddr(rs.getString("addr"));
+				dto.setRecnum(rs.getInt("recnum"));
 				list.add(dto);
 			}
 		} catch (Exception e) {
@@ -164,10 +165,10 @@ private Connection conn = DBConn.getConnection();
 		StringBuilder sb = new StringBuilder();
 		
 		try {
-			sb.append(" SELECT s.num, s.userid, nickname, subject, content, imageFileName, created, score, addr ");
+			sb.append(" SELECT s.num, s.userid, nickname, subject, content, imageFileName, created, score, addr, recnum ");
 			sb.append(" FROM store_bbs s");
 			sb.append(" LEFT OUTER JOIN member1 m ON s.userid=m.userid");
-			sb.append(" LEFT OUTER JOIN (SELECT num, ROUND(AVG(score),2) score FROM store_rec GROUP BY num) r ON s.num=r.num");
+			sb.append(" LEFT OUTER JOIN (SELECT num, ROUND(AVG(score),2) score, COUNT(*) recnum FROM store_rec GROUP BY num) r ON s.num=r.num");
 			if(keyword.equals("기타")) {
 				sb.append(" WHERE INSTR(addr, ?) < 1 AND INSTR(addr, ?) < 1 AND INSTR(addr, ?) < 1 ");
 				sb.append(" ORDER BY num DESC ");
@@ -201,6 +202,7 @@ private Connection conn = DBConn.getConnection();
 				dto.setAddr(rs.getString("addr"));
 				dto.setCreated(rs.getString("created"));
 				dto.setScore(rs.getDouble("score"));
+				dto.setRecnum(rs.getInt("recnum"));
 				list.add(dto);
 			}
 		} catch (Exception e) {
