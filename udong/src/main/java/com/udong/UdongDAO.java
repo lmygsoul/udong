@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.udong.UdongDTO;
 import com.util.DBConn;
 
 public class UdongDAO {
@@ -459,6 +460,68 @@ public class UdongDAO {
 
         return dto;
     }
+ // 게시물 수정
+ 	public int updateBoard(UdongDTO dto) throws SQLException {
+ 		int result = 0;
+ 		PreparedStatement pstmt = null;
+ 		String sql;
+ 		
+ 		sql="UPDATE udong SET subject=?, content=? WHERE num=? AND userId=?";
+ 		try {
+ 			pstmt = conn.prepareStatement(sql);
+ 			pstmt.setString(1, dto.getSubject());
+ 			pstmt.setString(2, dto.getContent());
+ 			pstmt.setInt(3, dto.getNum());
+ 			pstmt.setString(4, dto.getUserId());
+ 			result = pstmt.executeUpdate();
+ 			
+ 		} catch (SQLException e) {
+ 			e.printStackTrace();
+ 			throw e;
+ 		} finally {
+ 			if(pstmt!=null) {
+ 				try {
+ 					pstmt.close();
+ 				} catch (SQLException e) {
+ 				}
+ 			}
+ 		}		
+ 		return result;
+ 	}
+ 	
+ 	// 게시물 삭제
+ 	public int deleteBoard(int num, String userId) throws SQLException {
+ 		int result = 0;
+ 		PreparedStatement pstmt = null;
+ 		String sql;
+ 		
+ 		try {
+ 			if(userId.equals("admin")) {
+ 				sql="DELETE FROM udong WHERE num=?";
+ 				pstmt = conn.prepareStatement(sql);
+ 				pstmt.setInt(1, num);
+ 				result = pstmt.executeUpdate();
+ 			}else {
+ 				sql="DELETE FROM udong WHERE num=? AND userId=?";
+ 				pstmt = conn.prepareStatement(sql);
+ 				pstmt.setInt(1, num);
+ 				pstmt.setString(2, userId);
+ 				result = pstmt.executeUpdate();
+ 			}
+ 			
+ 		} catch (SQLException e) {
+ 			e.printStackTrace();
+ 			throw e;
+ 		} finally {
+ 			if(pstmt!=null) {
+ 				try {
+ 					pstmt.close();
+ 				} catch (SQLException e) {
+ 				}
+ 			}
+ 		}		
+ 		return result;
+ 	}
+ }
 	
-	
-}
+

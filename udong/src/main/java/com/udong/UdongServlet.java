@@ -230,15 +230,106 @@ public class UdongServlet extends HttpServlet {
 	}
 
 	protected void updateForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
+/////
+	String cp = req.getContextPath();
+	UdongDAO dao = new UdongDAO();
+	
+	HttpSession session = req.getSession();
+	SessionInfo info = (SessionInfo) session.getAttribute("member");
+	
+	String page = req.getParameter("page");
+	
+	try {
+		int num = Integer.parseInt( req.getParameter("num"));
+		UdongDTO dto = dao.readBoard(num);
+		
+		if(dto==null) {
+				resp.sendRedirect(cp+"/udong/list.do?page="+page);
+				return;
+		}
+		
+		//게시물 올린 사용자X
+		if(! dto.getUserId().equals(info.getUserId())) {
+				resp.sendRedirect(cp+"/udong/list.do?page="+page);
+				return;
+		}
+		
+		req.setAttribute("dto", dto);
+		req.setAttribute("page", page);
+		req.setAttribute("mode", "update");
+		
+		forward(req, resp, "/WEB-INF/views/udong/created.jsp");
+		return;
+		
+	} catch (Exception e) {
+		e.printStackTrace();
+	}
+	
+	resp.sendRedirect(cp+"/udong/list.do?page="+page);
 	}
 
+	
+	
 	protected void updateSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
+/////
+		// created.jsp 수정
+		String cp = req.getContextPath();
+		UdongDAO dao = new UdongDAO();
+		
+		HttpSession session=req.getSession();
+		SessionInfo info=(SessionInfo)session.getAttribute("member");
+		String page=req.getParameter("page");
+		
+		try {
+			if(req.getMethod().equalsIgnoreCase("GET")) {
+				resp.sendRedirect(cp+"/udong/list.do?page="+page);
+				return;
+			}
+			
+			UdongDTO dto=new UdongDTO();
+			dto.setNum(Integer.parseInt(req.getParameter("num")));
+			dto.setSubject(req.getParameter("subject"));
+			dto.setContent(req.getParameter("content"));
+			
+			dto.setUserId(info.getUserId());
+			
+			dao.updateBoard(dto);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		resp.sendRedirect(cp+"/udong/list.do?page="+page);
 	}
 
 	protected void delete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		// 삭제
+				String cp = req.getContextPath();
+				UdongDAO dao = new UdongDAO();
 
-	}
-	
-}
+				HttpSession session = req.getSession();
+				SessionInfo info = (SessionInfo) session.getAttribute("member");
+				String page=req.getParameter("page");
+				String query="page="+page;
+				
+				try {
+					int num=Integer.parseInt(req.getParameter("num"));
+					String condition=req.getParameter("condition");
+					String keyword=req.getParameter("keyword");
+					if(condition==null) {
+						condition="all";
+						keyword="";
+					}
+					keyword=URLDecoder.decode(keyword, "utf-8");
+
+					if(keyword.length()!=0) {
+						query+="&condition="+condition+"&keyword="+URLEncoder.encode(keyword, "UTF-8");
+					}
+
+					dao.deleteBoard(num, info.getUserId());
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				
+				resp.sendRedirect(cp+"/udong/list.do?"+query);
+			}
+		}
