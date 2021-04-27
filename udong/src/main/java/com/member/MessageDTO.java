@@ -7,6 +7,35 @@ public class MessageDTO {
 	private String content;
 	private String sendTime;
 	private String messageType;
+	private String nickName;
+	private String type;
+	private int pageNum,listNum;
+	
+	
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
+	}
+	public String getNickName() {
+		return nickName;
+	}
+	public void setNickName(String nickName) {
+		this.nickName = nickName;
+	}
+	public int getListNum() {
+		return listNum;
+	}
+	public void setListNum(int listNum) {
+		this.listNum = listNum;
+	}
+	public int getPageNum() {
+		return pageNum;
+	}
+	public void setPageNum(int pageNum) {
+		this.pageNum = pageNum;
+	}
 	public String getSendUser() {
 		return sendUser;
 	}

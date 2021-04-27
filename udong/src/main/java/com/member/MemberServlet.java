@@ -1,7 +1,10 @@
 package com.member;
 
 import java.io.IOException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.sql.SQLException;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -10,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.util.MyServlet;
+import com.util.MyUtil;
 
 @WebServlet("/member/*")
 public class MemberServlet extends MyServlet{
@@ -17,6 +21,7 @@ public class MemberServlet extends MyServlet{
 	@Override
 	protected void process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		req.setCharacterEncoding("utf-8");
+		
 		
 		String uri = req.getRequestURI();
 		
@@ -36,10 +41,14 @@ public class MemberServlet extends MyServlet{
 			update(req,resp);
 		} else if(uri.indexOf("update_ok.do")!=-1) {
 			updateForm(req,resp);
-		} else if(uri.indexOf("sm_article.do")!=-1) {
+		} else if(uri.indexOf("sm_created.do")!=-1) {
 			sendMessage(req,resp);
 		} else if(uri.indexOf("sm_list.do")!=-1) {
 			sendMessageList(req,resp);
+		} else if(uri.indexOf("sm_created_ok.do")!=-1) {
+			sendMessage_ok(req,resp);
+		} else if(uri.indexOf("sm_article.do")!=-1) {
+			sendMessage_article(req,resp);
 		}
 		
 	}
@@ -222,38 +231,158 @@ public class MemberServlet extends MyServlet{
 		}
 		resp.sendRedirect(cp);
 	}
-
+	private void sendMessageList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
+		SendMessageDAO dao = new SendMessageDAO();
+		MyUtil util= new MyUtil();
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		String page = req.getParameter("page");
+		String cp = req.getContextPath();
+		int current_page = 1;
+		
+		if (info==null) {
+			resp.sendRedirect(cp+"/member/login.do");
+			return;
+		}
+		if(page!=null) {
+			current_page = Integer.parseInt(page);
+		}
+		String condition = req.getParameter("condition");
+		String keyword = req.getParameter("keyword");
+		if(condition==null) {
+			condition = "all";
+			keyword="";
+		}
+		if(req.getMethod().equalsIgnoreCase("GET")) {
+			keyword=URLDecoder.decode(keyword,"UTF-8");
+		}
+		int dataCount;
+		if(keyword.length()==0) {
+			dataCount = dao.dataCount(info.getUserId());
+			if(info.getType().equals("0"))
+				dataCount+=3;
+		} else {
+			dataCount = dao.dataCount(info.getUserId(),condition, keyword);
+			if(info.getType().equals("0"))
+				dataCount+=3;
+		}
+		int rows = 10;
+		int total_page = util.pageCount(rows, dataCount);
+		
+		if(current_page > total_page) {
+			current_page = total_page ;
+		}
+		int offset = (current_page -1 ) * rows;
+		if(offset <0) offset = 0;
+		List<MessageDTO> list = null;
+		if(keyword.length()==0) {
+			list=dao.listsm(offset, rows);
+		} else {
+			list=dao.listsm(offset, rows, condition, keyword);
+		}
+		int listNum, n=0;
+		for(MessageDTO mdto : list) {
+				listNum = dataCount - (offset+n);
+				mdto.setListNum(listNum);
+				n++;
+		}
+		String query="";
+		if(keyword.length()!=0) {
+			query="condition="+condition+"&keyword="+URLEncoder.encode(keyword, "UTF-8");
+		}
+		String listUrl = cp+"/member/sm_list.do";
+		String articleUrl = cp+"/member/sm_article.do?page="+current_page;
+		if(query.length()!=0) {
+			listUrl += "?"+query;
+			articleUrl = "&"+articleUrl;
+		}
+		String paging = util.paging(current_page, total_page,listUrl);
+		
+		req.setAttribute("list", list);
+		req.setAttribute("paging", paging);
+		req.setAttribute("dataCount", dataCount);
+		req.setAttribute("total_page", total_page);
+		req.setAttribute("articleUrl", articleUrl);
+		req.setAttribute("condition", condition);
+		req.setAttribute("keyword", keyword);
+		
+		req.setAttribute("title", "보낸쪽지함");
+		
+		forward(req, resp, "/WEB-INF/views/member/sm_list.jsp");
+		
+	}
 	private void sendMessage(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
-		MemberDAO dao=new MemberDAO();
-		MemberDTO dto = new MemberDTO();
+		req.setAttribute("title", "보낸쪽지함");
+		req.setAttribute("mode", "sm_created");
+		
+		forward(req, resp, "/WEB-INF/views/member/sm_created.jsp");
+		
+	}
+
+	private void sendMessage_ok(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		SendMessageDAO mdao = new SendMessageDAO();
 		MessageDTO mdto = new MessageDTO();
 		HttpSession session=req.getSession();
 		try {
 			SessionInfo info=(SessionInfo)session.getAttribute("member");
 			mdto.setSendUser(info.getUserId());
-			dto = dao.readMember(req.getParameter("userId"));
+			mdto.setReceiveUser(req.getParameter("receiveUserId"));
+			mdto.setSubject(req.getParameter("subject"));
+			mdto.setContent(req.getParameter("content"));
 			
-			mdao.insertMessage(dto, mdto);
+			mdao.insertMessage(mdto);
 			
-			req.setAttribute("title", "쪽지 보내기");
+			req.setAttribute("title", "보낸쪽지함");
 			req.setAttribute("mode", "sendMessage");
-			req.setAttribute("dto", dto);
 			req.setAttribute("mdto", mdto);
 			
-			forward(req, resp, "/WEB-INF/views/member/sm_article.jsp");
+			forward(req, resp, "/WEB-INF/views/member/sm_list.jsp");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
 	}
-
-	private void sendMessageList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
-		
-		req.setAttribute("title", "보낸쪽지함");
-		req.setAttribute("mode", "member");
-		
-		forward(req, resp, "/WEB-INF/views/member/sm_list.jsp");
+	private void sendMessage_article(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		SendMessageDAO mdao= new SendMessageDAO();
+		String cp = req.getContextPath();
+		String page = req.getParameter("page");
+		String query = "page="+page;
+		try {
+			int num = Integer.parseInt(req.getParameter("num"));
+			
+			String condition = req.getParameter("condition");
+			String keyword = req.getParameter("keyword");
+			
+			if(condition==null) {
+				condition = "all";
+				keyword="";
+			}
+			keyword = URLDecoder.decode(keyword,"UTF-8");
+			
+			if(keyword.length()!=0) {
+				query +="&condition="+condition+"&keyword="+URLEncoder.encode(keyword,"UTF-8");
+			}
+			MessageDTO mdto = mdao.readMember(num);
+			if(mdto==null) {
+				resp.sendRedirect(cp+"/member/sm_list.do?"+query);
+				return;
+			}
+			mdto.setContent(mdto.getContent().replaceAll("\n", "<br>"));
+			MessageDTO preReadSM = mdao.preReadSM(num, condition, keyword);
+			MessageDTO nextReadSM = mdao.nextReadSM(num, condition, keyword);
+			
+			req.setAttribute("mdto", mdto);
+			req.setAttribute("preReadsm", preReadSM);
+			req.setAttribute("nextReadsm", nextReadSM);
+			req.setAttribute("page", page);
+			req.setAttribute("query", query);
+			
+			forward(req, resp, "/WEB-INF/views/member/sm_article.jsp");
+			return;
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 	}
 }
