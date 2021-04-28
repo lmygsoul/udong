@@ -19,6 +19,12 @@ function deleteBoard(boardNum) {
 	}
 }
 </c:if>
+function classSubmit(boardNum) {
+	if(confirm("해당 클래스에 신청 하시겠습니까 ?")) {
+		var url="${pageContext.request.contextPath}/dayclass/classSubmit.do?boardNum="+boardNum+"&${query}";
+		location.href=url;
+	}
+}
 </script>
 </head>
 <body>
@@ -42,11 +48,11 @@ function deleteBoard(boardNum) {
 			</tr>
 			
 			<tr height="35" class="row-2">
-			    <td width="50%" align="left" class="col-2">
+			    <td width="40%" align="left" class="col-2">
 			       이름 : ${dto.nickName}
 			    </td>
-			    <td width="50%" align="right" class="col-2">
-			        ${dto.created} | 현재 ${dto.curClass}/총 ${dto.maxClass }
+			    <td width="60%" align="right" class="col-2">
+			        ${dto.created} | [모집인원]  현재 ${curClass}명 / 총 ${dto.maxClass}명 
 			    </td>
 			</tr>
 			
@@ -69,7 +75,7 @@ function deleteBoard(boardNum) {
 			    <td colspan="2" align="left" class="col-3">
 			       다음글 :
 					<c:if test="${not empty nextReadDto}">
-						<a href="${pageContext.request.contextPath}/dayclass/article.do?boardNnum=${nextReadDto.boardNum}&${query}">${nextReadDto.subject}</a>
+						<a href="${pageContext.request.contextPath}/dayclass/article.do?boardNum=${nextReadDto.boardNum}&${query}">${nextReadDto.subject}</a>
 					</c:if>
 			    </td>
 			</tr>
@@ -78,7 +84,7 @@ function deleteBoard(boardNum) {
 			    	
 			    	<c:choose>
 			    		<c:when test="${dto.curClass != dto.maxClass}">
-			          		<button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/dayclass/classsubmit.do?boardNum=${dto.boardNum}&page=${page}';">신청</button>
+			          		<button type="button" class="btn" onclick="classSubmit('${dto.boardNum}');">신청</button>
 			    		</c:when>
 			    		<c:otherwise>
 			    			<button type="button" class="btn" disabled="disabled">신청</button>
@@ -105,6 +111,10 @@ function deleteBoard(boardNum) {
 			    </td>
 			
 			    <td align="right" class="col-4">
+			    	<input type="hidden" name="boardNum" value="${dto.boardNum}">
+			    	<input type="hidden" name="condition" value="${condition}">
+			        <input type="hidden" name="keyword" value="${keyword}">
+			    	
 			        <button type="button" class="btn btnList" onclick="javascript:location.href='${pageContext.request.contextPath}/dayclass/list.do?${query}';">리스트</button>
 			    </td>
 			</tr>

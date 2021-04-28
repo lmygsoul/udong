@@ -76,8 +76,8 @@
 			      </td>
 			  </tr>
 			  
-			  <tr align="left" style="border-bottom: 1px solid #ccc;"> 
-			      <td width="100" style="text-align: center; padding-top:10px;" valign="top">모집인원</td>
+			  <tr align="left" height="43" style="border-bottom: 1px solid #ccc;"> 
+			      <td width="100" style="text-align: center;">모집인원</td>
 			      <td style="padding-left:10px;"> 
 			        <input type="text" name="maxClass" maxlength="100" class="boxTF" style="width: 97%;" value="${dto.maxClass}">
 			      </td>
@@ -88,6 +88,8 @@
 			     <tr height="45"> 
 			      <td align="center" >
 			      	<input type="hidden" name="boardNum" value="${dto.boardNum}">
+			      	<input type="hidden" name="condition" value="${condition}">
+			        <input type="hidden" name="keyword" value="${keyword}">
 			      	<input type="hidden" name="page" value="${page}">
 			      	
 			        <button type="button" class="btn btnCreate" onclick="sendOk();">${mode=='update'?'수정완료':'등록하기'}</button>

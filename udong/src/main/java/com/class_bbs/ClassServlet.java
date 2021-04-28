@@ -63,7 +63,7 @@ public class ClassServlet extends HttpServlet {
 			delete(req, resp);
 		} else if (uri.indexOf("article.do") != -1) {
 			article(req, resp);
-		} else if(uri.indexOf("class_ok.do") != -1) {
+		} else if(uri.indexOf("classSubmit.do") != -1) {
 			classSubmit(req, resp);
 		}
 	}
@@ -169,6 +169,7 @@ public class ClassServlet extends HttpServlet {
 			ClassDTO dto=new ClassDTO();
 			dto.setSubject(req.getParameter("subject"));
 			dto.setContent(req.getParameter("content"));
+			dto.setMaxClass(Integer.parseInt(req.getParameter("maxClass")));
 			dto.setUserId(info.getUserId());
 
 			dao.insertBoard(dto, "created");
@@ -262,6 +263,7 @@ public class ClassServlet extends HttpServlet {
 			dto.setBoardNum(Integer.parseInt(req.getParameter("boardNum")));
 			dto.setSubject(req.getParameter("subject"));
 			dto.setContent(req.getParameter("content"));
+			dto.setMaxClass(Integer.parseInt(req.getParameter("maxClass")));
 
 			dao.updateBoard(dto, info.getUserId());
 		} catch (Exception e) {
@@ -331,7 +333,7 @@ public class ClassServlet extends HttpServlet {
 
 			String condition = req.getParameter("condition");
 			String keyword = req.getParameter("keyword");
-			if(condition==null) {
+			if(condition==null) {	
 				condition="all";
 				keyword="";
 			}
@@ -343,6 +345,8 @@ public class ClassServlet extends HttpServlet {
 			}
 
 			ClassDTO dto=dao.readBoard(boardNum);
+			int curClass = dao.readClass(boardNum);
+			
 			if(dto==null) {
 				resp.sendRedirect(cp+"/dayclass/list.do?"+query);
 				return;
@@ -361,6 +365,7 @@ public class ClassServlet extends HttpServlet {
 			req.setAttribute("nextReadDto", nextReadDto);
 			req.setAttribute("query", query);
 			req.setAttribute("page", page);
+			req.setAttribute("curClass", curClass);
 
 			forward(req, resp, "/WEB-INF/views/dayclass/article.jsp");
 			return;
@@ -372,7 +377,45 @@ public class ClassServlet extends HttpServlet {
 	}
 
 	protected void classSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		// 신청 완료
+		HttpSession session=req.getSession();
+		SessionInfo info=(SessionInfo)session.getAttribute("member");
 
+		String cp=req.getContextPath();
+		ClassDAO dao=new ClassDAO();
+
+		String page=req.getParameter("page");
+		String query="page="+page;
+
+		try {
+			int boardNum = Integer.parseInt(req.getParameter("boardNum"));
+			
+			String condition = req.getParameter("condition");
+			String keyword = req.getParameter("keyword");
+			if(condition==null) {
+				condition="all";
+				keyword="";
+			}
+			keyword = URLDecoder.decode(keyword, "utf-8");
+			if(keyword.length()!=0) {
+				query+="&condition="+condition+
+					     "&keyword="+URLEncoder.encode(keyword, "utf-8");
+			}
+			
+			ClassDTO dto=dao.readBoard(boardNum);
+			
+			if(dto==null) {
+				resp.sendRedirect(cp+"/dayclass/list.do?"+query);
+				return;
+			}
+			
+			dao.submitClass(boardNum, info.getUserId());
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		resp.sendRedirect(cp+"/dayclass/list.do?"+query);
 	}
 
 }

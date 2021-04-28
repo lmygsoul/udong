@@ -70,7 +70,7 @@ function deleteBoard(boardNum) {
 			    <td colspan="2" align="left" class="col-3">
 			       다음글 :
 					<c:if test="${not empty nextReadDto}">
-						<a href="${pageContext.request.contextPath}/qa/article.do?boardNnum=${nextReadDto.boardNum}&${query}">${nextReadDto.subject}</a>
+						<a href="${pageContext.request.contextPath}/qa/article.do?boardNum=${nextReadDto.boardNum}&${query}">${nextReadDto.subject}</a>
 					</c:if>
 			    </td>
 			</tr>

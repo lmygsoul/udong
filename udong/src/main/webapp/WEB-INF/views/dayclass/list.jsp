@@ -61,7 +61,7 @@
 			      <td>${dto.nickName}</td>
 			      <td>${dto.created}</td>
 			      <td>
-			      	${dto.curClass==dto.maxClass? '모집마감':'모집중!'}
+			      	${dto.curClass==dto.maxClass?'모집마감':'모집중!'}
 			      </td>
 			  </tr>
 			</c:forEach>

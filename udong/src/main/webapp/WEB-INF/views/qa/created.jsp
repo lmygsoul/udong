@@ -74,8 +74,10 @@
 			     <tr height="45"> 
 			      <td align="center" >
 			      	<c:if test="${mode=='update'}">
-			      		<input type="hidden" name="boardNum" value="${dto.boardNum}">
-			      		<input type="hidden" name="page" value="${page}">
+			      		 <input type="hidden" name="boardNum" value="${dto.boardNum}">
+			      		 <input type="hidden" name="page" value="${page}">
+			      		 <input type="hidden" name="condition" value="${condition}">
+			        	 <input type="hidden" name="keyword" value="${keyword}">
 			      	</c:if>
 			      	<c:if test="${mode=='reply'}">
 			      	     <input type="hidden" name="groupNum" value="${dto.groupNum}">

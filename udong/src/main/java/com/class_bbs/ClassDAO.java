@@ -35,8 +35,8 @@ public class ClassDAO {
 			dto.setBoardNum(seq);
 			
 			sql = "INSERT INTO classBoard(boardNum, userId, subject, content, "
-					+ "  curClass, maxClass, created) "
-					+ "  VALUES (?, ?, ?, ?, 0, ?, SYSDATE)";
+					+ "  maxClass, created) "
+					+ "  VALUES (?, ?, ?, ?, ?, SYSDATE)";
 			
 			pstmt=conn.prepareStatement(sql);
 			pstmt.setInt(1, dto.getBoardNum());
@@ -152,7 +152,7 @@ public class ClassDAO {
 		
 		try {
 			sb.append("SELECT boardNum, b.userId, m.nickName,");
-			sb.append("       subject, TO_CHAR(created, 'YYYY-MM-DD') created");
+			sb.append("       subject, TO_CHAR(created, 'YYYY-MM-DD') created, maxClass ");
 			sb.append(" FROM classBoard b  ");
 			sb.append(" JOIN member1 m ON b.userId=m.userId  ");
 			sb.append(" OFFSET ? ROWS FETCH FIRST ? ROWS ONLY ");
@@ -168,6 +168,7 @@ public class ClassDAO {
 				dto.setBoardNum(rs.getInt("boardNum"));
 				dto.setUserId(rs.getString("userId"));
 				dto.setNickName(rs.getString("nickName"));
+				dto.setMaxClass(rs.getInt("maxClass"));
 				dto.setSubject(rs.getString("subject"));
 				dto.setCreated(rs.getString("created"));
 				
@@ -205,7 +206,7 @@ public class ClassDAO {
 
         try {
 			sb.append("SELECT boardNum, b.userId, m.nickName, ");
-			sb.append("       subject, TO_CHAR(created, 'YYYY-MM-DD') created ");
+			sb.append("       subject, TO_CHAR(created, 'YYYY-MM-DD') created, maxClass ");
 			sb.append(" FROM classBoard b  ");
 			sb.append(" JOIN member1 m ON b.userId=m.userId  ");
 			if(condition.equals("created")) {
@@ -217,7 +218,7 @@ public class ClassDAO {
 				sb.append(" WHERE INSTR(" + condition + ", ?) >= 1  ");
 			}
 			
-			sb.append(" ORDER BY groupNum DESC, orderNo ASC  ");
+			sb.append(" ORDER BY boardNum DESC  ");
 			sb.append(" OFFSET ? ROWS FETCH FIRST ? ROWS ONLY ");
             
 			pstmt=conn.prepareStatement(sb.toString());
@@ -240,7 +241,6 @@ public class ClassDAO {
 				dto.setUserId(rs.getString("userId"));
 				dto.setNickName(rs.getString("nickName"));
 				dto.setSubject(rs.getString("subject"));
-				dto.setCurClass(rs.getInt("curClass"));
 				dto.setMaxClass(rs.getInt("maxClass"));
 				dto.setCreated(rs.getString("created"));
             
@@ -276,7 +276,7 @@ public class ClassDAO {
 		
 		try {
 			sb.append("SELECT boardNum, b.userId, m.nickName, subject, ");
-			sb.append("    content, created ");
+			sb.append("    content, created, maxClass ");
 			sb.append(" FROM classBoard b  ");
 			sb.append(" JOIN member1 m ON b.userId=m.userId  ");
 			sb.append(" WHERE boardNum=?  ");
@@ -292,7 +292,6 @@ public class ClassDAO {
 				dto.setNickName(rs.getString("nickName"));
 				dto.setSubject(rs.getString("subject"));
 				dto.setContent(rs.getString("content"));
-				dto.setCurClass(rs.getInt("curClass"));
 				dto.setMaxClass(rs.getInt("maxClass"));
 				dto.setCreated(rs.getString("created"));
 			}
@@ -323,13 +322,14 @@ public class ClassDAO {
 		PreparedStatement pstmt = null;
 		String sql;
 		
-		sql="UPDATE classBoard SET subject=?, content=? WHERE boardNum=? AND userId=?";
+		sql="UPDATE classBoard SET subject=?, content=?, maxClass=? WHERE boardNum=? AND userId=?";
 		try {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, dto.getSubject());
 			pstmt.setString(2, dto.getContent());
-			pstmt.setInt(3, dto.getBoardNum());
-			pstmt.setString(4, userId);
+			pstmt.setInt(3, dto.getMaxClass());
+			pstmt.setInt(4, dto.getBoardNum());
+			pstmt.setString(5, userId);
 			result = pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -392,8 +392,8 @@ public class ClassDAO {
 	                } else {
 	                    sb.append(" WHERE ( INSTR("+condition+", ?) > 0) ");
 	                }
-	                sb.append("            AND (boardNum > ? ) ");
-	                sb.append(" ORDER BY boardNum ASC ");
+	                sb.append("            AND (boardNum < ? ) ");
+	                sb.append(" ORDER BY boardNum DESC ");
 	                sb.append(" FETCH  FIRST  1  ROWS  ONLY ");
 
 	                pstmt=conn.prepareStatement(sb.toString());
@@ -407,9 +407,9 @@ public class ClassDAO {
 	                   	pstmt.setInt(2, num);
 	                }
 	            } else {
-	                sb.append("SELECT boradNum, subject FROM classBoard ");
+	                sb.append("SELECT boardNum, subject FROM classBoard ");
 	                sb.append(" WHERE boardNum < ? ");
-	                sb.append(" ORDER BY boardNum ASC ");
+	                sb.append(" ORDER BY boardNum DESC ");
 	                sb.append(" FETCH  FIRST  1  ROWS  ONLY ");
 
 	                pstmt=conn.prepareStatement(sb.toString());
@@ -444,73 +444,130 @@ public class ClassDAO {
 	    }
 
 	    // 다음글
-	    public ClassDTO nextReadBoard(int num, String condition, String keyword) {
-	        ClassDTO dto=null;
+    public ClassDTO nextReadBoard(int boardNum, String condition, String keyword) {
+        ClassDTO dto=null;
 
-	        PreparedStatement pstmt=null;
-	        ResultSet rs=null;
-	        StringBuilder sb = new StringBuilder();
+        PreparedStatement pstmt=null;
+        ResultSet rs=null;
+        StringBuilder sb = new StringBuilder();
 
-	        try {
-	        	if(keyword.length() != 0) {
-	                sb.append("SELECT boardNum, subject FROM classBoard b ");
-	                sb.append(" JOIN member1 m ON  b.userId = m.userId ");
-	                if(condition.equals("all")) {
-	                    sb.append(" WHERE ( INSTR(subject, ?) >= 1 OR INSTR(content, ?) >= 1  )  ");
-	                } else if(condition.equals("created")) {
-	                	keyword = keyword.replaceAll("(\\-|\\/|\\.)", "");
-	                    sb.append(" WHERE (TO_CHAR(created, 'YYYYMMDD') = ?) ");
-	                } else {
-	                    sb.append(" WHERE ( INSTR("+condition+", ?) > 0) ");
+        try {
+        	if(keyword.length() != 0) {
+                sb.append("SELECT boardNum, subject FROM classBoard b ");
+                sb.append(" JOIN member1 m ON  b.userId = m.userId ");
+                if(condition.equals("all")) {
+                    sb.append(" WHERE ( INSTR(subject, ?) >= 1 OR INSTR(content, ?) >= 1  )  ");
+                } else if(condition.equals("created")) {
+                	keyword = keyword.replaceAll("(\\-|\\/|\\.)", "");
+                    sb.append(" WHERE (TO_CHAR(created, 'YYYYMMDD') = ?) ");
+                } else {
+                    sb.append(" WHERE ( INSTR("+condition+", ?) > 0) ");
+                }
+                sb.append("          AND (boardNum > ? ) ");
+                sb.append(" ORDER BY boardNum ASC ");
+                sb.append(" FETCH  FIRST  1  ROWS  ONLY ");
+
+                pstmt=conn.prepareStatement(sb.toString());
+                if(condition.equals("all")) {
+                    pstmt.setString(1, keyword);
+                    pstmt.setString(2, keyword);
+                   	pstmt.setInt(3, boardNum);
+                } else {
+                    pstmt.setString(1, keyword);
+                   	pstmt.setInt(2, boardNum);
 	                }
-	                sb.append("          AND (boardNum < ? ) ");
-	                sb.append(" ORDER BY boardNum DESC ");
-	                sb.append(" FETCH  FIRST  1  ROWS  ONLY ");
+	            } 
+        	else {
+            	sb.append("SELECT boardNum, subject FROM classBoard ");
+            	sb.append(" WHERE boardNum > ? ");
+            	sb.append(" ORDER BY boardNum ASC ");
+            	sb.append(" FETCH  FIRST  1  ROWS  ONLY ");
 
-	                pstmt=conn.prepareStatement(sb.toString());
-	                if(condition.equals("all")) {
-	                    pstmt.setString(1, keyword);
-	                    pstmt.setString(2, keyword);
-	                   	pstmt.setInt(3, num);
-	                } else {
-	                    pstmt.setString(1, keyword);
-	                   	pstmt.setInt(2, num);
-	                }
-	            } else {
-	                sb.append("SELECT boardNum, subject FROM classBoard ");
-	                sb.append(" WHERE boardNum < ? ");
-	                sb.append(" ORDER BY boardNum DESC ");
-	                sb.append(" FETCH  FIRST  1  ROWS  ONLY ");
+                pstmt=conn.prepareStatement(sb.toString());
+                pstmt.setInt(1, boardNum);
+            }
 
-	                pstmt=conn.prepareStatement(sb.toString());
-	                pstmt.setInt(1, num);
-	            }
+            rs=pstmt.executeQuery();
 
-	            rs=pstmt.executeQuery();
-
-	            if(rs.next()) {
-	                dto=new ClassDTO();
-	                dto.setBoardNum(rs.getInt("boardNum"));
-	                dto.setSubject(rs.getString("subject"));
-	            }
-			} catch (SQLException e) {
-				e.printStackTrace();
-			} finally {
-				if(rs!=null) {
-					try	{
-						rs.close();
-					}catch (SQLException e2){
-					}
-				}
-				if(pstmt!=null) {
-					try	{
-						pstmt.close();
-					}catch (SQLException e2){
-					}
+            if(rs.next()) {
+               dto=new ClassDTO();
+               dto.setBoardNum(rs.getInt("boardNum"));
+               dto.setSubject(rs.getString("subject"));
+	        }
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if(rs!=null) {
+				try	{
+					rs.close();
+				}catch (SQLException e2){
 				}
 			}
+			if(pstmt!=null) {
+				try	{
+					pstmt.close();
+				}catch (SQLException e2){
+				}
+			}
+		}
 
-	        return dto;
-	    }
+        return dto;
+	}
+    
+    
 	
+	public int submitClass(int boardNum, String userId) throws SQLException {
+		int result = 0;
+		PreparedStatement pstmt = null;
+		String sql;
+		
+		try {
+			sql = "INSERT INTO dayClass(boardNum, userId) VALUES(?, ?)";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, boardNum);
+			pstmt.setString(2, userId);
+			
+			result = pstmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+			
+		return result;
+	}
+	
+	public int readClass(int boardNum) throws SQLException {
+		int result = 0;
+		PreparedStatement pstmt = null;
+		String sql;
+		
+		try {
+			sql = "SELECT NVL(COUNT(*), 0) FROM dayClass WHERE boardNum = ?";
+			
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setInt(1, boardNum);
+			
+			result=pstmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+		
+		return result;
+	}
 }

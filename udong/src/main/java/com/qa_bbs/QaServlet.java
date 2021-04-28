@@ -304,16 +304,7 @@ public class QaServlet extends HttpServlet {
 				return;
 			}
 			
-			/* 역할처리를 어떻게 할지 ?
-			// 게시물을 올린 사용자나 admin이 아니면 리스트로 리다이렉트
-			if(! dto.getUserId().equals(info.getUserId()) && ! info.getUserId().equals("admin")) {
-				resp.sendRedirect(cp+"/qa/list.do?"+query);
-				return;
-			}
-			*/
-			
-			// 일단 게시글을 올린 사용자인지만 확인
-			if(! dto.getUserId().equals(info.getUserId())) {
+			if(! dto.getUserId().equals(info.getUserId()) && ! info.getType().equals("0")) {
 				resp.sendRedirect(cp+"/qa/list.do?"+query);
 				return;
 			}
@@ -360,16 +351,14 @@ public class QaServlet extends HttpServlet {
 			MyUtil util=new MyUtil();
 			dto.setContent(util.htmlSymbols(dto.getContent()));
 			
-			/*
-			QadDTO preReadDto=dao.preReadBoard(dto.getGroupNum(),
+			QaDTO preReadDto=dao.preReadBoard(dto.getGroupNum(),
 					dto.getOrderNo(), condition, keyword);
 			QaDTO nextReadDto=dao.nextReadBoard(dto.getGroupNum(),
 					dto.getOrderNo(), condition, keyword);
-			*/
 		
 			req.setAttribute("dto", dto);
-			// req.setAttribute("preReadDto", preReadDto);
-			// req.setAttribute("nextReadDto", nextReadDto);
+			req.setAttribute("preReadDto", preReadDto);
+			req.setAttribute("nextReadDto", nextReadDto);
 			req.setAttribute("query", query);
 			req.setAttribute("page", page);
 			
