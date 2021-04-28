@@ -8,16 +8,9 @@ public class MessageDTO {
 	private String sendTime;
 	private String messageType;
 	private String nickName;
-	private String type;
 	private int pageNum,listNum;
 	
 	
-	public String getType() {
-		return type;
-	}
-	public void setType(String type) {
-		this.type = type;
-	}
 	public String getNickName() {
 		return nickName;
 	}

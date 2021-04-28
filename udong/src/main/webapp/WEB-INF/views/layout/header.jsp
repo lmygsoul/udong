@@ -93,7 +93,7 @@ $(function(){
             <a href="#"><span>마이페이지</span></a>
             <ul>
                 <li><a href="${pageContext.request.contextPath}/member/sm_list.do" style="margin-left:456px; " onmouseover="this.style.marginLeft='456px';">보낸 쪽지함</a></li>
-                <li><a href="#">받은 쪽지함</a></li>
+                <li><a href="${pageContext.request.contextPath}/member/rm_list.do">받은 쪽지함</a></li>
                 <li><a href="#">내가쓴글</a></li>
                 <li><a href="#">찜한목록</a></li>
             </ul>

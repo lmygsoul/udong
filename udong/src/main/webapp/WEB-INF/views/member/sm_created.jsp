@@ -27,7 +27,7 @@
             return;
         }
 
-   		f.action="${pageContext.request.contextPath}/member/${mode}_ok.do";
+   		f.action="${pageContext.request.contextPath}/member/sm_created_ok.do";
 
         f.submit();
     }

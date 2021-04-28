@@ -18,7 +18,7 @@ public class SendMessageDAO {
 		ResultSet rs = null;
 		StringBuilder sb = new StringBuilder();
 		try {
-			sb.append("SELECT sm.sendUser, receiveUser, subject, content, TO_CHAR(sendTime, 'YYYY-MM-DD') sendTime, messageType, pageNum, nickName, type FROM sendMessage sm" );
+			sb.append("SELECT sm.sendUser, receiveUser, subject, content, TO_CHAR(sendTime, 'YYYY-MM-DD') sendTime, messageType, pageNum, nickName FROM sendMessage sm" );
 			sb.append(" LEFT OUTER JOIN member1 m1 ON sm.sendUser = m1.userId WHERE pageNum = ? ");
 			
 			pstmt = conn.prepareStatement(sb.toString());
@@ -34,7 +34,6 @@ public class SendMessageDAO {
 				mdto.setMessageType(rs.getString("messageType"));
 				mdto.setPageNum(rs.getInt("pageNum"));
 				mdto.setNickName(rs.getString("nickName"));
-				mdto.setType(rs.getString("type"));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -62,7 +61,7 @@ public class SendMessageDAO {
 		ResultSet rs = null;
 		StringBuilder sb = new StringBuilder();
 		try {
-			sb.append("SELECT sm.sendUser, receiveUser, subject, content, TO_CHAR(sendTime, 'YYYY-MM-DD') sendTime, messageType, pageNum, nickName, type FROM sendMessage sm" );
+			sb.append("SELECT sm.sendUser, receiveUser, subject, content, TO_CHAR(sendTime, 'YYYY-MM-DD') sendTime, messageType, pageNum, nickName FROM sendMessage sm" );
 			sb.append(" LEFT OUTER JOIN member1 m1 ON sm.sendUser = m1.userId WHERE sm.sendUser = ? ");
 			
 			pstmt = conn.prepareStatement(sb.toString());
@@ -78,7 +77,6 @@ public class SendMessageDAO {
 				mdto.setMessageType(rs.getString("messageType"));
 				mdto.setPageNum(rs.getInt("pageNum"));
 				mdto.setNickName(rs.getString("nickName"));
-				mdto.setType(rs.getString("type"));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -117,6 +115,20 @@ public class SendMessageDAO {
 			pstmt.setString(5, mdto.getMessageType());
 			
 			result=pstmt.executeUpdate();
+			
+			pstmt.close();
+			pstmt=null;
+			
+			sql="INSERT INTO reciveMessage(receiveUser, sendUser, subject, content, sendTime, messageType, pageNum) VALUES(?,?,?,?,SYSDATE,?,send_seq.NEXTVAL)";
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setString(1, mdto.getReceiveUser());
+			pstmt.setString(2, mdto.getSendUser());
+			pstmt.setString(3, mdto.getSubject());
+			pstmt.setString(4, mdto.getContent());
+			mdto.setMessageType("1");
+			pstmt.setString(5, mdto.getMessageType());
+			
+			result+=pstmt.executeUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -129,7 +141,7 @@ public class SendMessageDAO {
 		}
 		return result;
 	}
-	public int dataCount(String userId) {
+	public int dataCount_sm(String userId) {
 		int result=0;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -163,7 +175,7 @@ public class SendMessageDAO {
 		
 		return result;
 	}
-	public int dataCount(String userId, String condition, String keyword) {
+	public int dataCount_sm(String userId, String condition, String keyword) {
 		int result = 0;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -174,9 +186,9 @@ public class SendMessageDAO {
 			
 			if(condition.equals("all")) {
 				sql+=" WHERE INSTR(subject, ?) >= 1 OR INSTR(content, ?) >= 1 AND sendUser = ?";
-			} else if(condition.equals("created")) {
+			} else if(condition.equals("sendTime")) {
 				keyword = keyword.replaceAll("(\\-|\\/|\\.)", "");
-				sql+=" WHERE TO_CHAR(created, 'YYYYMMDD') = ? AND sendUser = ?";
+				sql+=" WHERE TO_CHAR(sendTime, 'YYYYMMDD') = ? AND sendUser = ?";
 			} else {
 				sql +=" WHERE INSTR(" + condition + ", ?) >= 1 AND sendUser = ?";
 			}
@@ -223,7 +235,7 @@ public class SendMessageDAO {
 		String sql;
 		
 		try {
-			sql="SELECT sm.sendUser, receiveUser, subject, content, TO_CHAR(sendTime, 'YYYY-MM-DD') sendTime, messageType, pageNum,type FROM sendMessage sm"
+			sql="SELECT sm.sendUser, receiveUser, subject, content, TO_CHAR(sendTime, 'YYYY-MM-DD') sendTime, messageType, pageNum FROM sendMessage sm"
 					+ " LEFT OUTER JOIN member1 m1 ON sm.sendUser = m1.userId ORDER BY pageNum DESC"
 					+ " OFFSET ? ROWS FETCH FIRST ? ROWS ONLY";
 			
@@ -239,8 +251,8 @@ public class SendMessageDAO {
 				mdto.setReceiveUser(rs.getString("receiveUser"));
 				mdto.setSubject(rs.getString("subject"));
 				mdto.setSendTime(rs.getString("sendTime"));
+				mdto.setContent(rs.getString("content"));
 				mdto.setMessageType(rs.getString("messageType"));
-				mdto.setType(rs.getString("type"));
 				
 				list.add(mdto);
 			}
@@ -273,12 +285,12 @@ public class SendMessageDAO {
 		
 		try {
 			sql="SELECT sm.sendUser, receiveUser, subject, content, TO_CHAR(sendTime, 'YYYY-MM-DD') sendTime, messageType, pageNum FROM sendMessage sm"
-					+ " LETF OUTER JOIN member1 m1 ON sm.sendUser = m1.userId ";
+					+ " LEFT OUTER JOIN member1 m1 ON sm.sendUser = m1.userId ";
 			if(condition.equals("all")) {
 				sql += "  WHERE INSTR(subject, ?) >= 1 OR INSTR(content, ?) >=1";
-			} else if (condition.equals("created")) {
+			} else if (condition.equals("sendTime")) {
 				keyword = keyword.replaceAll("(\\-|\\/|\\.)", "");
-				sql +=" WHERE TO_CHAR(created, 'YYYYMMDD') = ? ";
+				sql +=" WHERE TO_CHAR(sendTime, 'YYYYMMDD') = ? ";
 			} else {
 				sql += " WHERE INSTR(" + condition + ", ?) >= 1";
 			}
@@ -301,9 +313,11 @@ public class SendMessageDAO {
 			while(rs.next()) {
 				MessageDTO mdto = new MessageDTO();
 				mdto.setPageNum(rs.getInt("pageNum"));
+				mdto.setSendUser(rs.getString("sendUser"));
 				mdto.setReceiveUser(rs.getString("receiveUser"));
 				mdto.setSubject(rs.getString("subject"));
 				mdto.setSendTime(rs.getString("sendTime"));
+				mdto.setContent(rs.getString("content"));
 				mdto.setMessageType(rs.getString("messageType"));
 				
 				list.add(mdto);
@@ -328,7 +342,7 @@ public class SendMessageDAO {
 		}
 		return list;
 	}
-	public MessageDTO preReadSM(int num, String condition, String keyword) {
+	public MessageDTO preReadSM(int num, String condition, String keyword,String userId) {
 		MessageDTO mdto = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -338,23 +352,34 @@ public class SendMessageDAO {
 			sb.append("SELECT sm.sendUser, receiveUser, subject, content, TO_CHAR(sendTime, 'YYYY-MM-DD') sendTime, messageType, pageNum FROM sendMessage sm");
 			sb.append(" LEFT OUTER JOIN member1 m1 ON sm.sendUser = m1.userId ");
 			if(condition.equals("all")) {
-                sb.append(" WHERE ( INSTR(subject, ?) >= 1 OR INSTR(content, ?) >= 1  ) ");
-            } else if(condition.equals("created")) {
+				if(keyword.equals(""))
+					sb.append(" WHERE sendUser = ?");
+				else
+                sb.append(" WHERE ( INSTR(subject, ?) >= 1 OR INSTR(content, ?) >= 1  ) AND sendUser = ?");
+            } else if(condition.equals("sendTime")) {
             	keyword = keyword.replaceAll("(\\-|\\/|\\.)", "");
-                sb.append(" WHERE (TO_CHAR(created, 'YYYYMMDD') = ?) ");
+                sb.append(" WHERE (TO_CHAR(sendTime, 'YYYYMMDD') = ?) AND sendUser = ? ");
             } else {
-                sb.append(" WHERE ( INSTR("+condition+", ?) > 0) ");
+                sb.append(" WHERE ( INSTR("+condition+", ?) > 0) AND sendUser = ?");
             }
             sb.append(" AND (pageNum > ? ) ORDER BY pageNum ASC FETCH  FIRST  1  ROWS  ONLY ");
             
             pstmt= conn.prepareStatement(sb.toString());
             if(condition.equals("all")) {
-                pstmt.setString(1, keyword);
-                pstmt.setString(2, keyword);
-               	pstmt.setInt(3, num);
+            	if(keyword.equals("")) {
+            		pstmt.setString(1, userId);
+               		pstmt.setInt(2, num);
+            	}
+            	else {
+            		pstmt.setString(1, keyword);
+            		pstmt.setString(2, keyword);
+            		pstmt.setString(3, userId);
+            		pstmt.setInt(4, num);
+            	}
             } else {
                 pstmt.setString(1, keyword);
-               	pstmt.setInt(2, num);
+                pstmt.setString(2, userId);
+               	pstmt.setInt(3, num);
             }
             rs=pstmt.executeQuery();
             if(rs.next()) {
@@ -380,7 +405,7 @@ public class SendMessageDAO {
 		}
 		return mdto;
 	}
-	public MessageDTO nextReadSM(int num, String condition, String keyword) {
+	public MessageDTO nextReadSM(int num, String condition, String keyword,String userId) {
 		MessageDTO mdto = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -390,23 +415,34 @@ public class SendMessageDAO {
 			sb.append("SELECT sm.sendUser, receiveUser, subject, content, TO_CHAR(sendTime, 'YYYY-MM-DD') sendTime, messageType, pageNum FROM sendMessage sm");
 			sb.append(" LEFT OUTER JOIN member1 m1 ON sm.sendUser = m1.userId ");
 			if(condition.equals("all")) {
-                sb.append(" WHERE ( INSTR(subject, ?) >= 1 OR INSTR(content, ?) >= 1  ) ");
-            } else if(condition.equals("created")) {
+				if(keyword.equals(""))
+					sb.append(" WHERE sendUser = ?");
+				else
+                sb.append(" WHERE ( INSTR(subject, ?) >= 1 OR INSTR(content, ?) >= 1  ) AND sendUser = ?");
+            } else if(condition.equals("sendTime")) {
             	keyword = keyword.replaceAll("(\\-|\\/|\\.)", "");
-                sb.append(" WHERE (TO_CHAR(created, 'YYYYMMDD') = ?) ");
+                sb.append(" WHERE (TO_CHAR(sendTime, 'YYYYMMDD') = ?) AND sendUser = ?");
             } else {
-                sb.append(" WHERE ( INSTR("+condition+", ?) > 0) ");
+                sb.append(" WHERE ( INSTR("+condition+", ?) > 0) AND sendUser = ? ");
             }
             sb.append(" AND (pageNum < ? ) ORDER BY pageNum DESC FETCH  FIRST  1  ROWS  ONLY ");
             
             pstmt= conn.prepareStatement(sb.toString());
             if(condition.equals("all")) {
+            	if(keyword.equals("")) {
+            		pstmt.setString(1, userId);
+                   	pstmt.setInt(2, num);
+            	}
+            	else {
+            		pstmt.setString(1, keyword);
+                	pstmt.setString(2, keyword);
+                	pstmt.setString(3, userId);
+               		pstmt.setInt(4, num);
+            	}
+            }  else {
                 pstmt.setString(1, keyword);
-                pstmt.setString(2, keyword);
+                pstmt.setString(2, userId);
                	pstmt.setInt(3, num);
-            } else {
-                pstmt.setString(1, keyword);
-               	pstmt.setInt(2, num);
             }
             rs=pstmt.executeQuery();
             if(rs.next()) {
@@ -430,6 +466,382 @@ public class SendMessageDAO {
 				}
 			}
 		}
+		return mdto;
+	}
+	public int deletesendMessage(String userId,int pageNum) throws SQLException{
+		int result=0;
+		PreparedStatement pstmt = null;
+		String sql;
+		try {
+			sql="DELETE FROM sendMessage WHERE sendUser = ? AND pageNum= ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, userId);
+			pstmt.setInt(2, pageNum);
+			
+			result=pstmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+		
+		
+		return result;
+	}
+	public List<MessageDTO> listrm(int offset, int rows){
+		List<MessageDTO> list = new ArrayList<MessageDTO>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		
+		try {
+			sql="SELECT rm.receiveUser, sendUser, subject, content, TO_CHAR(sendTime, 'YYYY-MM-DD') sendTime, messageType, pageNum FROM reciveMessage rm"
+					+ " LEFT OUTER JOIN member1 m1 ON rm.receiveUser = m1.userId ORDER BY pageNum DESC"
+					+ " OFFSET ? ROWS FETCH FIRST ? ROWS ONLY";
+			
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setInt(1, offset);
+			pstmt.setInt(2, rows);
+			
+			rs=pstmt.executeQuery();
+			while(rs.next()) {
+				MessageDTO mdto = new MessageDTO();
+				mdto.setPageNum(rs.getInt("pageNum"));
+				mdto.setSendUser(rs.getString("sendUser"));
+				mdto.setReceiveUser(rs.getString("receiveUser"));
+				mdto.setSubject(rs.getString("subject"));
+				mdto.setSendTime(rs.getString("sendTime"));
+				mdto.setContent(rs.getString("content"));
+				mdto.setMessageType(rs.getString("messageType"));
+				
+				list.add(mdto);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if(rs!=null) {
+				try {
+					rs.close();
+				} catch (Exception e2) {
+					
+				}
+			}
+			
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+		}
+		return list;
+	}
+	
+	public List<MessageDTO> listrm(int offset, int rows,String condition, String keyword){
+		List<MessageDTO> list = new ArrayList<MessageDTO>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		
+		try {
+			sql="SELECT rm.receiveUser, sendUser, subject, content, TO_CHAR(sendTime, 'YYYY-MM-DD') sendTime, messageType, pageNum FROM reciveMessage rm"
+					+ " LEFT OUTER JOIN member1 m1 ON rm.receiveUser = m1.userId ";
+			if(condition.equals("all")) {
+				sql += "  WHERE INSTR(subject, ?) >= 1 OR INSTR(content, ?) >=1";
+			} else if (condition.equals("sendTime")) {
+				keyword = keyword.replaceAll("(\\-|\\/|\\.)", "");
+				sql +=" WHERE TO_CHAR(sendTime, 'YYYYMMDD') = ? ";
+			} else {
+				sql += " WHERE INSTR(" + condition + ", ?) >= 1";
+			}
+			sql += " ORDER BY pageNum DESC OFFSET ? ROWS FETCH FIRST ? ROWS ONLY";
+			
+			pstmt=conn.prepareStatement(sql);
+			
+			if(condition.equals("all")) {
+				pstmt.setString(1, keyword);
+				pstmt.setString(2, keyword);
+				pstmt.setInt(3, offset);
+				pstmt.setInt(4, rows);
+			}else {
+				pstmt.setString(1, keyword);
+				pstmt.setInt(2, offset);
+				pstmt.setInt(3, rows);
+			}
+			
+			rs=pstmt.executeQuery();
+			while(rs.next()) {
+				MessageDTO mdto = new MessageDTO();
+				mdto.setPageNum(rs.getInt("pageNum"));
+				mdto.setSendUser(rs.getString("sendUser"));
+				mdto.setReceiveUser(rs.getString("receiveUser"));
+				mdto.setSubject(rs.getString("subject"));
+				mdto.setSendTime(rs.getString("sendTime"));
+				mdto.setContent(rs.getString("content"));
+				mdto.setMessageType(rs.getString("messageType"));
+				
+				list.add(mdto);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if(rs!=null) {
+				try {
+					rs.close();
+				} catch (Exception e2) {
+					
+				}
+			}
+			
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+		}
+		return list;
+	}
+	public int updateMessage(String userId,int num) throws SQLException{
+		int result=0;
+		PreparedStatement pstmt = null;
+		String sql;
+		
+		try {
+			sql="UPDATE sendMessage SET messageType = ? WHERE receiveUser = ? AND pageNum = ?-1";
+			pstmt=conn.prepareStatement(sql);
+			
+			pstmt.setString(1, "2");
+			pstmt.setString(2, userId);
+			pstmt.setInt(3, num);
+			
+			result=pstmt.executeUpdate();
+			pstmt.close();
+			pstmt=null;
+			
+			sql="UPDATE reciveMessage SET messageType = ? WHERE receiveUser = ? AND pageNum = ?";
+			pstmt=conn.prepareStatement(sql);
+			
+			pstmt.setString(1, "2");
+			pstmt.setString(2, userId);
+			pstmt.setInt(3, num);
+			
+			result +=pstmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+		}
+		
+		return result;
+	}
+	public int deletereceiveMessage(String userId,int pageNum) throws SQLException{
+		int result=0;
+		PreparedStatement pstmt = null;
+		String sql;
+		try {
+			sql="DELETE FROM reciveMessage WHERE sendUser = ? AND pageNum= ? +1";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, userId);
+			pstmt.setInt(2, pageNum);
+			
+			result=pstmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+		
+		
+		return result;
+	}
+	public MessageDTO readsendUser(String userId,int num) throws SQLException {
+		MessageDTO mdto =null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		StringBuilder sb = new StringBuilder();
+		try {
+			sb.append("SELECT rm.sendUser, receiveUser, subject, content, TO_CHAR(sendTime, 'YYYY-MM-DD') sendTime, messageType, pageNum, nickName FROM reciveMessage rm" );
+			sb.append(" LEFT OUTER JOIN member1 m1 ON rm.sendUser = m1.userId WHERE receiveUser = ? AND pageNum = ?+1 ");
+			
+			pstmt = conn.prepareStatement(sb.toString());
+			pstmt.setString(1, userId);
+			pstmt.setInt(2, num);
+			rs=pstmt.executeQuery();
+			if(rs.next()) {
+				mdto = new MessageDTO();
+				mdto.setSendUser(rs.getString("sendUser"));
+				mdto.setReceiveUser(rs.getString("receiveUser"));
+				mdto.setSubject(rs.getString("subject"));
+				mdto.setContent(rs.getString("content"));
+				mdto.setSendTime(rs.getString("sendTime"));
+				mdto.setMessageType(rs.getString("messageType"));
+				mdto.setPageNum(rs.getInt("pageNum"));
+				mdto.setNickName(rs.getString("nickName"));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if(rs!=null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+				}
+			}
+				
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+		
+		return mdto;
+	}
+	public int dataCount_rm(String userId) {
+		int result=0;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		
+		try {
+			sql="SELECT COUNT(*) FROM reciveMessage WHERE receiveUser = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, userId);
+			rs=pstmt.executeQuery();
+			if(rs.next()) {
+				result=rs.getInt(1);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs!=null) {
+				try {
+					rs.close();
+				} catch (Exception e2) {
+				}
+			}
+			
+			if (pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+		}
+		
+		return result;
+	}
+	public int dataCount_rm(String userId, String condition, String keyword) {
+		int result = 0;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		
+		try {
+			sql=" SELECT COUNT(*) FROM reciveMessage rm JOIN member1 m ON rm.receiveUser = m.userId";
+			
+			if(condition.equals("all")) {
+				sql+=" WHERE INSTR(subject, ?) >= 1 OR INSTR(content, ?) >= 1 AND receiveUser = ?";
+			} else if(condition.equals("sendTime")) {
+				keyword = keyword.replaceAll("(\\-|\\/|\\.)", "");
+				sql+=" WHERE TO_CHAR(sendTime, 'YYYYMMDD') = ? AND receiveUser = ?";
+			} else {
+				sql +=" WHERE INSTR(" + condition + ", ?) >= 1 AND receiveUser = ?";
+			}
+			pstmt =conn.prepareStatement(sql);
+			
+			if(condition.equals("all")) {
+				pstmt.setString(1, keyword);
+				pstmt.setString(2, keyword);
+				pstmt.setString(3, userId);
+			}else {
+				pstmt.setString(1, keyword);
+				pstmt.setString(2, userId);
+			}
+			
+			rs=pstmt.executeQuery();
+			
+			if(rs.next()) {
+				result=rs.getInt(1);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs!=null) {
+				try {
+					rs.close();
+				} catch (Exception e2) {
+				}
+			}
+			
+			if (pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+		}
+		
+		return result;
+	}
+	public MessageDTO readMember_rm(int num) throws SQLException {
+		MessageDTO mdto =null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		StringBuilder sb = new StringBuilder();
+		try {
+			sb.append("SELECT rm.sendUser, receiveUser, subject, content, TO_CHAR(sendTime, 'YYYY-MM-DD') sendTime, messageType, pageNum, nickName FROM reciveMessage rm" );
+			sb.append(" LEFT OUTER JOIN member1 m1 ON rm.sendUser = m1.userId WHERE pageNum = ? ");
+			
+			pstmt = conn.prepareStatement(sb.toString());
+			pstmt.setInt(1, num);
+			rs=pstmt.executeQuery();
+			if(rs.next()) {
+				mdto = new MessageDTO();
+				mdto.setSendUser(rs.getString("sendUser"));
+				mdto.setReceiveUser(rs.getString("receiveUser"));
+				mdto.setSubject(rs.getString("subject"));
+				mdto.setContent(rs.getString("content"));
+				mdto.setSendTime(rs.getString("sendTime"));
+				mdto.setMessageType(rs.getString("messageType"));
+				mdto.setPageNum(rs.getInt("pageNum"));
+				mdto.setNickName(rs.getString("nickName"));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if(rs!=null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+				}
+			}
+				
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+		
 		return mdto;
 	}
 }

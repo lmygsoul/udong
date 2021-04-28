@@ -11,10 +11,10 @@
 
 <script type="text/javascript">
 // 관리자이거나 글 작성자가 아니면, 스크립트가 보이지 않게.
-<c:if test="${mdto.sendUser == sessionScope.member.userId || sessionScope.member.type == '0'}">
+<c:if test="${mdto.receiveUser == sessionScope.member.userId || sessionScope.member.type == '0'}">
 function deleteBoard(num) {
 	if(confirm("게시물을 삭제 하시겠습니까 ?")) {
-		var url="${pageContext.request.contextPath}/member/sm_delete.do?num="+num+"&${query}";
+		var url="${pageContext.request.contextPath}/member/rm_delete.do?num="+num+"&${query}";
 		location.href=url;
 	}
 }
@@ -38,7 +38,7 @@ function deleteBoard(num) {
 			
 			<tr height="35" class="row-2">
 			    <td width="50%" align="left" class="col-2">
-			       받는사람 : ${mdto.receiveUser}
+			       보낸사람 : ${mdto.sendUser}
 			    </td>
 			    <td width="50%" align="right" class="col-2">
 			        ${mdto.sendTime} 
@@ -55,7 +55,7 @@ function deleteBoard(num) {
 			    <td colspan="2" align="left" class="col-3">
 			       이전쪽지 : 
 					<c:if test="${not empty preReadSM}">
-						<a href="${pageContext.request.contextPath}/member/sm_article.do?num=${preReadSM.pageNum}&${query}">${preReadSM.subject}</a>
+						<a href="${pageContext.request.contextPath}/member/rm_article.do?num=${preReadSM.pageNum}&${query}">${preReadSM.subject}</a>
 					</c:if>
 			    </td>
 			</tr>
@@ -64,23 +64,23 @@ function deleteBoard(num) {
 			    <td colspan="2" align="left" class="col-3">
 			       다음쪽지 :
 					<c:if test="${not empty nextReadSM}">
-						<a href="${pageContext.request.contextPath}/member/sm_article.do?num=${nextReadSM.pageNum}&${query}">${nextReadSM.subject}</a>
+						<a href="${pageContext.request.contextPath}/member/rm_article.do?num=${nextReadSM.pageNum}&${query}">${nextReadSM.subject}</a>
 					</c:if>
 			    </td>
 			</tr>
 			<tr height="45">
 			    <td class="col-4">			    	
 			    	<c:choose>
-			    		<c:when test="${mdto.sendUser == sessionScope.member.userId || sessionScope.member.type == '0'}">
+			    		<c:when test="${mdto.receiveUser == sessionScope.member.userId || sessionScope.member.type == '0'}">
 				        	<button type="button" class="btn" onclick="deleteBoard('${mdto.pageNum}');">삭제</button>
 			    		</c:when>
 			    	</c:choose>
-			    	
 			    </td>
-			
 			    <td align="right" class="col-4">
-			        <button type="button" class="btn btnList" onclick="javascript:location.href='${pageContext.request.contextPath}/member/sm_list.do?${query}';">리스트</button>
+			    	<button type="button" class="btn btnCreate" onclick="javascript:location.href='${pageContext.request.contextPath}/member/sm_created.do';">답장하기</button>
+			        <button type="button" class="btn btnList" onclick="javascript:location.href='${pageContext.request.contextPath}/member/rm_list.do?${query}';">리스트</button>
 			    </td>
+			    
 			</tr>
 			</table>
         </div>

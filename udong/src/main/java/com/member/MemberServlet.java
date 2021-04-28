@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -49,6 +50,16 @@ public class MemberServlet extends MyServlet{
 			sendMessage_ok(req,resp);
 		} else if(uri.indexOf("sm_article.do")!=-1) {
 			sendMessage_article(req,resp);
+		} else if(uri.indexOf("sm_delete.do")!=-1) {
+			sm_Message_delete(req,resp);
+		} else if(uri.indexOf("rm_list.do")!=-1) {
+			receiveMessageList(req,resp);
+		} else if(uri.indexOf("rm_created.do")!=-1) {
+			recieveMessage(req, resp);
+		} else if(uri.indexOf("rm_article.do")!=-1) {
+			receiveMessage_article(req,resp);
+		} else if(uri.indexOf("rm_delete.do")!=-1) {
+			rm_Message_delete(req,resp);
 		}
 		
 	}
@@ -258,11 +269,11 @@ public class MemberServlet extends MyServlet{
 		}
 		int dataCount;
 		if(keyword.length()==0) {
-			dataCount = dao.dataCount(info.getUserId());
+			dataCount = dao.dataCount_sm(info.getUserId());
 			if(info.getType().equals("0"))
 				dataCount+=3;
 		} else {
-			dataCount = dao.dataCount(info.getUserId(),condition, keyword);
+			dataCount = dao.dataCount_sm(info.getUserId(),condition, keyword);
 			if(info.getType().equals("0"))
 				dataCount+=3;
 		}
@@ -283,6 +294,8 @@ public class MemberServlet extends MyServlet{
 		int listNum, n=0;
 		for(MessageDTO mdto : list) {
 				listNum = dataCount - (offset+n);
+				if(listNum==0)
+					listNum=1;
 				mdto.setListNum(listNum);
 				n++;
 		}
@@ -300,29 +313,31 @@ public class MemberServlet extends MyServlet{
 		
 		req.setAttribute("list", list);
 		req.setAttribute("paging", paging);
+		req.setAttribute("page", current_page);
 		req.setAttribute("dataCount", dataCount);
 		req.setAttribute("total_page", total_page);
 		req.setAttribute("articleUrl", articleUrl);
 		req.setAttribute("condition", condition);
 		req.setAttribute("keyword", keyword);
-		
+		req.setAttribute("mode", "sendMessage");
 		req.setAttribute("title", "보낸쪽지함");
 		
 		forward(req, resp, "/WEB-INF/views/member/sm_list.jsp");
-		
+		return;
 	}
 	private void sendMessage(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
 		req.setAttribute("title", "보낸쪽지함");
 		req.setAttribute("mode", "sm_created");
 		
 		forward(req, resp, "/WEB-INF/views/member/sm_created.jsp");
-		
+		return;
 	}
 
 	private void sendMessage_ok(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		SendMessageDAO mdao = new SendMessageDAO();
 		MessageDTO mdto = new MessageDTO();
 		HttpSession session=req.getSession();
+		String cp = req.getContextPath();
 		try {
 			SessionInfo info=(SessionInfo)session.getAttribute("member");
 			mdto.setSendUser(info.getUserId());
@@ -333,10 +348,10 @@ public class MemberServlet extends MyServlet{
 			mdao.insertMessage(mdto);
 			
 			req.setAttribute("title", "보낸쪽지함");
-			req.setAttribute("mode", "sendMessage");
 			req.setAttribute("mdto", mdto);
 			
-			forward(req, resp, "/WEB-INF/views/member/sm_list.jsp");
+			resp.sendRedirect(cp+"/member/sm_list.do");
+			return;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -345,11 +360,12 @@ public class MemberServlet extends MyServlet{
 	private void sendMessage_article(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		SendMessageDAO mdao= new SendMessageDAO();
 		String cp = req.getContextPath();
+		HttpSession session=req.getSession();
 		String page = req.getParameter("page");
 		String query = "page="+page;
 		try {
 			int num = Integer.parseInt(req.getParameter("num"));
-			
+			SessionInfo info=(SessionInfo)session.getAttribute("member");
 			String condition = req.getParameter("condition");
 			String keyword = req.getParameter("keyword");
 			
@@ -368,12 +384,12 @@ public class MemberServlet extends MyServlet{
 				return;
 			}
 			mdto.setContent(mdto.getContent().replaceAll("\n", "<br>"));
-			MessageDTO preReadSM = mdao.preReadSM(num, condition, keyword);
-			MessageDTO nextReadSM = mdao.nextReadSM(num, condition, keyword);
+			MessageDTO preReadSM = mdao.preReadSM(num, condition, keyword,info.getUserId());
+			MessageDTO nextReadSM = mdao.nextReadSM(num, condition, keyword,info.getUserId());
 			
 			req.setAttribute("mdto", mdto);
-			req.setAttribute("preReadsm", preReadSM);
-			req.setAttribute("nextReadsm", nextReadSM);
+			req.setAttribute("preReadSM", preReadSM);
+			req.setAttribute("nextReadSM", nextReadSM);
 			req.setAttribute("page", page);
 			req.setAttribute("query", query);
 			
@@ -384,5 +400,177 @@ public class MemberServlet extends MyServlet{
 			e.printStackTrace();
 		}
 		
+	}
+
+	private void sm_Message_delete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		SendMessageDAO mdao = new SendMessageDAO();
+		HttpSession session=req.getSession();
+		String cp = req.getContextPath();
+		String page = req.getParameter("page");
+		try {
+			int num= Integer.parseInt(req.getParameter("num"));
+			SessionInfo info=(SessionInfo)session.getAttribute("member");
+			
+			
+			mdao.deletesendMessage(info.getUserId(),num);
+			
+			resp.sendRedirect(cp+"/member/sm_list.do?page="+page);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void receiveMessageList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		SendMessageDAO dao = new SendMessageDAO();
+		MyUtil util= new MyUtil();
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		String page = req.getParameter("page");
+		String cp = req.getContextPath();
+		int current_page = 1;
+		
+		if (info==null) {
+			resp.sendRedirect(cp+"/member/login.do");
+			return;
+		}
+		if(page!=null) {
+			current_page = Integer.parseInt(page);
+		}
+		String condition = req.getParameter("condition");
+		String keyword = req.getParameter("keyword");
+		if(condition==null) {
+			condition = "all";
+			keyword="";
+		}
+		if(req.getMethod().equalsIgnoreCase("GET")) {
+			keyword=URLDecoder.decode(keyword,"UTF-8");
+		}
+		int dataCount;
+		if(keyword.length()==0) {
+			dataCount = dao.dataCount_rm(info.getUserId());
+			if(info.getType().equals("0"))
+				dataCount+=3;
+		} else {
+			dataCount = dao.dataCount_rm(info.getUserId(),condition, keyword);
+			if(info.getType().equals("0"))
+				dataCount+=3;
+		}
+		int rows = 10;
+		int total_page = util.pageCount(rows, dataCount);
+		
+		if(current_page > total_page) {
+			current_page = total_page ;
+		}
+		int offset = (current_page -1 ) * rows;
+		if(offset <0) offset = 0;
+		List<MessageDTO> list = null;
+		if(keyword.length()==0) {
+			list=dao.listrm(offset, rows);
+		} else {
+			list=dao.listrm(offset, rows, condition, keyword);
+		}
+		int listNum, n=0;
+		for(MessageDTO mdto : list) {
+				listNum = dataCount - (offset+n);
+				if(listNum==0)
+					listNum=1;
+				mdto.setListNum(listNum);
+				n++;
+		}
+		String query="";
+		if(keyword.length()!=0) {
+			query="condition="+condition+"&keyword="+URLEncoder.encode(keyword, "UTF-8");
+		}
+		String listUrl = cp+"/member/rm_list.do";
+		String articleUrl = cp+"/member/rm_article.do?page="+current_page;
+		if(query.length()!=0) {
+			listUrl += "?"+query;
+			articleUrl = "&"+articleUrl;
+		}
+		String paging = util.paging(current_page, total_page,listUrl);
+		
+		req.setAttribute("list", list);
+		req.setAttribute("paging", paging);
+		req.setAttribute("page", current_page);
+		req.setAttribute("dataCount", dataCount);
+		req.setAttribute("total_page", total_page);
+		req.setAttribute("articleUrl", articleUrl);
+		req.setAttribute("condition", condition);
+		req.setAttribute("keyword", keyword);
+		req.setAttribute("mode", "receiveMessage");
+		req.setAttribute("title", "받은쪽지함");
+		
+		forward(req, resp, "/WEB-INF/views/member/rm_list.jsp");
+		return;
+		
+	}
+	
+	private void recieveMessage(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
+		req.setAttribute("title", "받은쪽지함");
+		req.setAttribute("mode", "rm_created");
+		
+		forward(req, resp, "/WEB-INF/views/member/rm_created.jsp");
+		return;
+	}
+	private void receiveMessage_article(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		SendMessageDAO mdao= new SendMessageDAO();
+		String cp = req.getContextPath();
+		HttpSession session=req.getSession();
+		String page = req.getParameter("page");
+		String query = "page="+page;
+		try {
+			int num = Integer.parseInt(req.getParameter("num"));
+			SessionInfo info=(SessionInfo)session.getAttribute("member");
+			String condition = req.getParameter("condition");
+			String keyword = req.getParameter("keyword");
+			
+			if(condition==null) {
+				condition = "all";
+				keyword="";
+			}
+			keyword = URLDecoder.decode(keyword,"UTF-8");
+			
+			if(keyword.length()!=0) {
+				query +="&condition="+condition+"&keyword="+URLEncoder.encode(keyword,"UTF-8");
+			}
+			MessageDTO mdto = mdao.readMember_rm(num);
+			if(mdto==null) {
+				resp.sendRedirect(cp+"/member/rm_list.do?"+query);
+				return;
+			}
+			mdao.updateMessage(info.getUserId(), num);
+			mdto.setContent(mdto.getContent().replaceAll("\n", "<br>"));
+			MessageDTO preReadSM = mdao.preReadSM(num, condition, keyword,info.getUserId());
+			MessageDTO nextReadSM = mdao.nextReadSM(num, condition, keyword,info.getUserId());
+			
+			req.setAttribute("mdto", mdto);
+			req.setAttribute("preReadSM", preReadSM);
+			req.setAttribute("nextReadSM", nextReadSM);
+			req.setAttribute("page", page);
+			req.setAttribute("query", query);
+			
+			forward(req, resp, "/WEB-INF/views/member/rm_article.jsp");
+			return;
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+	private void rm_Message_delete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		SendMessageDAO mdao = new SendMessageDAO();
+		String cp = req.getContextPath();
+		String page = req.getParameter("page");
+		HttpSession session=req.getSession();
+		try {
+			int num= Integer.parseInt(req.getParameter("num"));
+			SessionInfo info=(SessionInfo)session.getAttribute("member");
+			MessageDTO mdto = mdao.readsendUser(info.getUserId(), num);
+			mdao.deletereceiveMessage(mdto.getSendUser(),num);
+			
+			resp.sendRedirect(cp+"/member/rm_list.do?page="+page);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }
