@@ -11,6 +11,7 @@ public class UsedDTO {
 	private String category;
 	private String imageFilename;
 	
+	private int likeCount;
 	
 	public int getNum() {
 		return num;
@@ -77,6 +78,12 @@ public class UsedDTO {
 	}
 	public void setImageFilename(String imageFilename) {
 		this.imageFilename = imageFilename;
+	}
+	public int getLikeCount() {
+		return likeCount;
+	}
+	public void setLikeCount(int likeCount) {
+		this.likeCount = likeCount;
 	}
 	
 	

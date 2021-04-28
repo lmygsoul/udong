@@ -62,7 +62,7 @@
 			      </td>
 			      <td>${dto.nickName}</td>
 			      <td>${dto.created}</td>
-			      <td>관심숫자</td>
+			      <td></td>
 			      
 			  </tr>
 			</c:forEach>

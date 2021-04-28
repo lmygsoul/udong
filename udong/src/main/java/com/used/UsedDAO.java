@@ -18,8 +18,8 @@ public class UsedDAO {
 		String sql;
 		
 		try {
-			sql = "INSERT INTO used(num, userId, subject, content, category, area, price, imageFilename, created)"
-				+ " VALUES(used_seq.NEXTVAL, ?, ?, ?, ?, ?, ?, ?, SYSDATE)";
+			sql = "INSERT INTO used(num, userId, subject, content, category, area, price, imageFilename, created, likeCount)"
+				+ " VALUES(used_seq.NEXTVAL, ?, ?, ?, ?, ?, ?, ?, SYSDATE, ?)";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, dto.getUserId());
 			pstmt.setString(2, dto.getSubject());
@@ -28,6 +28,7 @@ public class UsedDAO {
 			pstmt.setString(5, dto.getArea());
 			pstmt.setString(6, dto.getPrice());
 			pstmt.setString(7, dto.getImageFilename());
+			pstmt.setInt(8, dto.getLikeCount());
 			
 			result = pstmt.executeUpdate();
 			
@@ -44,7 +45,49 @@ public class UsedDAO {
 		}
 		return result;
 	} 
+	
+	//관심(좋아요) 수 늘리기
+	public int updateLikeCount(int num) throws SQLException {
+		int result=0;
+		PreparedStatement pstmt=null;
+		String sql;
 		
+		try {
+			sql="UPDATE used SET likeCount = likeCount + 1 WHERE num = ?";
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setInt(1, num);
+			
+			result=pstmt.executeUpdate();
+			
+		}catch (SQLException e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e2) {
+				}
+			}
+		}	
+		return result;
+	}
+	
+	//관심 insert
+	public int insertLike(String userId, int num) {
+		
+		
+		String sql = "INSERT into usedLike(userId, num) VALUES (?,?)";
+		try {
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, userId);
+			pstmt.setInt(2, num);
+			return pstmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return -1; 
+	}
 		
 	//데이터 개수
 	public int dataCount() {
@@ -158,6 +201,7 @@ public class UsedDAO {
 				dto.setSubject(rs.getString("subject"));
 				dto.setCategory(rs.getString("category"));
 				dto.setCreated(rs.getString("created"));
+				//dto.setLikeCount(rs.getInt("likeCount"));
 				
 				list.add(dto);
 			}
@@ -191,7 +235,7 @@ public class UsedDAO {
 		String sql;
 		
 		try {
-			sql= "SELECT num, u.userId, nickName, subject, category, TO_CHAR(created, 'YYYY-MM-DD') created "
+			sql= "SELECT num, u.userId, nickName, subject, category, TO_CHAR(created, 'YYYY-MM-DD') created, likeCount "
 					+ " FROM used u  "
 					+ " JOIN member1 m ON u.userId = m.userId  ";
 			if(condition.equals("all")) {
@@ -227,6 +271,7 @@ public class UsedDAO {
 				dto.setSubject(rs.getString("subject"));
 				dto.setCategory(rs.getString("category"));
 				dto.setCreated(rs.getString("created"));
+				dto.setLikeCount(rs.getInt("likeCount"));
 				
 				list.add(dto);
 			}
@@ -260,7 +305,7 @@ public class UsedDAO {
 		StringBuilder sb=new StringBuilder();
 		
 		try {
-			sb.append("SELECT num, u.userId, nickName, subject, content, price, area, imageFilename, created");
+			sb.append("SELECT num, u.userId, nickName, subject, category, content, price, area, imageFilename, created, likeCount");
 			sb.append(" FROM used u JOIN member1 m ON u.userId=m.userId");
 			sb.append(" WHERE num=?");						
 				
@@ -274,11 +319,13 @@ public class UsedDAO {
 				dto.setUserId(rs.getString("userId"));
 				dto.setNickName(rs.getString("nickName"));
 				dto.setSubject(rs.getString("subject"));
+				dto.setCategory(rs.getString("category"));
 				dto.setContent(rs.getString("content"));
 				dto.setPrice(rs.getString("price"));
 				dto.setArea(rs.getString("area"));
 				dto.setImageFilename(rs.getString("imageFilename"));
 				dto.setCreated(rs.getString("created"));
+				dto.setLikeCount(rs.getInt("likeCount"));
 	
 			}
 		} catch (SQLException e) {
@@ -458,7 +505,7 @@ public UsedDTO nextReadUsed(int num, String condition, String keyword) {
 		String sql;
 		
 		try {
-			sql = "UPDATE used SET subject=?, content=?, price=?, area=?, imageFilename=? WHERE num=? AND userId=?";
+			sql = "UPDATE used SET subject=?, content=?, price=?, area=?, imageFilename=?, category =? WHERE num=? AND userId=?";
 			pstmt=conn.prepareStatement(sql);
 			
 			pstmt.setString(1, dto.getSubject());
@@ -466,8 +513,9 @@ public UsedDTO nextReadUsed(int num, String condition, String keyword) {
 			pstmt.setString(3, dto.getPrice());
 			pstmt.setString(4, dto.getArea());
 			pstmt.setString(5, dto.getImageFilename());
-			pstmt.setInt(6, dto.getNum());
-			pstmt.setString(7, dto.getUserId());
+			pstmt.setString(6, dto.getCategory());
+			pstmt.setInt(7, dto.getNum());
+			pstmt.setString(8, dto.getUserId());
 			
 			result = pstmt.executeUpdate();
 			
@@ -516,7 +564,6 @@ public UsedDTO nextReadUsed(int num, String condition, String keyword) {
 		
 		return result;
 	}
-	
 	
 }
 

@@ -117,16 +117,8 @@
     	});
     });
 
-<c:if test="${mode=='update'}">
-    function deleteFile(fileNum) {
-    	if(! confirm("이미지를 삭제 하시겠습니까 ?")) {
-    		return;
-    	}
-    	var url="${pageContext.request.contextPath}/used/deleteFile.do?num=${dto.num}&fileNum="+fileNum+"&page=${page}";
-    	location.href=url;
-    }
+
 //돈에 세자리마다 콤마 넣기    
-</c:if>
     
     function inputNumberFormat(obj) {
         obj.value = comma(uncomma(obj.value));
@@ -217,33 +209,20 @@
 			           <input type="file" name="selectFile" accept="image/*" class="boxTF" size="53" style="height: 25px;">
 			       </td>
 			  </tr>
-			      
-			      <!-- 수정 모드일 때 -> 글번호, 페이지 번호를 넘긴다 (*page는 dto 안에 없음) -->
-			   <c:if test="${mode=='update'}">
-				  <tr align="left" height="40" style="border-bottom: 1px solid #cccccc;">
-				      <td style="padding-left:10px;">
-				      	<div class="imgLayout">
-					        <c:forEach var="vo" items="${listFile}">
-					        	<img src="${pageContext.request.contextPath}/uploads/used/${vo.imageFilename}"
-				                     onclick="deleteFile('${vo.fileNum}');">
-					        </c:forEach>
-				      	</div>
-				       </td>
-				  </tr> 
-			  </c:if>			  
 			  </table>
-			
-			  <table style="width: 100%; margin: 0px auto; border-spacing: 0px;">
+					
+			  <table style="width: 100%; border-spacing: 0px; margin-top: 5px;">
 			     <tr height="45"> 
 			      <td align="center" >
-			        <button type="button" class="btn" onclick="sendUsed();">${mode=='update'?'수정완료':'등록하기'}</button>
+			      <!-- 수정 모드일 때 -> 글번호, 페이지 번호를 넘긴다 (*page는 dto 안에 없음) -->
+			      	<c:if test="${mode=='update'}">
+			      		<input type="hidden" name="num" value="${dto.num}">
+			      		<input type="hidden" name="page" value="${page}">
+			      	</c:if>
+			        <button type="button" class="btn btnCreate" onclick="sendUsed();">${mode=='update'?'수정완료':'등록하기'}</button>
 			        <button type="reset" class="btn">다시입력</button>
 			        <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/used/list.do';">${mode=='update'?'수정취소':'등록취소'}</button>
-			         <c:if test="${mode=='update'}">
-                             <input type="hidden" name="num" value="${dto.num}">              
-                             <input type="hidden" name="page" value="${page}">
-			        </c:if>
-			      </td>
+			     </td>
 			    </tr>
 			  </table>
 			</form>

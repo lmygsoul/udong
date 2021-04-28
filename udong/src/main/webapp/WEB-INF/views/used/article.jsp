@@ -20,6 +20,7 @@ function deleteBoard(num) {
 	}
 }
 </c:if>
+
 </script>
 </head>
 <body>
@@ -40,8 +41,10 @@ function deleteBoard(num) {
 			    <td width="50%" align="left" class="col-2">
 			        ${dto.subject}
 			    </td>
-			     <td width="50%" align="right" class="col-2">
-			       관심클릭 이미지 넣기?
+			     <td width="50%" align="right" class="col-2">		   
+			       <c:if test ="${sessionScope.member.userId != null && sessionScope.member.userId != dto.userId}">
+			       <a onclick="return confirm('관심글에 추가할까요?')" href="${pageContext.request.contextPath}/used/like.do?num=${dto.num}&page=${page}">관심👍</a>
+			       </c:if>
 			    </td>
 			</tr>
 			
@@ -56,10 +59,10 @@ function deleteBoard(num) {
 			
 			<tr class="row-2">
 			  <td  rowspan="4" height="50">
-			    <img src="${pageContext.request.contextPath}/uploads/used/${dto.imageFilename}" style="max-width:100%; height:auto; resize:both;">
+			    <img src="${pageContext.request.contextPath}/uploads/photo/${dto.imageFilename}" style="max-width:100%; height:auto; resize:both;">
 			   </td>
 			    <td  height="50">
-			   카테고리: ${dto.category}
+			    > ${dto.category}
 			   </td>
 			</tr>
 			<tr class="row-2">

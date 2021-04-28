@@ -61,6 +61,8 @@ public class UsedServlet extends MyUploadServlet {
 			updateSubmit(req, resp);
 		} else if(uri.indexOf("delete.do")!=-1) {
 			delete(req, resp);
+		} else if(uri.indexOf("like.do")!=-1) {
+			updateLike(req, resp); 
 		}
 	}
 	
@@ -178,9 +180,19 @@ public class UsedServlet extends MyUploadServlet {
 			dto.setCategory(req.getParameter("category"));
 			dto.setPrice(req.getParameter("price"));
 			dto.setArea(req.getParameter("area"));
-			dto.setImageFilename(req.getParameter("imageFilename"));
-						
-			dao.insertUsed(dto);
+			
+			String filename = null;
+			Part p = req.getPart("selectFile"); //selectFile(이미지 넣은 input의 name)
+			Map<String, String> map = doFileUpload(p, pathname);
+			if(map !=null) {
+				filename = map.get("saveFilename");
+			}
+			
+			if(filename !=null) {
+				dto.setImageFilename(filename);
+				dao.insertUsed(dto);
+			}
+									
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -212,13 +224,15 @@ public class UsedServlet extends MyUploadServlet {
 					query += "&condition="+condition+"&keyword="+URLEncoder.encode(keyword,"utf-8");
 			}
 			
+						
 			//게시글 가져오기 
 			UsedDTO dto = dao.readUsed(num);
-			if(dto == null) {
-				resp.sendRedirect(cp+"/used/list.do?"+query);
+			if(dto == null) { //게시글이 없으면
+				resp.sendRedirect(cp+"/used/list.do?"+query); //리스트로
 				return;
 			}
 			dto.setContent(dto.getContent().replace("\n", "<br>"));	
+			
 			UsedDTO preReadUsed = dao.preReadUsed(num, condition, keyword);
 			UsedDTO nextReadUsed =dao.nextReadUsed(num, condition, keyword);
 									
@@ -241,10 +255,10 @@ public class UsedServlet extends MyUploadServlet {
 	private void updateForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 	
 		String cp=req.getContextPath();
+		UsedDAO dao=new UsedDAO();
+		
 		HttpSession session=req.getSession();
 		SessionInfo info=(SessionInfo)session.getAttribute("member");
-		
-		UsedDAO dao=new UsedDAO();
 	
 		String page=req.getParameter("page");
 		
@@ -252,7 +266,7 @@ public class UsedServlet extends MyUploadServlet {
 			int num=Integer.parseInt(req.getParameter("num"));
 			UsedDTO dto=dao.readUsed(num);
 			
-			if(dto==null) {
+			if(dto == null) {
 				resp.sendRedirect(cp+"/used/list.do?page="+page);
 				return;
 			}
@@ -265,7 +279,6 @@ public class UsedServlet extends MyUploadServlet {
 			
 			req.setAttribute("dto", dto);
 			req.setAttribute("page", page);
-			
 			req.setAttribute("mode", "update");
 
 			forward(req, resp, "/WEB-INF/views/used/created.jsp");
@@ -281,33 +294,49 @@ public class UsedServlet extends MyUploadServlet {
 	private void updateSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String cp=req.getContextPath();
 		UsedDAO dao=new UsedDAO();
-		UsedDTO dto=new UsedDTO();
 		
-		if(req.getMethod().equalsIgnoreCase("GET")) {
-			resp.sendRedirect(cp+"/used/list.do");
-			return;
-		}
 		
-		String page=req.getParameter("page");
-		
+		HttpSession session=req.getSession();
+		SessionInfo info=(SessionInfo)session.getAttribute("member");
+		String page = req.getParameter("page");
+				
 		try {
+			if(req.getMethod().equalsIgnoreCase("GET")) {
+				resp.sendRedirect(cp+"/used/list.do?page="+page);
+				return;
+			}
+			
+			UsedDTO dto=new UsedDTO();
+			
 			dto.setNum(Integer.parseInt(req.getParameter("num")));
 			dto.setSubject(req.getParameter("subject"));
 			dto.setContent(req.getParameter("content"));
-			
+			dto.setPrice(req.getParameter("price"));
+			dto.setArea(req.getParameter("area"));
+			dto.setCategory(req.getParameter("category"));
+
 			String imageFilename=req.getParameter("imageFilename");
-			dto.setImageFilename(imageFilename);
 			
 			Part p = req.getPart("selectFile");
 			Map<String, String> map = doFileUpload(p, pathname);
 			if(map != null) { // 이미지 파일을 업로드 한경우
-				String filename = map.get("saveFilename");
+				
 				// 기존 이미지 파일 지우기
 				FileManager.doFiledelete(pathname, imageFilename);
+				
+				//새로운 이미지 파일
+				String filename = map.get("saveFilename");
+				
 				dto.setImageFilename(filename);
+			}else {
+				//새로 업로드한 이미지가 없으면 기존 이미지파일로
+				dto.setImageFilename(imageFilename);
 			}
 			
+			dto.setUserId(info.getUserId());
+			
 			dao.updateUsed(dto);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -350,4 +379,31 @@ public class UsedServlet extends MyUploadServlet {
 		
 		resp.sendRedirect(cp+"/used/list.do?page="+page);			
 	}
+
+	private void updateLike(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
+		UsedDAO dao=new UsedDAO();
+		
+		String cp = req.getContextPath();
+		String page = req.getParameter("page");
+		String query = "page="+page;
+		
+		HttpSession session=req.getSession();
+		SessionInfo info=(SessionInfo)session.getAttribute("member");
+		
+		try {
+			int num = Integer.parseInt(req.getParameter("num"));
+			
+			dao.insertLike(info.getUserId(), num);
+			
+			dao.updateLikeCount(num);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		resp.sendRedirect(cp+"/used/article.do?"+query);
+	
+	}
+		
 }
