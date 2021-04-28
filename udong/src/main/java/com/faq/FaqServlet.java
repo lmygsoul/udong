@@ -40,17 +40,6 @@ public class FaqServlet extends HttpServlet {
 		req.setCharacterEncoding("utf-8");
 		String uri = req.getRequestURI();
 		
-		//로그인이 되지 않은 상태이면 로그인 페이지로
-		HttpSession session = req.getSession();
-		SessionInfo info = (SessionInfo)session.getAttribute("member");
-		
-		if (info==null) {
-			String cp = req.getContextPath();
-			resp.sendRedirect(cp+"/member/login.do");
-			return;
-		}
-		
-		
 		if(uri.indexOf("list.do")!=-1) {
 			list(req, resp);
 		} else if(uri.indexOf("created.do")!=-1) {
@@ -148,6 +137,17 @@ public class FaqServlet extends HttpServlet {
 	}
 	
 	protected void createdForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
+		//로그인이 되지 않은 상태이면 로그인 페이지로
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+				
+		if (info==null) {
+			String cp = req.getContextPath();
+			resp.sendRedirect(cp+"/member/login.do");
+			return;
+		}		
+		
 		req.setAttribute("mode", "created");
 		forward(req, resp, "/WEB-INF/views/faq/created.jsp");
 	}
@@ -176,6 +176,17 @@ public class FaqServlet extends HttpServlet {
 	}
 	
 	protected void article(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
+		//로그인이 되지 않은 상태이면 로그인 페이지로
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+				
+		if (info==null) {
+			String cp = req.getContextPath();
+			resp.sendRedirect(cp+"/member/login.do");
+			return;
+		}	
+		
 		FaqDAO dao = new FaqDAO();
 		String cp = req.getContextPath();
 		String page = req.getParameter("page");

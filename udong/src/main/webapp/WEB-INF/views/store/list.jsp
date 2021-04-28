@@ -21,10 +21,10 @@
 	    <jsp:include page="/WEB-INF/views/layout/header.jsp"></jsp:include>
 	</div>
 		
-	<div class="container" style="background-color: #FBF7F2;">
-   <div class="body-container" style="width: 1000px;">
+	<div class="container" style="background-color: white; border-top: 1px solid #E9ECEF;">
+   <div class="body-container" style="background-color: white; border: 0; width: 1000px;">
         <div class="body-title">
-            <h3><span style="font-family: Webdings">2</span> 우리동네 홍보 </h3>
+            <h3><i class="fas fa-bullhorn"></i>&nbsp;&nbsp;우리동네 홍보</h3>
         </div>
         <div align="right" style="padding-right: 10px">
         	<form name="searchForm" action="${pageContext.request.contextPath}/store/list.do" method="post">
@@ -51,7 +51,7 @@
         			<div class="imgLayout">
         				<img src="${pageContext.request.contextPath}/uploads/photo/${dto.imageFileName}" width="230" height="230"><br>
         				<span class="subject">[${dto.addrsub}] ${dto.subject}</span><br>
-        				<span class="subject">평점 ${dto.score} / 5.0 (참여 ${dto.recnum})</span>
+        				<span class="subject" style="color: gray; font-size: 11px">평점 ${dto.score} / 5.0 (참여 ${dto.recnum})</span>
         			</div>
         		</td>
         	</c:forEach>
