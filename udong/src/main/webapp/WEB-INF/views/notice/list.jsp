@@ -57,7 +57,7 @@
 	
 <div class="container">
     <div class="body-container">
-        <div class="body-title">
+        <div class="body-title" style="border-bottom: 0; padding-bottom: 0;">
             <h3><i class="fas fa-flag"></i><span>&nbsp;&nbsp;공지사항</span></h3>
         </div>
         
@@ -80,7 +80,7 @@
 			</table>
 			
 			<table style="width: 100%; margin: 0px auto; border-spacing: 0px; border-collapse: collapse;">
-			  <tr align="center" height="35" style="border-top: 1px solid #cccccc; border-bottom: 1px solid #cccccc;"> 
+			  <tr class="table-row1"> 
 			      <c:if test="${sessionScope.member.userId=='admin'}">
 				  	  <th width="40" style="color: #787878;">
 				  	  	<input type="checkbox" name="chkAll" id="chkAll" style="margin-top: 3px;">
@@ -97,17 +97,17 @@
 			 
 			 <!-- 공지글 -->
 			 <c:forEach var="dto" items="${listNotice}">
-			  <tr align="center" bgcolor="#ffffff" height="35" style="border-bottom: 1px solid #cccccc;"> 
+			  <tr class="notice-row"> 
 			  	  <c:if test="${sessionScope.member.userId=='admin'}">
 			  	     <td>
 			  	  		<input type="checkbox" name="nums" value="${dto.num}" style="margin-top: 3px;">
 			  	  	 </td>
 			  	  </c:if>
 			      <td align="left" style="padding-left: 14px;">
-			           <span style="display: inline-block;padding:1px 3px; background: #ED4C00;color: #FFFFFF; ">공지</span>
+			           <span class="notice-badge">공지</span>
 			      </td>
-			      <td align="left" style="padding-left: 10px;">
-			           <a href="${articleUrl}&num=${dto.num}">${dto.subject}</a>
+			      <td align="left" style="padding-left: 10px; font-weight: 500;">
+			           <a href="${articleUrl}&num=${dto.num}"><span style="color: #FE6671;">${dto.subject}</span></a>
 			      </td>
 			      <td>${dto.userName}</td>
 			      <td>${dto.created}</td>
@@ -122,7 +122,7 @@
 			 
 			  <!-- 일반글 -->
 			 <c:forEach var="dto" items="${list}">
-			  <tr align="center" bgcolor="#ffffff" height="35" style="border-bottom: 1px solid #cccccc;"> 
+			  <tr class="table-row2"> 
 			      <c:if test="${sessionScope.member.userId=='admin'}">
 			   	     <td>
 			   	  		<input type="checkbox" name="nums" value="${dto.num}" style="margin-top: 3px;">
@@ -174,7 +174,7 @@
 			      </td>
 			      <td align="right" width="100">
 			      	<c:if test="${sessionScope.member.userId=='admin'}">
-			          <button type="button" class="btn btnCreate" onclick="javascript:location.href='${pageContext.request.contextPath}/notice/created.do';">글쓰기</button>
+			          <button type="button" class="btn btnCreate" onclick="javascript:location.href='${pageContext.request.contextPath}/notice/created.do';">글올리기</button>
 			         </c:if>
 			      </td>
 			   </tr>

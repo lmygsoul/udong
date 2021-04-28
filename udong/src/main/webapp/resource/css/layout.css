@@ -126,7 +126,7 @@ li {
     border-radius: 5px;
     background-color: white;
     margin: 0 auto;
-    padding: 5px 0;
+    padding: 5px 10px;
 }
 
 .body-title {
@@ -149,15 +149,30 @@ li {
 /* table */
 
 .row-1 {
-	border-top: 1px solid #ccc; border-bottom: 1px solid #ccc;	
+	border-top: 1px solid #E9ECEF; border-bottom: 1px solid #E9ECEF;	
 }
 .row-2 {
-	border-bottom: 1px solid #ccc;
+	border-bottom: 1px solid #E9ECEF;
 }
 
 .row-3 {
 	border-top: 0;
 	border-bottom: 0;
+}
+
+.table-row1 {
+	text-align: center;
+	background-color: white;
+	height: 35px;
+	border-top: 1px solid #ccc; 
+	border-bottom: 1px solid #E9ECEF;
+}
+
+.table-row2 {
+	text-align: center;
+	background-color: white;
+	height: 35px;
+	border-bottom: 1px solid #E9ECEF;
 }
 
 .col-1 {
@@ -181,6 +196,38 @@ li {
 
 .artiBox{
 	padding: 20px 20px;
+}
+
+/* create */
+
+.create-row {
+	text-align: left;
+	height: 43px;
+	border-bottom: 1px solid #ccc; 
+	border-top: 1px solid #ccc;
+}
+
+.create-col1 {
+	width: 100px;
+	text-align: center;
+	background-color: #F8F9FA;
+}
+
+/* notice */
+.notice-row {
+	text-align: center;
+	background-color: #F8F9FA;
+	height: 35px;
+	border-bottom: 1px solid #F8F9FA;
+}
+
+.notice-badge {
+	display: inline-block; 
+	padding: 1px 5px; 
+	color: white; 
+	border-radius: 4px;
+	background: #FE6671; 
+	font-weight: 500;
 }
 
 /* form */

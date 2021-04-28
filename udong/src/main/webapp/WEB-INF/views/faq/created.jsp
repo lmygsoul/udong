@@ -49,21 +49,21 @@
 			<form name="faqForm" method="post" class="formBox">
 			  <table style="width: 100%; margin: 0 auto; border-spacing: 0px; border-collapse: collapse;">
 			  <tr align="left" height="43" style="border-bottom: 1px solid #ccc; border-top: 1px solid #ccc;"> 
-			      <td width="100" style="text-align: center;">제&nbsp;&nbsp;&nbsp;&nbsp;목</td>
+			      <td class="create-col1">제&nbsp;&nbsp;&nbsp;&nbsp;목</td>
 			      <td style="padding-left:10px;"> 
 			        <input type="text" name="subject" maxlength="100" class="boxTF" style="width: 96%;" value="${dto.subject}">
 			      </td>
 			  </tr>
 			
 			  <tr align="left" height="43" style="border-bottom: 1px solid #ccc;"> 
-			      <td width="100" style="text-align: center;">작성자</td>
+			      <td class="create-col1">작성자</td>
 			      <td style="padding-left:10px;"> 
 			          ${sessionScope.member.userName}
 			      </td>
 			  </tr>
 			
 			  <tr align="left" style="border-bottom: 1px solid #ccc;"> 
-			      <td width="100" style="text-align: center; padding-top:10px;" valign="top">내&nbsp;&nbsp;&nbsp;&nbsp;용</td>
+			      <td class="create-col1" style="padding-top:10px;" valign="top">내&nbsp;&nbsp;&nbsp;&nbsp;용</td>
 			      <td valign="top" style="padding:10px 0px 5px 10px;"> 
 			        <textarea name="content" rows="12" class="boxTA" style="width: 96%;">${dto.content}</textarea>
 			      </td>

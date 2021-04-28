@@ -51,7 +51,7 @@
 			</table>
 			
 			<table style="width: 100%; border-spacing: 0; border-collapse: collapse;">
-			  <tr align="center" bgcolor="white" height="35" style="border-top: 1px solid #cccccc; border-bottom: 1px solid #cccccc;"> 
+			  <tr class="table-row1"> 
 			      <th width="60" style="color: #787878;">번호</th>
 			      <th style="color: #787878;">제목</th>
 			      <th width="100" style="color: #787878;">작성자</th>
@@ -59,7 +59,7 @@
 			  </tr>
 			 
 			 <c:forEach var="dto" items="${list}">
-			  <tr align="center" height="35" style="border-bottom: 1px solid #cccccc;"> 
+			  <tr class="table-row2"> 
 			      <td>${dto.listNum}</td>
 			      <td align="left" style="padding-left: 10px;">
 			           <a href="${articleUrl}&num=${dto.num}">${dto.subject}</a>
@@ -98,7 +98,7 @@
 			        </form>
 			      </td>
 			      <td align="right" width="100">
-			          <button type="button" class="btn btnCreate" onclick="javascript:location.href='${pageContext.request.contextPath}/faq/created.do';">글쓰기</button>
+			          <button type="button" class="btn btnCreate" onclick="javascript:location.href='${pageContext.request.contextPath}/faq/created.do';">글올리기</button>
 			      </td>
 			   </tr>
 			</table>

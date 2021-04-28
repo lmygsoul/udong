@@ -66,7 +66,9 @@ a:hover, a:active {
 
 .btnCreate, .btnList {
 	color: white;
-	background: #495057;
+	background: #FF9933;
+	border: 1px solid #FF9933;
+	font-weight: 700;
 }
 
 .btnTab {
@@ -186,6 +188,10 @@ textarea:focus, input:focus{
 }
 ._box_lg {
 	background-color: #ddd; /* 연한 회색 */
+}
+
+._box_back {
+	background-color: #F8F9FA; /* 컨테이너 배경색 */
 }
 
 /* 테두리 색상 */
