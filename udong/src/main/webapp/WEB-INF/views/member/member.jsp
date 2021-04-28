@@ -19,17 +19,63 @@
 
 .memberFormBody p {
 	margin-left: 5px;
+	color: #4C4C4C;
+	font-weight: 300;
+}
+
+.memberFormBody select {
+	width: 28%;
+	height: 40px;
+	border: 1px solid #ccc;
+	margin: 5px;
+	padding-left: 10px;
+}
+
+.memberFormBody button {
+	height: 40px;
+	width: 100px;
+	margin-left: 5px;
+	margin-right: 5px;
+}
+
+.memberFormBody input:focus {
+	background-color: white;
+	outline: 1px solid #FF8A3D;
 }
 
 .memberFormBody .formCol-1 {
-	width: 150px;
+	width: 20%;
+	text-align: left;
+	margin: 5px 0;
+}
+
+.memberFormBody .formCol-2 {
+	width: 80%;
 	text-align: left;
 }
 
+.member-table-1 {
+	width: 85%; 
+	margin: 0 auto;
+	border-spacing: 0 10px;
+}
+
+.member-table-2 {
+	width:100%; 
+	margin: 40px auto; 
+	margin-bottom: 60px; 
+	border-spacing: 0px;
+}
+
+.member-table-2 button {
+	width: 150px;
+}
+
 .memberForm {
-	width : 450px;
+	width :95%;
 	height: 30px;
 	padding: 5px;
+	padding-left: 10px;
 	margin: 5px;
   	font-size:14px;
   	border-radius:2px;
@@ -37,11 +83,22 @@
   	background-color: #eee;
 }
 
+.memberForm2 {
+	width :28.5%;
+	height: 30px;
+	padding: 5px;
+	padding-left: 10px;
+	margin: 5px 0;
+  	font-size:14px;
+  	border-radius:2px;
+  	border: 0;
+  	background-color: #eee;
+}
 
 .member-title {
 	text-align: center ; 
 	height: 40px; 
-	padding-top: 20px; 
+	padding-top: 60px; 
 	font-size: 25px; 
 	font-weight: 500;
 }
@@ -152,18 +209,19 @@ function changeEmail() {
 	    <jsp:include page="/WEB-INF/views/layout/header.jsp"></jsp:include>
 	</div>
 		
-	<div class="container" style="height: 1200px; background-color: #FBF7F2; overflow: scroll;">
-	    <div class="main-container" style="height: 1200px; position: relative;">
+	<div class="container" style="height: 1450px; background-color: #FBF7F2;">
+	    <div class="main-container" style="height: 1450px; position: relative;">
 	    <div class="memberFormBody">
 	    <div>
             <h3 class="member-title"> ${title} </h3>
-            <p align="center" style="margin: 10px 0 20px 0;"> 간편한 회원가입 후 중고거래 서비스를 경험하세요! <p>
+            <p align="center" style="margin: 10px 0 40px 0; color: black; font-size: 16px;"> 회원가입 후 중고거래 서비스를 경험하세요! <p>
         </div>
 	    	<form name="memberForm" method="post">
-	    		<table style="width: 85%; margin: 0 auto;">
+	    		<table class="member-table-1">
 	    			<tr>
 	    				<td class="formCol-1">
 	    					<label style="font-weight: 500;">아이디</label>
+	    					<p>&nbsp;</p>
 	    				</td>
 	    				<td class="formCol-2">
 	    					<input type="text" name="userId" id="userId" maxlength="10" value="${dto.userId }"  ${mode=="update" ? "readonly='readonly' ":""}
@@ -174,6 +232,7 @@ function changeEmail() {
 	    			<tr>
 	    				<td class="formCol-1">
 	    					<label style="font-weight: 500;">비밀번호</label>
+	    					<p>&nbsp;</p>
 	    				</td>
 	    				<td class="formCol-2">
 	    					<input type="password" name="userPwd" maxlength="10"  value="${dto.userPwd }"
@@ -186,6 +245,8 @@ function changeEmail() {
 	    			<tr>
 	    				<td class="formCol-1">
 	    					<label style="font-weight: 500;">비밀번호 확인</label>
+	    					<p>&nbsp;</p>
+	    					<p>&nbsp;</p>
 	    				</td>
 	    				<td class="formCol-2">
 	    					<input type="password" name="userPwd_check" maxlength="10" 
@@ -217,6 +278,7 @@ function changeEmail() {
 	    			<tr>
 	    				<td class="formCol-1">
 	    					<label style="font-weight: 500;">개인/사업자</label>
+	    					<p>&nbsp;</p>
 	    				</td>
 	    				<td class="formCol-2">
 	    					<select name="type">
@@ -230,6 +292,7 @@ function changeEmail() {
 	    			<tr>
 	    				<td class="formCol-1">
 	    					<label style="font-weight: 500;">생년월일</label>
+	    					<p>&nbsp;</p>
 	    				</td>
 	    				<td class="formCol-2">
 	    					<input type="text" name="birth"  value="${dto.birth }"  ${mode=="update" ? "readonly='readonly' ":""}
@@ -241,8 +304,8 @@ function changeEmail() {
 	    				<td class="formCol-1">
 	    					<label style="font-weight: 500;">이메일</label>
 	    				</td>
-	    				<td>
-	    					<select name="selectEmail" onchange="changeEmail();">
+	    				<td class="formCol-2">
+	    					<select name="selectEmail" onchange="changeEmail();" style="margin-right: 13px;">
 			               	 	 <option value="">선 택</option>
 			                	 <option value="naver.com" ${dto.email2=="naver.com" ? "selected='selected'" : ""}>네이버 메일</option>
 			              		 <option value="hanmail.net" ${dto.email2=="hanmail.net" ? "selected='selected'" : ""}>한 메일</option>
@@ -250,17 +313,17 @@ function changeEmail() {
 			                	 <option value="gmail.com" ${dto.email2=="gmail.com" ? "selected='selected'" : ""}>지 메일</option>
 			                	 <option value="direct">직접입력</option>
 			            	</select>
-			            <input type="text" name="email1" value="${dto.email1}" size="13" maxlength="30"  class="boxTF">
+			            <input type="text" name="email1" value="${dto.email1}" size="13" maxlength="30"  class="memberForm2">
 			            @
-			            <input type="text" name="email2" value="${dto.email2}" size="13"maxlength="30"  class="boxTF" readonly="readonly">
+			            <input type="text" name="email2" value="${dto.email2}" size="13"maxlength="30" style="background-color: #DEDEDE;" class="memberForm2" readonly="readonly">
 	    				</td>
 	    			</tr>
 	    			<tr>
 	    				<td class="formCol-1">
 	    					<label style="font-weight: 500;">전화번호</label>
 	    				</td>
-	    				<td>
-	    					<select name="selectTel">
+	    				<td class="formCol-2">
+	    					<select name="selectTel" style="margin-right: 0;">
 			                <option value="">선 택</option>
 			                <option value="010" ${dto.tel1=="010" ? "selected='selected'" : ""}>010</option>
 			                <option value="011" ${dto.tel1=="010" ? "selected='selected'" : ""}>011</option>
@@ -269,30 +332,29 @@ function changeEmail() {
 			                <option value="018" ${dto.tel1=="018" ? "selected='selected'" : ""}>018</option>
 			                <option value="019" ${dto.tel1=="019" ? "selected='selected'" : ""}>019</option>
 			            </select>
-			            -
-			            <input type="text" name="tel2" value="${dto.tel2}" size="13" maxlength="4"  class="boxTF">
-			            -
-			            <input type="text" name="tel3" value="${dto.tel3}" size="13" maxlength="4"  class="boxTF" >
+			            <span>&nbsp;-&nbsp;</span> 
+			            <input type="text" name="tel2" value="${dto.tel2}" size="13" maxlength="4"  class="memberForm2">
+			            <span>&nbsp;-&nbsp;</span> 
+			            <input type="text" name="tel3" value="${dto.tel3}" size="13" maxlength="4"  class="memberForm2" >
 	    				</td>
 	    			</tr>
 	    			<tr>
-	    				<td width="100" height="50" valign="middle" style="text-align: left;">
+	    				<td class="formCol-1">
 	    					<label style="font-weight: 500;">우편번호</label>
 	    				</td>
-	    				<td>
+	    				<td class="formCol-2">
 	    					<input type="text" id="zipCode" value="${dto.zipCode}" name="zipCode"
-			                       class="memberForm" style="border: 1px solid #fff; width: 200px;" readonly="readonly">
-			            	<button type="button" onclick="daumPostcode();">우편번호</button>      
+			                       class="memberForm" style="width: 126px; background-color: #DEDEDE;"readonly="readonly">
+			            	<button type="button" onclick="daumPostcode();" class="btn" style="margin-left: 10px; background-color: #8c8c8c; color: white;">우편번호</button>      
 	    				</td>
 	    			</tr>
 	    			<tr>
-			     		<td width="100" height="50" valign="middle" style="text-align: left;">
+			     		<td class="formCol-1">
 	    					<label style="font-weight: 500;">주소</label>
 	    				</td>
-			      		 <td>
-			            	<input type="text" name="addr1" id="addr1" value="${dto.addr1}" maxlength="50" class="boxTF" 
-			                        class="memberForm" style="background-color: #ddd; border: 1px solid #fff;" placeholder="기본 주소" readonly="readonly">
-			       
+			      		 <td class="formCol-2">
+			            	<input type="text" name="addr1" id="addr1" value="${dto.addr1}" maxlength="50" 
+			                        class="memberForm" style="background-color: #DEDEDE;" placeholder="기본 주소" readonly="readonly">
 			           		 <input type="text" name="addr2" id="addr2" value="${dto.addr2}" maxlength="50" 
 			                       class="memberForm" placeholder="나머지 주소">
 			     		 </td>
@@ -309,12 +371,12 @@ function changeEmail() {
 	    			</tr>
 	    		</table>
 	    		
-	    		<table style="width:100%; margin: 0px auto; border-spacing: 0px;">
+	    		<table class="member-table-2">
 			     	<tr height="45"> 
 			      		<td align="center" >
-			        		<button type="button" name="sendButton" class="btn" onclick="memberOk()">${mode=="member"?"회원가입":"정보수정"}</button>
 			        		<button type="reset" class="btn" ${mode!="myProfile" ? "visible='hidden' ":""}>다시입력</button>
 			        		<button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/';">${mode=="member"?"가입취소":"수정취소"}</button>
+			        		<button type="button" name="sendButton" class="btn" onclick="memberOk()" style="background-color: #FF8A3D; border: 0; color: white; font-weight: 700;">${mode=="member"?"가입하기":"정보수정"}</button>
 			      		</td>
 			   		</tr>
 			    </table>
