@@ -81,16 +81,15 @@ function changeEmail() {
 	    				</td>
 	    			</tr>
 	    			<tr>
-	    				<td width="100" valign="middle" style="text-align: right;">
+	    				<td width="100" valign="middle" style="text-align: right;" >
 	    					<label style="font-weight: bold;">개인/사업자</label>
 	    				</td>
 	    				<td>
 	    					<select name="type" style="margin-left: 80px; margin-top: 10px;">
-			               	 	 <option value="">선 택</option>
-			                	 <option value="1" ${dto.type=="1" ? "selected='selected'" : ""}>개인</option>
-			              		 <option value="2" ${dto.type=="2" ? "selected='selected'" : ""}>사업자</option>
+			               	 	 <option value="" disabled="disabled">선 택</option>
+			                	 <option value="1" ${dto.type=="1" ? "selected='selected'" : ""} disabled="disabled" >개인</option>
+			              		 <option value="2" ${dto.type=="2" ? "selected='selected'" : ""} disabled="disabled" >사업자</option>
 			            	</select>
-	    					<p style="margin-left: 80px;">*여기서 바꿔도 안됨
 	    				</td>
 	    			</tr>
 	    			<tr>
