@@ -135,35 +135,6 @@
 	</div>
 	
 <jsp:include page="/WEB-INF/views/layout/staticFooter.jsp"/>
-	<script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
-<script>
-    function daumPostcode() {
-        new daum.Postcode({
-            oncomplete: function(data) {
-                var fullAddr = ''; // 최종 주소 변수
-                var extraAddr = ''; // 조합형 주소 변수
-
-                if (data.userSelectedType === 'R') {
-                    fullAddr = data.roadAddress;
-
-                } else {
-                    fullAddr = data.jibunAddress;
-                }
-
-                if(data.userSelectedType === 'R'){
-                    if(data.bname !== ''){
-                        extraAddr += data.bname;
-                    }
-                    if(data.buildingName !== ''){
-                        extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
-                    }
-                    fullAddr += (extraAddr !== '' ? ' ('+ extraAddr +')' : '');
-                }
-
-                document.getElementById('address').value = fullAddr;
-            }
-        }).open();
-    }
-</script>    
+	
 </body>
 </html>
