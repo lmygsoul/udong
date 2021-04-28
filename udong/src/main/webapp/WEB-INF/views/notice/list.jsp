@@ -57,7 +57,7 @@
 	
 <div class="container">
     <div class="body-container">
-        <div class="body-title" style="border-bottom: 0; padding-bottom: 0;">
+        <div class="body-title">
             <h3><i class="fas fa-flag"></i><span>&nbsp;&nbsp;공지사항</span></h3>
         </div>
         

@@ -55,7 +55,7 @@
         
         <div>
 			<form name="noticeForm" method="post" enctype="multipart/form-data" class="formBox">
-			  <table style="width: 100%; margin: 0 auto; border-spacing: 0px; border-collapse: collapse;">
+			  <table class="create-table">
 			  <tr class="create-row"> 
 			      <td class="create-col1">제&nbsp;&nbsp;&nbsp;&nbsp;목</td>
 			      <td style="padding-left:10px;"> 
@@ -78,7 +78,7 @@
 			  </tr>
 			
 			  <tr align="left" style="border-bottom: 1px solid #cccccc;"> 
-			      <td class="create-col1" style="padding-top: 10px;" valign="top">내&nbsp;&nbsp;&nbsp;&nbsp;용</td>
+			      <td class="create-col2">내&nbsp;&nbsp;&nbsp;&nbsp;용</td>
 			      <td valign="top" style="padding:10px 0px 5px 10px;"> 
 			        <textarea name="content" rows="12" class="boxTA" style="width: 97%;">${dto.content}</textarea>
 			      </td>
@@ -93,7 +93,7 @@
 
 			  <c:if test="${mode=='update'}">
 				  <tr align="left" height="40" style="border-bottom: 1px solid #cccccc;">
-				      <td width="100" style="text-align: center;">첨부된파일</td>
+				      <td class="create-col1">첨부된파일</td>
 				      <td style="padding-left:10px;"> 
 				         <c:if test="${not empty dto.saveFilename}">
 				             <a href="javascript:deleteFile('${dto.num}');"><i class="far fa-trash-alt"></i></a>
