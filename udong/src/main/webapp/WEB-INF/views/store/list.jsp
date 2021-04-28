@@ -21,8 +21,8 @@
 	    <jsp:include page="/WEB-INF/views/layout/header.jsp"></jsp:include>
 	</div>
 		
-	<div class="container">
-   <div class="body-container" style="width: 1000px;">
+	<div class="container" style="background-color: white; border-top: 1px solid #E9ECEF;">
+   <div class="body-container" style="background-color: white; border: 0; width: 1000px;">
         <div class="body-title">
             <h3><i class="fas fa-bullhorn"></i>&nbsp;&nbsp;우리동네 홍보</h3>
         </div>
