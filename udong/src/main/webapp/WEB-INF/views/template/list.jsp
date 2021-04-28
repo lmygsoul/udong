@@ -26,9 +26,9 @@
 <!-- myPage 외의 게시판 양식 -->
 <!-- tableName -> 본인 폴더명으로 모두 바꾸기 -->
 
-<div class="container">
+<div class="container" style="min-height: 650px;">
 	
-    <div class="body-container" style="width: 700px;">
+    <div class="body-container">
         <div class="body-title">
             <h3><span style="font-family: Webdings">4</span> tableName </h3>
         </div>

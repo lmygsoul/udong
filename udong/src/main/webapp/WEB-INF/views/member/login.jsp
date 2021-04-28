@@ -8,28 +8,6 @@
 <meta charset="UTF-8">
 <title>Login</title>
 <jsp:include page="/WEB-INF/views/layout/staticHeader.jsp"/>
-<style type="text/css">
-.login {
-	width : 400px;
-	height: 40px;
-	padding: 5px;
-	border: 1px solid #F5EBDF;
-	margin-top:5px; margin-bottom:5px;
-  	font-size:14px;
-  	border-radius:4px;
-  	font-family:"Noto Sans KR", "Malgun Gothic", "맑은 고딕", NanumGothic, 나눔고딕, 돋움, sans-serif;
-}
-.btnlogin{
-	width : 410px;
-	height: 50px;
-	border: 1px solid #FF9933;
-	background-color : #FF9933;
-	color: white;
-	font-size:20px;
-  	border-radius:4px;
-  	font-family:"Noto Sans KR", "Malgun Gothic", "맑은 고딕", NanumGothic, 나눔고딕, 돋움, sans-serif;
-}
-</style>
 <script type="text/javascript">
 function sendLogin() {
     var f = document.loginForm;

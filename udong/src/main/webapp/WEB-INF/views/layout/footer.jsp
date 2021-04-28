@@ -8,7 +8,7 @@
 		<img src="${pageContext.request.contextPath}/resource/images/logo_wh2.png" style="width: 100%;" >
 	</div>
 	<div class="footer-right">
-		<a href="">학진마켓 정책 및 약관</a>&nbsp;&nbsp;&nbsp;
+		<a href="">우동사리 정책 및 약관</a>&nbsp;&nbsp;&nbsp;
 		<a href="">이용약관</a>&nbsp;&nbsp;&nbsp;
 		<a href="">개인정보취급방침</a>&nbsp;&nbsp;&nbsp;
 		© Udong Market Corp.

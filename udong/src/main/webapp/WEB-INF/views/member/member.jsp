@@ -8,101 +8,6 @@
 <head>
 <meta charset="UTF-8">
 <title>우동사리-회원가입</title>
-<style type="text/css">
-
-.memberFormBody {
-	position: absolute; 
-	top: 100px; 
-	width: 750px; 
-	background-color: white;
-}
-
-.memberFormBody p {
-	margin-left: 5px;
-	color: #4C4C4C;
-	font-weight: 300;
-}
-
-.memberFormBody select {
-	width: 28%;
-	height: 40px;
-	border: 1px solid #ccc;
-	margin: 5px;
-	padding-left: 10px;
-}
-
-.memberFormBody button {
-	height: 40px;
-	width: 100px;
-	margin-left: 5px;
-	margin-right: 5px;
-}
-
-.memberFormBody input:focus {
-	background-color: white;
-	outline: 1px solid #FF8A3D;
-}
-
-.memberFormBody .formCol-1 {
-	width: 20%;
-	text-align: left;
-	margin: 5px 0;
-}
-
-.memberFormBody .formCol-2 {
-	width: 80%;
-	text-align: left;
-}
-
-.member-table-1 {
-	width: 85%; 
-	margin: 0 auto;
-	border-spacing: 0 10px;
-}
-
-.member-table-2 {
-	width:100%; 
-	margin: 40px auto; 
-	margin-bottom: 60px; 
-	border-spacing: 0px;
-}
-
-.member-table-2 button {
-	width: 150px;
-}
-
-.memberForm {
-	width :95%;
-	height: 30px;
-	padding: 5px;
-	padding-left: 10px;
-	margin: 5px;
-  	font-size:14px;
-  	border-radius:2px;
-  	border: 0;
-  	background-color: #eee;
-}
-
-.memberForm2 {
-	width :28.5%;
-	height: 30px;
-	padding: 5px;
-	padding-left: 10px;
-	margin: 5px 0;
-  	font-size:14px;
-  	border-radius:2px;
-  	border: 0;
-  	background-color: #eee;
-}
-
-.member-title {
-	text-align: center ; 
-	height: 40px; 
-	padding-top: 60px; 
-	font-size: 25px; 
-	font-weight: 500;
-}
-</style>
 <script type="text/javascript">
 function memberOk(){
 	var f = document.memberForm;
@@ -209,8 +114,8 @@ function changeEmail() {
 	    <jsp:include page="/WEB-INF/views/layout/header.jsp"></jsp:include>
 	</div>
 		
-	<div class="container" style="height: 1450px; background-color: #FBF7F2;">
-	    <div class="main-container" style="height: 1450px; position: relative;">
+	<div class="container" style="height: 1430px; padding: 0; background-color: #FBF7F2;">
+	    <div class="main-container" style="height: 1430px; position: relative;">
 	    <div class="memberFormBody">
 	    <div>
             <h3 class="member-title"> ${title} </h3>

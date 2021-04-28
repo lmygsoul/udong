@@ -16,7 +16,7 @@
 	    <jsp:include page="/WEB-INF/views/layout/header.jsp"></jsp:include>
 	</div>
 		
-	<div class="container" style="background-color: #FBF7F2;">
+	<div class="container" style="background-color: #FBF7F2; padding: 0;">
 	    <div class="main-container">
 	    	<div class="main-left">
 	    		<ul>
