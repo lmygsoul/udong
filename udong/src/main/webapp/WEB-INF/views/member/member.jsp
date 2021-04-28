@@ -9,15 +9,41 @@
 <meta charset="UTF-8">
 <title>우동사리-회원가입</title>
 <style type="text/css">
+
+.memberFormBody {
+	position: absolute; 
+	top: 100px; 
+	width: 750px; 
+	background-color: white;
+}
+
+.memberFormBody p {
+	margin-left: 5px;
+}
+
+.memberFormBody .formCol-1 {
+	width: 150px;
+	text-align: left;
+}
+
 .memberForm {
-	width : 400px;
-	height: 40px;
+	width : 450px;
+	height: 30px;
 	padding: 5px;
-	border: 1px solid #F5EBDF;
-	margin-top:5px; margin-bottom:5px;
+	margin: 5px;
   	font-size:14px;
-  	border-radius:4px;
-  	font-family:"Noto Sans KR", "Malgun Gothic", "맑은 고딕", NanumGothic, 나눔고딕, 돋움, sans-serif;
+  	border-radius:2px;
+  	border: 0;
+  	background-color: #eee;
+}
+
+
+.member-title {
+	text-align: center ; 
+	height: 40px; 
+	padding-top: 20px; 
+	font-size: 25px; 
+	font-weight: 500;
 }
 </style>
 <script type="text/javascript">
@@ -126,91 +152,97 @@ function changeEmail() {
 	    <jsp:include page="/WEB-INF/views/layout/header.jsp"></jsp:include>
 	</div>
 		
-	<div class="container" style="background-color: #FBF7F2;" style="overflow: scroll;">
-	    <div class="main-container">
+	<div class="container" style="height: 1200px; background-color: #FBF7F2; overflow: scroll;">
+	    <div class="main-container" style="height: 1200px; position: relative;">
+	    <div class="memberFormBody">
 	    <div>
-            <h3 style="text-align: center ; height: 40px; padding-top: 20px; margin: 0 0 20px 0; font-size: 20px; border-bottom: 2px solid #FF9933"> ${title} </h3>
+            <h3 class="member-title"> ${title} </h3>
+            <p align="center" style="margin: 10px 0 20px 0;"> 간편한 회원가입 후 중고거래 서비스를 경험하세요! <p>
         </div>
 	    	<form name="memberForm" method="post">
-	    		<table style="width: 100%;">
+	    		<table style="width: 85%; margin: 0 auto;">
 	    			<tr>
-	    				<td width="100" valign="middle" style="text-align: right;">
-	    					<label style="font-weight: bold;">아이디</label>
+	    				<td class="formCol-1">
+	    					<label style="font-weight: 500;">아이디</label>
 	    				</td>
-	    				<td>
+	    				<td class="formCol-2">
 	    					<input type="text" name="userId" id="userId" maxlength="10" value="${dto.userId }"  ${mode=="update" ? "readonly='readonly' ":""}
-			                   placeholder="아이디" class="memberForm" style="width: 400px; margin-left: 80px; margin-bottom: 5px;">
-			                 <p style="margin-left: 80px;"> ${mode=="update" ? "*아이디는 수정되지 않습니다*":"아이디는 7~15자 이내이며, 영어와 숫자를 조합하여 작성해야합니다."}
+			                   placeholder="아이디" class="memberForm">
+			                 <p> ${mode=="update" ? "*아이디는 수정되지 않습니다*":"아이디는 7~15자 이내이며, 영어와 숫자를 조합하여 작성해야합니다."} </p>
 	    				</td>
 	    			</tr>
 	    			<tr>
-	    				<td width="100" valign="middle" style="text-align: right;">
-	    					<label style="font-weight: bold;">비밀번호</label>
+	    				<td class="formCol-1">
+	    					<label style="font-weight: 500;">비밀번호</label>
 	    				</td>
-	    				<td>
+	    				<td class="formCol-2">
 	    					<input type="password" name="userPwd" maxlength="10"  value="${dto.userPwd }"
-			                   placeholder="비밀번호" class="memberForm" style="width: 400px; margin-left: 80px; margin-bottom: 5px;">
-			                	<p style="margin-left: 80px;">비밀번호는 5~10자 이내이며, 영어와 숫자를 조합 입력해야합니다.
+			                   placeholder="비밀번호" class="memberForm">
+			                	<p>
+			                	비밀번호는 5~10자 이내이며, 영어와 숫자를 조합 입력해야합니다. 
+			                	</p>
 	    				</td>
 	    			</tr>
 	    			<tr>
-	    				<td width="100" valign="middle" style="text-align: right;">
-	    					<label style="font-weight: bold;">비밀번호 확인</label>
+	    				<td class="formCol-1">
+	    					<label style="font-weight: 500;">비밀번호 확인</label>
 	    				</td>
-	    				<td>
+	    				<td class="formCol-2">
 	    					<input type="password" name="userPwd_check" maxlength="10" 
-			                   placeholder="비밀번호 확인" class="memberForm" style="width: 400px; margin-left: 80px; margin-bottom: 5px;">
-			                 <p style="margin-left: 80px;">비밀번호를 동일하게 입력해야합니다. 비밀번호는 5~10자 이내이며, 영어와 숫자를 조합 입력해야합니다.
+			                   placeholder="비밀번호 확인" class="memberForm">
+			                 <p>
+			                 *비밀번호를 동일하게 입력해야합니다.<br>
+			                 *비밀번호는 5~10자 이내이며, 영어와 숫자를 조합 입력해야합니다. </p>
 	    				</td>
 	    			</tr>
 	    			<tr>
-	    				<td width="100" valign="middle" style="text-align: right;">
-	    					<label style="font-weight: bold;">이름</label>
+	    				<td class="formCol-1">
+	    					<label style="font-weight: 500;">이름</label>
 	    				</td>
-	    				<td>
+	    				<td class="formCol-2">
 	    					<input type="text" name="userName"maxlength="10" value="${dto.userName }"  ${mode=="update" ? "readonly='readonly' ":""}
-			                   class="memberForm" style="width: 200px; margin-left: 80px; margin-bottom: 5px;">
-			                 <p style="margin-left: 80px;"> ${mode=="update" ? "*이름은 수정되지 않습니다*":""}
+			                   class="memberForm">
+			                 <p> ${mode=="update" ? "*이름은 수정되지 않습니다*":""} </p>
 	    				</td>
 	    			</tr>
 	    			<tr>
-	    				<td width="100" valign="middle" style="text-align: right;">
-	    					<label style="font-weight: bold;">닉네임</label>
+	    				<td class="formCol-1">
+	    					<label style="font-weight: 500;">닉네임</label>
 	    				</td>
-	    				<td>
+	    				<td class="formCol-2">
 	    					<input type="text" name="nickName" maxlength="10" value="${dto.nickName }" 
-			                   class="memberForm" style="width: 200px; margin-left: 80px; margin-bottom: 5px;">
+			                   class="memberForm">
 	    				</td>
 	    			</tr>
 	    			<tr>
-	    				<td width="100" valign="middle" style="text-align: right;">
-	    					<label style="font-weight: bold;">개인/사업자</label>
+	    				<td class="formCol-1">
+	    					<label style="font-weight: 500;">개인/사업자</label>
 	    				</td>
-	    				<td>
-	    					<select name="type" style="margin-left: 80px; margin-top: 10px;">
+	    				<td class="formCol-2">
+	    					<select name="type">
 			               	 	 <option value="">선 택</option>
 			                	 <option value="1" ${dto.type=="1" ? "selected='selected'" : ""}>개인</option>
 			              		 <option value="2" ${dto.type=="2" ? "selected='selected'" : ""}>사업자</option>
 			            	</select>
-	    					<p style="margin-left: 80px;">*선택하지 않을시 개인으로 선택됩니다.
+	    					<p>*선택하지 않을시 개인으로 선택됩니다.
 	    				</td>
 	    			</tr>
 	    			<tr>
-	    				<td width="100" valign="middle" style="text-align: right;">
-	    					<label style="font-weight: bold;">생년월일</label>
+	    				<td class="formCol-1">
+	    					<label style="font-weight: 500;">생년월일</label>
 	    				</td>
-	    				<td>
+	    				<td class="formCol-2">
 	    					<input type="text" name="birth"  value="${dto.birth }"  ${mode=="update" ? "readonly='readonly' ":""}
- 			                   class="memberForm" style="width: 400px; margin-left: 80px; margin-bottom: 5px;" value="${dto.birth }">
-			                 <p style="margin-left: 80px;">생년월일의 작성 예시) 1111-22-33 형식으로 입력합니다.
+ 			                   class="memberForm" value="${dto.birth }">
+			                 <p>생년월일의 작성 예시) 1111-22-33 형식으로 입력합니다.
 	    				</td>
 	    			</tr>
 	    			<tr>
-	    				<td width="100" valign="middle" style="text-align: right;">
-	    					<label style="font-weight: bold;">이메일</label>
+	    				<td class="formCol-1">
+	    					<label style="font-weight: 500;">이메일</label>
 	    				</td>
 	    				<td>
-	    					<select name="selectEmail" onchange="changeEmail();" style="margin-left: 80px; margin-top: 10px;">
+	    					<select name="selectEmail" onchange="changeEmail();">
 			               	 	 <option value="">선 택</option>
 			                	 <option value="naver.com" ${dto.email2=="naver.com" ? "selected='selected'" : ""}>네이버 메일</option>
 			              		 <option value="hanmail.net" ${dto.email2=="hanmail.net" ? "selected='selected'" : ""}>한 메일</option>
@@ -224,11 +256,11 @@ function changeEmail() {
 	    				</td>
 	    			</tr>
 	    			<tr>
-	    				<td width="100" valign="middle" style="text-align: right;">
-	    					<label style="font-weight: bold;">전화번호</label>
+	    				<td class="formCol-1">
+	    					<label style="font-weight: 500;">전화번호</label>
 	    				</td>
 	    				<td>
-	    					<select name="selectTel" style="margin-left: 80px; margin-top: 10px;">
+	    					<select name="selectTel">
 			                <option value="">선 택</option>
 			                <option value="010" ${dto.tel1=="010" ? "selected='selected'" : ""}>010</option>
 			                <option value="011" ${dto.tel1=="010" ? "selected='selected'" : ""}>011</option>
@@ -244,35 +276,35 @@ function changeEmail() {
 	    				</td>
 	    			</tr>
 	    			<tr>
-	    				<td width="100" height="50" valign="middle" style="text-align: right;">
-	    					<label style="font-weight: bold;">우편번호</label>
+	    				<td width="100" height="50" valign="middle" style="text-align: left;">
+	    					<label style="font-weight: 500;">우편번호</label>
 	    				</td>
 	    				<td>
 	    					<input type="text" id="zipCode" value="${dto.zipCode}" name="zipCode"
-			                       class="boxTF" readonly="readonly"  style="width: 30%; height:30px; margin-left: 80px; margin-bottom: 5px;">
-			            	<button type="button" onclick="daumPostcode();" style="width: 10%; height:30px; margin-bottom: 5px;">우편번호</button>      
+			                       class="memberForm" style="border: 1px solid #fff; width: 200px;" readonly="readonly">
+			            	<button type="button" onclick="daumPostcode();">우편번호</button>      
 	    				</td>
 	    			</tr>
 	    			<tr>
-			     		<td width="100" height="50" valign="middle" style="text-align: right;">
-	    					<label style="font-weight: bold;">주소</label>
+			     		<td width="100" height="50" valign="middle" style="text-align: left;">
+	    					<label style="font-weight: 500;">주소</label>
 	    				</td>
 			      		 <td>
 			            	<input type="text" name="addr1" id="addr1" value="${dto.addr1}" maxlength="50" class="boxTF" 
-			                        style="width: 70%; height:50px; margin-left: 80px; margin-bottom: 5px; " placeholder="기본 주소" readonly="readonly">
+			                        class="memberForm" style="background-color: #ddd; border: 1px solid #fff;" placeholder="기본 주소" readonly="readonly">
 			       
 			           		 <input type="text" name="addr2" id="addr2" value="${dto.addr2}" maxlength="50" 
-			                       style="width: 70%; height:50px; margin-left: 80px; margin-bottom: 5px; " placeholder="나머지 주소">
+			                       class="memberForm" placeholder="나머지 주소">
 			     		 </td>
 			 		</tr>
 	    			<tr >
-	    				<td width="100" height="50" valign="middle" style="text-align: right;">
-	    					<label style="font-weight: bold;">하고싶은 한 마디</label>
+	    				<td width="100" height="50" valign="middle" style="text-align: left;">
+	    					<label style="font-weight: 500;">하고싶은 한 마디</label>
 	    				</td>
 	    				<td>
 	    					<input type="text" name="myComment" 
-			                   placeholder="하고싶은 말 한마디 적으세요" class="memberForm" style="width: 700px; height:50px; margin-left: 80px; margin-bottom: 5px;"
-			                   value="${dto.myComment }" >
+			                   placeholder="하고싶은 말 한마디 적으세요" class="memberForm"
+			                   value="${dto.myComment}" >
 	    				</td>
 	    			</tr>
 	    		</table>
@@ -287,6 +319,7 @@ function changeEmail() {
 			   		</tr>
 			    </table>
 	    	</form>
+	    	</div>
 	    </div>
 	</div>
 	
