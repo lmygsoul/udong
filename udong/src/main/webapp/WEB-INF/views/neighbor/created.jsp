@@ -55,7 +55,7 @@
 	<div class="container">
     <div class="body-container" style="width: 700px;">
         <div class="body-title">
-            <h3><span style="font-family: Webdings">2</span> 우리동네 홍보</h3>
+            <h3><span style="font-family: Webdings">2</span> 우리동네 자랑</h3>
         </div>
         
         <div>
@@ -100,7 +100,7 @@
 			      	</c:if>
 			        <button type="button" class="btn" onclick="sendOk();">${mode=='update'?'수정완료':'등록하기'}</button>
 			        <button type="reset" class="btn">다시입력</button>
-			        <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/store/list.do';">${mode=='update'?'수정취소':'등록취소'}</button>
+			        <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/neighbor/list.do';">${mode=='update'?'수정취소':'등록취소'}</button>
 
 				  </td>
 			    </tr>

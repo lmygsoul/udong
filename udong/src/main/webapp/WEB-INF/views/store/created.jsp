@@ -135,6 +135,38 @@
 	</div>
 	
 <jsp:include page="/WEB-INF/views/layout/staticFooter.jsp"/>
+		<script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
+<script>
+    function daumPostcode() {
+        new daum.Postcode({
+            oncomplete: function(data) {
+                var fullAddr = '';
+                var extraAddr = '';
+
+                if (data.userSelectedType === 'R') {
+                    fullAddr = data.roadAddress;
+
+                } else {
+                    fullAddr = data.jibunAddress;
+                }
+
+
+                if(data.userSelectedType === 'R'){
+                    if(data.bname !== ''){
+                        extraAddr += data.bname;
+                    }
+                    if(data.buildingName !== ''){
+                        extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+                    }
+                    fullAddr += (extraAddr !== '' ? ' ('+ extraAddr +')' : '');
+                }
+
+               document.getElementById('address').value = fullAddr;
+
+            }
+        }).open();
+    }
+</script>    
 	
 </body>
 </html>

@@ -138,7 +138,9 @@ public class NeighborServlet extends MyUploadServlet {
 	}
 
 	protected void created(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		req.setAttribute("mode", "created");
 
+		forward(req, resp, "/WEB-INF/views/neighbor/created.jsp");
 	}
 
 	protected void createdSubmit(HttpServletRequest req, HttpServletResponse resp)

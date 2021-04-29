@@ -75,7 +75,7 @@
 			      </td>
 			      <c:if test="${sessionScope.member!=null}">
 			      	<td align="right" width="100">
-			          	<button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/store/created.do';">글올리기</button>
+			          	<button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/neighbor/created.do';">글올리기</button>
 			      	</td>
 			      </c:if>
 			   </tr>
