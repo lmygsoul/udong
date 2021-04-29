@@ -54,8 +54,8 @@ function sendOk(){
 			   </tr>
 			</table>
 			   <c:if test="${sessionScope.member.created==ato.created }">
-			<form name="body" method="post">
-			<table style="width: 100%; border-spacing: 0; border-collapse: collapse;">
+			<form name="body" method="post"  >
+			<table style="width: 100%; border-spacing: 0; border-collapse: collapse;" >
 			   <tr class="table-row1"> 
 				  <th width="10%">등수</th>
 			      <th width="60%">이야기</th>
@@ -68,7 +68,6 @@ function sendOk(){
 			    <td width="70%" align="right" style="padding-right: 5px;">
 				   <textarea name="content" rows="2" class="boxTA" style="width: 530px; height:40px;" placeholder="출석체크를 해주세요"></textarea>
 			    </td>
-			    <c:if test="${ato.checkType!=2 }">
 			    <td>
 			    	<input type="hidden" name="num" value="${ato.num}">
 			    	<input type="hidden" name="num" value="${ato.userId}">
@@ -76,9 +75,8 @@ function sendOk(){
 			    	<input type="hidden" name="num" value="${ato.content}">
 			    	<input type="hidden" name="num" value="${ato.created}">
 			    	<input type="hidden" name="num" value="${ato.checkType}">
-				    <button type="button" class="btn" onclick="sendOk(); this.onclick=null;">입력</button>
+				    <button type="button" class="btn" onclick="sendOk(); this.onclick='';">입력</button>
 			    </td>
-			    </c:if>
 			</tr>
 			</table>
 			</form>
@@ -93,7 +91,7 @@ function sendOk(){
 			</tr>
 			 <c:forEach var="ato" items="${list}">
 			    <tr class="table-row2">
-			    	<td>${ato.num }</td>
+			    	<td>${ato.listNum }</td>
 			      <td style="text-align: left; padding-left: 20px">${ato.content}</td>
 			      <td>${ato.userName}</td>
 			      <td>${ato.created}</td>

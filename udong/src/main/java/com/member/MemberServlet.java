@@ -32,6 +32,7 @@ import com.util.MyUtil;
 @WebServlet("/member/*")
 public class MemberServlet extends MyServlet{
 	private static final long serialVersionUID = 1L;
+	private int type=0;
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		process(req, resp);
@@ -161,7 +162,7 @@ public class MemberServlet extends MyServlet{
 	private void logout(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		HttpSession session = req.getSession();
 		String cp = req.getContextPath();
-		
+		type=0;
 		//세션에 저장된 정보 지우기
 		session.removeAttribute("member");
 		
@@ -1564,8 +1565,9 @@ public class MemberServlet extends MyServlet{
 		AtCheckDTO ato = new AtCheckDTO();
 		HttpSession session=req.getSession();
 		String cp = req.getContextPath();
+		type++;
 		try {
-			if(ato.getCheckType()!=2) {
+			if(type==1) {
 			SessionInfo info=(SessionInfo)session.getAttribute("member");
 			String date = req.getParameter(info.getCreated());
 			ato.setUserId(info.getUserId());
