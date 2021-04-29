@@ -41,6 +41,10 @@ li {
     float: left;
 }
 
+.menu a:focus {
+	border: 0;
+}
+
 /* container - main */
 
 .container {
