@@ -32,7 +32,18 @@ function recommend2(){
 	var f= document.recForm1;
 	f.submit();
 }
-
+function sendOk(){
+	var f = document.replyForm;
+	
+	str = f.content.value;
+	if(!str) {
+		alert("내용을 입력하세요. ");
+		f.content.focus();
+		return;
+	}
+	f.action="${pageContext.request.contextPath}/neighbor/reply_ok.do"
+	f.submit();
+}
 </script>
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 <jsp:include page="/WEB-INF/views/layout/staticHeader.jsp"/>
@@ -98,13 +109,15 @@ function recommend2(){
 			<c:choose>
 			<c:when test="${sessionScope.member.userId!=null}">
 			<tr height="45" style="border-top: 1px solid #cccccc;">
-			    <td colspan="2" align="right">
+			    <td align="right">
 			    <form name="recForm1" action="${pageContext.request.contextPath}/neighbor/rec.do" method="post" style="width:150px">
 				       <input type="hidden" name="num" value="${dto.num}">
 				       <input type="hidden" name="page" value="${page}">
 			       	   <input type="hidden" name="selectRec" value="1">
-				       <button type="button"class="btn" onclick="javascript:recommend1();">추천</button>
+				       <button type="button" class="btn" onclick="javascript:recommend1();">추천</button>
 			    </form>
+			    </td>
+			    <td align="left">
 			    <form name="recForm2" action="${pageContext.request.contextPath}/neighbor/rec.do" method="post" style="width:150px">
 				       <input type="hidden" name="num" value="${dto.num}">
 				       <input type="hidden" name="page" value="${page}">
@@ -117,7 +130,7 @@ function recommend2(){
 			</c:choose>
 
 			<tr height="45">
-			    <td>
+			    <td colspan="2" align="right">
 					<c:choose>
 			    			<c:when test="${sessionScope.member.userId==dto.userId || sessionScope.member.type==0}">
 			         			<button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/neighbor/update.do?num=${dto.num}&page=${page}';">수정</button>
@@ -128,6 +141,23 @@ function recommend2(){
 			</tr>
 			</table>
         </div>
+		
+		<form name="replyForm" method="post" style="border: 1px solid lightgray">
+		<table>
+			<tr height="35" style="border-bottom: 1px solid #cccccc;">
+				<td width="10%">&nbsp;</td>
+			    <td width="10%" align="left" style="padding-left: 5px;">
+			       ${sessionScope.member.userName}
+			    </td>
+			    <td width="70%" align="right" style="padding-right: 5px;">
+				   <textarea name="content" rows="2" class="boxTA" style="width: 700px; height:40px;" placeholder="댓글을 입력해 주세요."></textarea>
+			    </td>
+			    <td>
+			    	<button type="button" class="btn" onclick="sendOk();">입력</button>
+			    </td>
+			</tr>
+		</table>
+		</form>
 		
 		</c:if>
                 

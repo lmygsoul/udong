@@ -617,5 +617,39 @@ private Connection conn = DBConn.getConnection();
 		}
 		return list;
 	}
+
+	public int insertReply(neighborReplyDTO dto) {
+		int result = 0;
+		String sql;
+		PreparedStatement pstmt = null;
+		
+		try {
+			sql = "INSERT INTO neighbor_rep(num, articleNum, userid, content, created)"
+					+ " VALUES (neighbor_rep_seq.NEXTVAL, ?, ?, ?, SYSDATE)";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setInt(1, dto.getArticlenum());
+			pstmt.setString(2, dto.getUserId());
+			pstmt.setString(3, dto.getContent());
+			
+			result = pstmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+		}
+		return result;
+	}
+
+	public neighborReplyDTO readreply(int num) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
 

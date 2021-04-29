@@ -65,8 +65,12 @@ public class NeighborServlet extends MyUploadServlet {
 			article(req, resp);
 		} else if (uri.indexOf("rec.do")!= -1) {
 			rec(req,resp);
+		} else if (uri.indexOf("reply_ok.do")!= -1) {
+			replySubmit(req, resp);
 		}
 	}
+
+
 
 	protected void list(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		NeighborDAO dao = new NeighborDAO();
@@ -260,16 +264,18 @@ public class NeighborServlet extends MyUploadServlet {
 
 		NeighborDAO dao = new NeighborDAO();
 		NeighborDTO dto = new NeighborDTO();
+		neighborReplyDTO repDto = new neighborReplyDTO();
 		try {
 			int num = Integer.parseInt(req.getParameter("num"));
 			
 			dto = dao.readNeighbor(num);
-			
 			if(dto == null) {
 				resp.sendRedirect(cp+"/neighbor/list.do?"+query);
 			}
 			dao.updateHitCount(num);
 			dto.setContent(dto.getContent().replaceAll("\n", "<br>"));
+			
+			
 			
 			req.setAttribute("dto", dto);
 			req.setAttribute("page", page);
@@ -306,6 +312,72 @@ public class NeighborServlet extends MyUploadServlet {
 				dao.updateRec(dto);
 			} 
 			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		resp.sendRedirect(cp+"/neighbor/list.do?page="+page+"&num="+dto.getNum());
+		return;	
+	}
+	
+	private void replylist(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		NeighborDAO dao = new NeighborDAO();
+		MyUtil util = new MyUtil();
+		String cp = req.getContextPath();
+		String page = req.getParameter("page");
+		int current_page = 1;
+		if (page != null)
+			current_page = Integer.parseInt(page);
+
+		int replyCount = dao.replyCount();
+
+		int rows = 10;
+		int total_page = util.pageCount(rows, replyCount);
+		if (current_page > total_page)
+			current_page = total_page;
+
+		int offset = (current_page - 1) * rows;
+		if (offset < 0)
+			offset = 0;
+
+		List<neighborReplyDTO> list = null;
+		list = dao.replyBoard(offset, rows);
+
+
+		String query = "";
+
+
+		String listUrl = cp + "/neighbor/list.do";
+		String articleUrl = cp + "/neighbor/article.do?page=" + current_page;
+		if (query.length() != 0) {
+			listUrl += "?" + query;
+			articleUrl += "&" + query;
+		}
+
+		String paging = util.paging(current_page, total_page, listUrl);
+
+		req.setAttribute("list", list);
+		req.setAttribute("page", current_page);
+		req.setAttribute("total_page", total_page);
+		req.setAttribute("articleUrl", articleUrl);
+		req.setAttribute("paging", paging);
+
+		forward(req, resp, "/WEB-INF/views/neighbor/list.jsp");
+
+	}
+	
+	private void replySubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
+		NeighborDAO dao = new NeighborDAO();
+		neighborReplyDTO dto = new neighborReplyDTO();
+		String cp = req.getContextPath();
+		String page = req.getParameter("page");
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		
+		try {
+			dto.setArticlenum(Integer.parseInt(req.getParameter("num")));
+			dto.setUserId(info.getUserId());
+			dto.setContent(req.getParameter("content"));
+			dao.insertReply(dto);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
