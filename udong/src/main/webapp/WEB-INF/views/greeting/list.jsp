@@ -84,7 +84,7 @@
 			</c:forEach>
 			</table>
 			 
-			<<!-- 없을 때 -->
+			<!-- 없을 때 -->
 			<c:if test="${dataCount==0}">
 			<table style="width: 100%; margin: 0px auto; border-spacing: 0px;">
 			   <tr height="35">

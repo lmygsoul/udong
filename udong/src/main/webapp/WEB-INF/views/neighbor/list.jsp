@@ -49,17 +49,38 @@ function sendOk(){
 <jsp:include page="/WEB-INF/views/layout/staticHeader.jsp"/>
 </head>
 <body>
-
-
+	
 	<div class="header">
 	    <jsp:include page="/WEB-INF/views/layout/header.jsp"></jsp:include>
 	</div>
-		
-	<div class="container" style="background-color: #FBF7F2;">
-   <div class="body-container" style="width: 1000px;">
-        <div class="body-title">
-            <h3><span style="font-family: Webdings">2</span> 우리동네 홍보 </h3>
+	
+	<!-- 리스트 타이틀 -->	
+	<div class="container">
+    <div class="body-container" style="border:0;">
+        <div class="list-title">
+        	<table style="width: 100%; margin: 0px auto; border-spacing: 0px;">
+        		<tr>
+        			<td align="left">
+        				<h3>&nbsp;우리동네 자랑</h3>
+        			</td>
+        			<td align="right">
+				          <form name="searchForm" action="${pageContext.request.contextPath}/neighbor/list.do" method="post">
+			              <select name="condition" class="selectField">
+			                  <option value="all"         ${condition=="all"?"selected='selected'":"" }>전체</option>
+			                  <option value="subject"     ${condition=="subject"?"selected='selected'":"" }>제목</option>
+			                  <option value="nickName"    ${condition=="nickName"?"selected='selected'":"" }>작성자</option>
+			                  <option value="content"     ${condition=="content"?"selected='selected'":"" }>내용</option>
+			                  <option value="created"     ${condition=="created"?"selected='selected'":"" }>등록일</option>
+			            </select>
+			            <input type="text" name="keyword" class="boxTF" value="${keyword}">
+			            <button type="button" class="btn btnSearch" onclick="searchList()">검색</button>
+			        </form>
+				      </td>
+			      </tr>
+        	</table>
         </div>
+        
+        <!-- 아티클 -->
         <c:if test="${dto.num!=null}">
         	<table style="width: 100%; margin: 20px auto 0px; border-spacing: 0px;">
 			   <tr height="35">
@@ -73,25 +94,25 @@ function sendOk(){
 			</table>
 		<div>
 			<table style="width: 100%; margin: 20px auto 0px; border-spacing: 0px; border-collapse: collapse;">
-			<tr height="35" style="border-top: 1px solid #cccccc; border-bottom: 1px solid #cccccc;">
-			    <td colspan="2" align="center">
+			   <tr height="35" class="row-3" style="border-top: 1px solid #E9ECEF;">
+			    <td colspan="2" align="left" class="col-1">
 				  	${dto.subject}
 			    </td>
 			</tr>
 			
-			<tr height="35" style="border-bottom: 1px solid #cccccc;">
-			    <td width="50%" align="left" style="padding-left: 5px;">
+			<tr height="35" class="row-2">
+			    <td align="left" class="col-2">
 			       이름 : ${dto.nickName}
 			    </td>
-			    <td width="50%" align="right" style="padding-right: 5px;">
+			   <td width="30%" align="right" class="col-2">
 			        ${dto.created} | 조회수 ${dto.hitCount}
 			    </td>
 			</tr>
-			<tr height="35" style="border-bottom: 1px solid #cccccc;">
-			    <td align="left" style="padding-left: 5px;">
+			<tr height="35" class="row-2">
+				<td align="left" class="col-2">
 			       동네 : ${dto.addr}
 			    </td>
-			    <td width="20%" align="right" style="padding-right: 5px;">
+			     <td align="right" class="col-2">
 			        추천 ${dto.rec} / 비추천 ${dto.notRec}
 			    </td>
 			</tr>
@@ -101,34 +122,36 @@ function sendOk(){
 					<img src="${pageContext.request.contextPath}/uploads/photo/${dto.imageFileName}" style="max-width:100%; height: auto; resize:both;">
 				</td>
 			</tr>
-			<tr >
+			
+			<tr class="row-2">
 			  <td colspan="2" align="left" style="padding: 10px 5px;" valign="top" height="200">
 			      ${dto.content}
 			   </td>
 			</tr>
+			
 			<c:choose>
 			<c:when test="${sessionScope.member.userId!=null}">
 			<tr height="45" style="border-top: 1px solid #cccccc;">
-			    <td align="right">
+			    <td align="right" width="50%" style="padding-top: 20px; padding-right: 5px;">
 			    <form name="recForm1" action="${pageContext.request.contextPath}/neighbor/rec.do" method="post" style="width:150px">
 				       <input type="hidden" name="num" value="${dto.num}">
 				       <input type="hidden" name="page" value="${page}">
 			       	   <input type="hidden" name="selectRec" value="1">
-				       <button type="button" class="btn" onclick="javascript:recommend1();">추천</button>
+				       <button type="button" class="btn btnCreate" onclick="javascript:recommend1();"><i class="fas fa-thumbs-up"></i>&nbsp;&nbsp;추천</button>
 			    </form>
 			    </td>
-			    <td align="left">
+			    <td align="left" width="50%" style="padding-top: 20px; padding-left: 5px;">
 			    <form name="recForm2" action="${pageContext.request.contextPath}/neighbor/rec.do" method="post" style="width:150px">
 				       <input type="hidden" name="num" value="${dto.num}">
 				       <input type="hidden" name="page" value="${page}">
 			       	   <input type="hidden" name="selectRec" value="2">
-				       <button type="button" class="btn" onclick="javascript:recommend2();">비추천</button>
+				       <button type="button" class="btn" onclick="javascript:recommend2();"><i class="fas fa-thumbs-down"></i>&nbsp;&nbsp;비추천</button>
 		       </form>
 			   </td>
 			</tr>
 			</c:when>
 			</c:choose>
-
+			
 			<tr height="45">
 			    <td colspan="2" align="right">
 					<c:choose>
@@ -160,9 +183,10 @@ function sendOk(){
 		</form>
 		
 		</c:if>
-                
-        <div>
-        	<table style="width: 100%; margin: 20px auto 0px; border-spacing: 0px;">
+         
+        <!-- 리스트 -->       
+        <div class="body-board">
+			<table style="width: 100%; margin: 20px auto 0px; border-spacing: 0;">
 			   <tr height="35">
 			      <td align="left" width="50%">
 			          ${dataCount}개(${page}/${total_page} 페이지)
@@ -174,17 +198,17 @@ function sendOk(){
 			</table>
 			
 			<table style="width: 100%; margin: 0px auto; border-spacing: 0px; border-collapse: collapse;">
-			  <tr align="center" bgcolor="#eeeeee" height="35" style="border-top: 1px solid #cccccc; border-bottom: 1px solid #cccccc;"> 
-			      <th width="60" style="color: #787878;">번호</th>
-			      <th style="color: #787878;">제목</th>
-			      <th width="100" style="color: #787878;">작성자</th>
-			      <th width="80" style="color: #787878;">작성일</th>
-			      <th width="60" style="color: #787878;">조회수</th>
-			      <th width="100" style="color: #787878">추천/비추천</th>
+			    <tr class="table-row1">
+			      <th width="60">번호</th>
+			      <th>제목</th>
+			      <th width="100">작성자</th>
+			      <th width="80">작성일</th>
+			      <th width="60">조회수</th>
+			      <th width="100">추천/비추천</th>
 			  </tr>
 			 
 			 <c:forEach var="dto" items="${list}">
-			  <tr align="center" bgcolor="#ffffff" height="35" style="border-bottom: 1px solid #cccccc;"> 
+			    <tr class="table-row2">
 			      <td>${dto.listNum}</td>
 			      <td align="left" style="padding-left: 10px;">
 			           <a href="${articleUrl}&num=${dto.num}">${dto.subject}</a>
@@ -197,44 +221,39 @@ function sendOk(){
 			</c:forEach> 
 			</table>
 			 
+			<!-- 없을 때 -->
+			<c:if test="${dataCount==0}">
 			<table style="width: 100%; margin: 0px auto; border-spacing: 0px;">
 			   <tr height="35">
 				<td align="center">
-			        ${dataCount==0?"등록된 게시물이 없습니다.":paging}
+			      등록된 게시물이 없습니다.
 				</td>
 			   </tr>
 			</table>
+			</c:if>
+			
 			<c:if test="${mode!='myContent' }">
-			<table style="width: 100%; margin: 10px auto; border-spacing: 0px;">
+			<table style="width: 100%; margin: 10px auto; margin-top: 30px; border-spacing: 0px;">
 			   <tr height="40">
 			      <td align="left" width="100">
 			          <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/neighbor/list.do';">새로고침</button>
 			      </td>
+			      <c:if test="${dataCount!=0}">
+			      <td align="center">
+			      	${paging}
+			      </td>
+			      </c:if>
 			      <c:if test="${sessionScope.member!=null}">
 			      	<td align="right" width="100">
-			          	<button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/neighbor/created.do';">글올리기</button>
+			          	<button type="button" class="btn btnCreate" onclick="javascript:location.href='${pageContext.request.contextPath}/neighbor/created.do';"><i class="fab fa-telegram-plane"></i>&nbsp;&nbsp;글쓰기</button>
 			      	</td>
 			      </c:if>
 			   </tr>
-			   <tr height="40">
-			   <td align="center">
-			          <form name="searchForm" action="${pageContext.request.contextPath}/neighbor/list.do" method="post">
-			              <select name="condition" class="selectField">
-			                  <option value="all"         ${condition=="all"?"selected='selected'":"" }>전체</option>
-			                  <option value="subject"     ${condition=="subject"?"selected='selected'":"" }>제목</option>
-			                  <option value="nickName"    ${condition=="nickName"?"selected='selected'":"" }>작성자</option>
-			                  <option value="content"     ${condition=="content"?"selected='selected'":"" }>내용</option>
-			                  <option value="created"     ${condition=="created"?"selected='selected'":"" }>등록일</option>
-			            </select>
-			            <input type="text" name="keyword" class="boxTF" value="${keyword}">
-			            <button type="button" class="btn" onclick="searchList()">검색</button>
-			        </form>
-			      </td>
-		      </tr>
 			</table>
 			</c:if>
+			
 			<c:if test="${mode=='myContent' }">
-			<table style="width: 100%; margin: 10px auto; border-spacing: 0px;">
+			<table style="width: 100%; margin: 10px auto; margin-top: 30px; border-spacing: 0px;">
 			   <tr height="40">
 			   	<td align="left" width="100">
 			          <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/member/nb_list.do';">새로고침</button>

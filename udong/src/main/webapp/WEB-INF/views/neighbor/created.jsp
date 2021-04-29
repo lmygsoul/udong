@@ -53,9 +53,9 @@
 	</div>
 	
 	<div class="container">
-    <div class="body-container" style="width: 700px;">
+    <div class="body-container">
         <div class="body-title" style="margin-bottom: 0; border-bottom: 0;">
-            <h3><i class="fas fa-bullhorn"></i>&nbsp;&nbsp;우리동네 자랑</h3>
+            <h3>우리동네 자랑</h3>
         </div>
         
         <div>
@@ -101,7 +101,7 @@
 			  </c:if>
 			  </table>
 			
-			  <table style="width: 100%; border-spacing: 0px; margin-top: 5px;">
+			  <table class="create-table2">
 			     <tr height="45"> 
 			      <td align="center" >
 			      	<c:if test = "${mode=='update'}">
