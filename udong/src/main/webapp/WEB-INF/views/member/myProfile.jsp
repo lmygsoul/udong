@@ -182,7 +182,7 @@ function changeEmail() {
 	    				</td>
 	    			</tr>
 	    		</table>
-	    		
+	    		<c:if test="${mode=='myProfile' }">
 	    		<table style="width:100%; margin: 0px auto; border-spacing: 0px;">
 			     	<tr height="45"> 
 			      		<td align="center" >
@@ -190,6 +190,7 @@ function changeEmail() {
 			      		</td>
 			   		</tr>
 			    </table>
+			    </c:if>
 	    	</form>
 	    </div>
 	</div>

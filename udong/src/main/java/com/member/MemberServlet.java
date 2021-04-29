@@ -59,6 +59,8 @@ public class MemberServlet extends MyServlet{
 			memberSubmit(req,resp);
 		} else if(uri.indexOf("myProfile.do")!=-1) {
 			myProfile(req,resp);
+		} else if(uri.indexOf("another_Profile.do")!=-1) {
+			another_Profile(req,resp);
 		} else if(uri.indexOf("update.do")!=-1) {
 			update(req,resp);
 		} else if(uri.indexOf("update_ok.do")!=-1) {
@@ -232,6 +234,29 @@ public class MemberServlet extends MyServlet{
 			dto.setTel3(tel3);
 			req.setAttribute("title", "마이프로필");
 			req.setAttribute("mode", "myProfile");
+			req.setAttribute("dto", dto);
+			
+			forward(req, resp, "/WEB-INF/views/member/myProfile.jsp");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	private void another_Profile(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
+		MemberDAO dao = new MemberDAO();
+		receiveUserDTO mdto= new receiveUserDTO();
+		try {
+			
+			MemberDTO dto = dao.readMember(mdto.getReceiveUser());
+			String[] telNum = dto.getTel().split("-");
+			String tel1 = telNum[0];
+			String tel2 = telNum[1];
+			String tel3 = telNum[2];
+			
+			dto.setTel1(tel1);
+			dto.setTel2(tel2);
+			dto.setTel3(tel3);
+			req.setAttribute("title", "마이프로필");
+			req.setAttribute("mode", "another_Profile");
 			req.setAttribute("dto", dto);
 			
 			forward(req, resp, "/WEB-INF/views/member/myProfile.jsp");
