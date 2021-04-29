@@ -30,9 +30,6 @@ function deleteBoard(num) {
 	
 <div class="container">
     <div class="body-container" style="width: 700px;">
-        <div class="body-title" style="margin: 0;">
-            <h3><span style="font-family: Webdings">4</span> 가입인사 </h3>
-        </div>
         
         <div>
 			<table style="width: 100%; margin: 0 auto; border-spacing: 0px; border-collapse: collapse;">
@@ -97,7 +94,7 @@ function deleteBoard(num) {
 			    </td>
 			
 			    <td align="right" class="col-4">
-			        <button type="button" class="btn btnList" onclick="javascript:location.href='${pageContext.request.contextPath}/member/sm_list.do?${query}';">리스트</button>
+			        <button type="button" class="btn btnList" onclick="javascript:location.href='${pageContext.request.contextPath}/greeting/list.do?${query}';">리스트</button>
 			    </td>
 			</tr>
 			</table>

@@ -41,10 +41,6 @@ function classSubmit(boardNum) {
 
 <div class="container">
 	<div class="body-container">
-         <div class="body-title" style="margin: 0;">
-            <button type="button" class="btnArticle" onclick="javascript:location.href='${pageContext.request.contextPath}/dayclass/list.do';">
-            > 우리동네 클래스 </button>
-        </div>
         
         <div>
 			<table style="width: 100%; margin: 0 auto; border-spacing: 0px; border-collapse: collapse;">

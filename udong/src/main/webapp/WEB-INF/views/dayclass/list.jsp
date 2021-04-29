@@ -103,9 +103,11 @@
 			      <td align="left" width="100">
 			          <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/dayclass/list.do';">새로고침</button>
 			      </td>
+			      <c:if test="${dataCount!=0}">
 			      <td align="center">
 			      	${paging}
 			      </td>
+			      </c:if>
 			      <td align="right" width="200">
 			          <button type="button" class="btn btnCreate" onclick="javascript:location.href='${pageContext.request.contextPath}/dayclass/created.do';"><i class="fas fa-user-edit"></i>&nbsp;&nbsp;클래스 모집</button>
 			      </td>
