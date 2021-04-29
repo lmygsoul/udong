@@ -85,6 +85,8 @@
 			      	     <input type="hidden" name="depth" value="${dto.depth}">
 			      	     <input type="hidden" name="parent" value="${dto.boardNum}">
 			      	     <input type="hidden" name="page" value="${page}">
+			      		 <input type="hidden" name="condition" value="${condition}">
+			        	 <input type="hidden" name="keyword" value="${keyword}">
 			      	</c:if>
 			        <button type="button" class="btn btnCreate" onclick="sendOk();">${mode=='update'?'수정완료':(mode=='reply'? '답변완료':'등록하기')}</button>
 			        <button type="reset" class="btn">다시입력</button>

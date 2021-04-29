@@ -98,6 +98,10 @@ function deleteBoard(boardNum) {
 			    </td>
 			
 			    <td align="right" class="col-4">
+			    	<input type="hidden" name="boardNum" value="${dto.boardNum}">
+			    	<input type="hidden" name="condition" value="${condition}">
+			        <input type="hidden" name="keyword" value="${keyword}">
+			        
 			        <button type="button" class="btn btnList" onclick="javascript:location.href='${pageContext.request.contextPath}/qa/list.do?${query}';">리스트</button>
 			    </td>
 			</tr>

@@ -56,7 +56,7 @@
 <div class="container">
     <div class="body-container">
         <div class="body-title" style="margin-bottom: 0; border-bottom: 0;">
-            <h3><span style="font-family: Webdings">4</span> 우동지식 </h3>
+            <h3><span style="font-family: Webdings">4</span> 우동클래스 </h3>
         </div>
         
         <div>
@@ -99,7 +99,14 @@
 			        <input type="hidden" name="keyword" value="${keyword}">
 			      	<input type="hidden" name="page" value="${page}">
 			      	
-			        <button type="button" class="btn btnCreate" onclick="sendOk();">${mode=='update'?'수정완료':'등록하기'}</button>
+			      	<c:choose>
+			      		<c:when test="${mode=='update'}">
+			        		<button type="button" class="btn btnCreate" onclick="sendOk();">수정하기</button>
+			        	</c:when>
+			        	<c:otherwise>
+			        		<button type="button" class="btn btnCreate" onclick="sendOk();">등록하기</button>
+			        	</c:otherwise>
+			        </c:choose>
 			        <button type="reset" class="btn">다시입력</button>
 			        <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/dayclass/list.do';">${mode=='update'?'수정취소':'등록취소'}</button>
 			      </td>
