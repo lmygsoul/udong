@@ -164,24 +164,55 @@ function sendOk(){
 			</tr>
 			</table>
         </div>
-		
+		<c:choose>
+		<c:when test="${sessionScope.member.userId!=null}">
 		<form name="replyForm" method="post" style="border: 1px solid lightgray">
 		<table>
 			<tr height="35" style="border-bottom: 1px solid #cccccc;">
-				<td width="10%">&nbsp;</td>
-			    <td width="10%" align="left" style="padding-left: 5px;">
+			    <td width="10%" align="left" style="padding-left: 5px; text-align: center;">
 			       ${sessionScope.member.userName}
 			    </td>
 			    <td width="70%" align="right" style="padding-right: 5px;">
-				   <textarea name="content" rows="2" class="boxTA" style="width: 700px; height:40px;" placeholder="댓글을 입력해 주세요."></textarea>
+				   <textarea name="content" rows="2" class="boxTA" style="width: 530px; height:40px;" placeholder="댓글을 입력해 주세요."></textarea>
 			    </td>
 			    <td>
-			    	<button type="button" class="btn" onclick="sendOk();">입력</button>
+			    	<input type="hidden" name="num" value="${dto.num}">
+				    <input type="hidden" name="page" value="${page}">
+				    <button type="button" class="btn" onclick="sendOk();">입력</button>
 			    </td>
 			</tr>
 		</table>
 		</form>
+		</c:when>
+		</c:choose>
 		
+		 <div class="body-board">
+			<table style="width: 100%; margin: 0px auto; border-spacing: 0px; border-collapse: collapse;">
+			<tr class="table-row2">
+			      <th width="10%">작성자</th>
+			      <th width="70%">댓글 내용</th>
+			      <th width="20%">작성일</th>
+			</tr>
+			 <c:forEach var="dto" items="${reply_list}">
+			    <tr class="table-row2">
+			      <td>${dto.userName}</td>
+			      <td style="text-align: left; padding-left: 20px">${dto.content}</td>
+			      <td>${dto.created}</td>
+			    </tr>
+			</c:forEach> 
+			</table>
+			
+			<table style="width: 100%; margin: 10px auto; margin-top: 30px; border-spacing: 0px;">
+			   <tr height="40">
+			      <c:if test="${replyCount!=0}">
+			      <td align="center">
+			      	${reqpaging}
+			      </td>
+			      </c:if>
+			   </tr>
+			</table>
+			
+		</div>
 		</c:if>
          
         <!-- 리스트 -->       

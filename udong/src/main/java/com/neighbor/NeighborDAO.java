@@ -343,6 +343,12 @@ private Connection conn = DBConn.getConnection();
 		String sql;
 		PreparedStatement pstmt = null;
 		try {
+			sql = "DELETE FROM neighbor_rep WHERE num = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, num);
+			result = pstmt.executeUpdate();
+			pstmt.close();
+			
 			sql = "DELETE FROM neighbor_rec WHERE num = ?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, num);
@@ -618,7 +624,7 @@ private Connection conn = DBConn.getConnection();
 		return list;
 	}
 
-	public int insertReply(neighborReplyDTO dto) {
+	public int insertReply(NeighborReplyDTO dto) {
 		int result = 0;
 		String sql;
 		PreparedStatement pstmt = null;
@@ -647,9 +653,85 @@ private Connection conn = DBConn.getConnection();
 		return result;
 	}
 
-	public neighborReplyDTO readreply(int num) {
-		// TODO Auto-generated method stub
-		return null;
+
+	public int replyCount(int num) {
+		int result = 0;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		try {
+			sql = "SELECT NVL(COUNT(*), 0) FROM neighbor_rep WHERE articlenum=?";
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setInt(1, num);
+			rs=pstmt.executeQuery();
+			if(rs.next()) {
+				result = rs.getInt(1);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if(rs!=null) {
+				try {
+					rs.close();
+				} catch (Exception e2) {
+				}
+			}
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+		}
+		return result;
+	}
+
+	public List<NeighborReplyDTO> replyBoard(int offset, int rows, int num) {
+		List<NeighborReplyDTO> list = new ArrayList<NeighborReplyDTO>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		try {
+			sql = " SELECT num, m.userId, userName, content, created"
+					+ " FROM neighbor_rep r"
+					+ " LEFT OUTER JOIN member1 m ON r.userId = m.userId"
+					+ " WHERE articleNum = ?"
+					+ " ORDER BY num DESC"
+					+ " OFFSET ? ROWS FETCH FIRST ? ROW ONLY";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, num);
+			pstmt.setInt(2, offset);
+			pstmt.setInt(3, rows);
+			
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				NeighborReplyDTO dto = new NeighborReplyDTO();
+				dto.setNum(rs.getInt("num"));
+				dto.setUserName(rs.getString("userName"));
+				dto.setContent(rs.getString("content"));
+				dto.setArticlenum(num);
+				dto.setUserId(rs.getString("userId"));
+				dto.setCreated(rs.getString("created"));
+				
+				list.add(dto);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if(rs!=null) {
+				try {
+					rs.close();
+				} catch (Exception e2) {
+				} 
+			}
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+		}
+		return list;
 	}
 }
 

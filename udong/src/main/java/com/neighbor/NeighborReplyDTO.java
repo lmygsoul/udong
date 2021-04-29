@@ -1,12 +1,19 @@
 package com.neighbor;
 
-public class neighborReplyDTO {
+public class NeighborReplyDTO {
 	private int num;
 	private int articlenum;
 	private String userId;
 	private String userName;
 	private String content;
+	private String created;
 
+	public String getCreated() {
+		return created;
+	}
+	public void setCreated(String created) {
+		this.created = created;
+	}
 	public String getUserId() {
 		return userId;
 	}

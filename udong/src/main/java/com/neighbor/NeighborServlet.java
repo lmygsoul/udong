@@ -264,7 +264,6 @@ public class NeighborServlet extends MyUploadServlet {
 
 		NeighborDAO dao = new NeighborDAO();
 		NeighborDTO dto = new NeighborDTO();
-		neighborReplyDTO repDto = new neighborReplyDTO();
 		try {
 			int num = Integer.parseInt(req.getParameter("num"));
 			
@@ -288,7 +287,10 @@ public class NeighborServlet extends MyUploadServlet {
 				isRec = dao.recCheck(rec);
 				req.setAttribute("isRec", isRec);
 			}
+			
+			replylist(req, resp);
 			list(req, resp);
+			
 			return;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -324,50 +326,48 @@ public class NeighborServlet extends MyUploadServlet {
 		MyUtil util = new MyUtil();
 		String cp = req.getContextPath();
 		String page = req.getParameter("page");
-		int current_page = 1;
+		int articleNum = Integer.parseInt(req.getParameter("num"));
+		int repcurrent_page = 1;
 		if (page != null)
-			current_page = Integer.parseInt(page);
+			repcurrent_page = Integer.parseInt(page);
 
-		int replyCount = dao.replyCount();
+		int replyCount = dao.replyCount(articleNum);
 
-		int rows = 10;
+		int rows = 20;
 		int total_page = util.pageCount(rows, replyCount);
-		if (current_page > total_page)
-			current_page = total_page;
+		if (repcurrent_page > total_page)
+			repcurrent_page = total_page;
 
-		int offset = (current_page - 1) * rows;
+		int offset = (repcurrent_page - 1) * rows;
 		if (offset < 0)
 			offset = 0;
 
-		List<neighborReplyDTO> list = null;
-		list = dao.replyBoard(offset, rows);
+		List<NeighborReplyDTO> reply_list = null;
+		reply_list = dao.replyBoard(offset, rows, articleNum );
 
 
 		String query = "";
 
 
 		String listUrl = cp + "/neighbor/list.do";
-		String articleUrl = cp + "/neighbor/article.do?page=" + current_page;
 		if (query.length() != 0) {
 			listUrl += "?" + query;
-			articleUrl += "&" + query;
 		}
 
-		String paging = util.paging(current_page, total_page, listUrl);
+		String reppaging = util.paging(repcurrent_page, total_page, listUrl);
 
-		req.setAttribute("list", list);
-		req.setAttribute("page", current_page);
-		req.setAttribute("total_page", total_page);
-		req.setAttribute("articleUrl", articleUrl);
-		req.setAttribute("paging", paging);
-
-		forward(req, resp, "/WEB-INF/views/neighbor/list.jsp");
+		req.setAttribute("reply_list", reply_list);
+		req.setAttribute("reppage", repcurrent_page);
+		req.setAttribute("reptotal_page", total_page);
+		req.setAttribute("reppaging", reppaging);
+		req.setAttribute("replyCount", replyCount);
+		
 
 	}
 	
 	private void replySubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
 		NeighborDAO dao = new NeighborDAO();
-		neighborReplyDTO dto = new neighborReplyDTO();
+		NeighborReplyDTO dto = new NeighborReplyDTO();
 		String cp = req.getContextPath();
 		String page = req.getParameter("page");
 		HttpSession session = req.getSession();
