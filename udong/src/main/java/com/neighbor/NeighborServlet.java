@@ -264,8 +264,8 @@ public class NeighborServlet extends MyUploadServlet {
 
 		NeighborDAO dao = new NeighborDAO();
 		NeighborDTO dto = new NeighborDTO();
+		int num = Integer.parseInt(req.getParameter("num"));
 		try {
-			int num = Integer.parseInt(req.getParameter("num"));
 			
 			dto = dao.readNeighbor(num);
 			if(dto == null) {
@@ -295,7 +295,7 @@ public class NeighborServlet extends MyUploadServlet {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		resp.sendRedirect(cp+"/neighbor/article.do?page="+page+"&num="+dto.getNum());
+		resp.sendRedirect(cp+"/neighbor/article.do?page="+page+"&num="+num);
 		return;
 	}
 	protected void rec(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -317,7 +317,7 @@ public class NeighborServlet extends MyUploadServlet {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		resp.sendRedirect(cp+"/neighbor/list.do?page="+page+"&num="+dto.getNum());
+		resp.sendRedirect(cp+"/neighbor/article.do?page="+page+"&num="+dto.getNum());
 		return;	
 	}
 	
@@ -349,15 +349,15 @@ public class NeighborServlet extends MyUploadServlet {
 		String query = "";
 
 
-		String listUrl = cp + "/neighbor/list.do";
+		String listUrl = cp + "/neighbor/article.do";
 		if (query.length() != 0) {
 			listUrl += "?" + query;
 		}
 
 		String reppaging = util.paging(repcurrent_page, total_page, listUrl);
-
+		
 		req.setAttribute("reply_list", reply_list);
-		req.setAttribute("reppage", repcurrent_page);
+		req.setAttribute("repcurrent_page", repcurrent_page);
 		req.setAttribute("reptotal_page", total_page);
 		req.setAttribute("reppaging", reppaging);
 		req.setAttribute("replyCount", replyCount);
@@ -381,7 +381,7 @@ public class NeighborServlet extends MyUploadServlet {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		resp.sendRedirect(cp+"/neighbor/list.do?page="+page+"&num="+dto.getNum());
+		resp.sendRedirect(cp+"/neighbor/article.do?page="+page+"&num="+dto.getArticlenum());
 		return;	
 	}
 }

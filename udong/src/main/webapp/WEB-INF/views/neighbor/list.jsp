@@ -29,7 +29,7 @@ function recommend2(){
 		alert("추천 및 비추천은 한번만 가능합니다.");
 		return;
 	}
-	var f= document.recForm1;
+	var f= document.recForm2;
 	f.submit();
 }
 function sendOk(){
@@ -206,7 +206,7 @@ function sendOk(){
 			   <tr height="40">
 			      <c:if test="${replyCount!=0}">
 			      <td align="center">
-			      	${reqpaging}
+			      	${reppaging}
 			      </td>
 			      </c:if>
 			   </tr>
