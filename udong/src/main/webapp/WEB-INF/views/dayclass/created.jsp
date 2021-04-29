@@ -34,6 +34,13 @@
             return;
         }
         
+    	str = f.maxClass.value;
+        if(str <= 1) {
+            alert("클래스 최소인원은 최소 2명입니다. ");
+            f.maxClass.focus();
+            return;
+        }
+        
    		f.action="${pageContext.request.contextPath}/dayclass/${mode}_ok.do";
 
         f.submit();
@@ -79,7 +86,7 @@
 			  <tr align="left" height="43" style="border-bottom: 1px solid #ccc;"> 
 			      <td width="100" style="text-align: center;">모집인원</td>
 			      <td style="padding-left:10px;"> 
-			        <input type="text" name="maxClass" maxlength="100" class="boxTF" style="width: 97%;" value="${dto.maxClass}">
+			        <input type="number" name="maxClass" maxlength="100" class="boxTF" style="width: 97%;" value="${dto.maxClass}">
 			      </td>
 			  </tr>
 			  </table>

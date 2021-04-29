@@ -327,6 +327,9 @@ public class ClassServlet extends HttpServlet {
 		String cp=req.getContextPath();
 		String page = req.getParameter("page");
 		String query="page="+page;
+		
+		HttpSession session=req.getSession();
+		SessionInfo info=(SessionInfo)session.getAttribute("member");
 
 		try {
 			int boardNum = Integer.parseInt(req.getParameter("boardNum"));
@@ -346,6 +349,7 @@ public class ClassServlet extends HttpServlet {
 
 			ClassDTO dto=dao.readBoard(boardNum);
 			int curClass = dao.readClass(boardNum);
+			int submitOk = dao.checkClass(boardNum, info.getUserId());
 			
 			if(dto==null) {
 				resp.sendRedirect(cp+"/dayclass/list.do?"+query);
@@ -359,13 +363,14 @@ public class ClassServlet extends HttpServlet {
 			ClassDTO preReadDto=dao.preReadBoard(dto.getBoardNum(), condition, keyword);
 			ClassDTO nextReadDto=dao.nextReadBoard(dto.getBoardNum(), condition, keyword);
 
-
+			
 			req.setAttribute("dto", dto);
 			req.setAttribute("preReadDto", preReadDto);
 			req.setAttribute("nextReadDto", nextReadDto);
 			req.setAttribute("query", query);
 			req.setAttribute("page", page);
 			req.setAttribute("curClass", curClass);
+			req.setAttribute("submitOk", submitOk);
 
 			forward(req, resp, "/WEB-INF/views/dayclass/article.jsp");
 			return;
@@ -409,7 +414,14 @@ public class ClassServlet extends HttpServlet {
 				return;
 			}
 			
+			if(dao.checkClass(boardNum, info.getUserId()) != 0) {
+				resp.sendRedirect(cp+"/dayclass/list.do?"+query);
+				return;
+			}
+			
 			dao.submitClass(boardNum, info.getUserId());
+			dao.curClass(boardNum);
+			
 			
 		} catch (Exception e) {
 			e.printStackTrace();

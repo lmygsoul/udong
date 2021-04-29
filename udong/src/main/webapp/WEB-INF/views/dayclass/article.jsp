@@ -20,6 +20,12 @@ function deleteBoard(boardNum) {
 }
 </c:if>
 function classSubmit(boardNum) {
+	var a="${submitOk}";
+	if(a==="1") {
+		alert("이미 해당 클래스에 신청했습니다.");
+		return;
+	}
+	
 	if(confirm("해당 클래스에 신청 하시겠습니까 ?")) {
 		var url="${pageContext.request.contextPath}/dayclass/classSubmit.do?boardNum="+boardNum+"&${query}";
 		location.href=url;
@@ -52,7 +58,7 @@ function classSubmit(boardNum) {
 			       이름 : ${dto.nickName}
 			    </td>
 			    <td width="60%" align="right" class="col-2">
-			        ${dto.created} | [모집인원]  현재 ${curClass}명 / 총 ${dto.maxClass}명 
+			        ${dto.created} | [모집인원]  현재 ${dto.curClass}명 / 총 ${dto.maxClass}명 
 			    </td>
 			</tr>
 			
