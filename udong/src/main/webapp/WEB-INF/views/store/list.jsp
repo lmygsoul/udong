@@ -72,7 +72,7 @@
         		</c:forEach>
         	</c:if>
         	</table>
-        
+        <c:if test="${mode!='myContent' }">
 			<table style="width: 100%; margin-top: 10px auto;  margin-top: 30px; border-spacing: 0;">
 			   <tr height="40" >
 			      <td align="left" width="100">
@@ -88,6 +88,33 @@
 			      </c:if>
 			   </tr>
 			</table>
+			</c:if>
+			<c:if test="${mode=='myContent' }">
+			<table style="width: 100%; margin: 10px auto; border-spacing: 0px;">
+			   <tr height="40">
+			   		<td align="left" width="100">
+			          <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/member/st_list.do';">새로고침</button>
+			      </td>
+			      <td align="left" width="100">
+			          <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/member/cb_list.do';">우동클래스</button>
+			      </td>
+			      <td align="left" width="100">
+			          <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/member/gt_list.do';">가입인사</button>
+			      </td>
+			      <td align="left" width="100">
+			          <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/member/nb_list.do';">우동자랑</button>
+			      </td>
+			      <td align="left" width="100">
+			          <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/member/qa_list.do';">우동지식</button>
+			      </td>
+			      <td align="left" width="100">
+			          <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/member/ud_list.do';">우동이야기</button>
+			      </td>
+			      <td align="left" width="100">
+			          <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/member/used_list.do';">중고거래</button>
+			      </td>
+			</table>
+			</c:if>
         </div>
     </div>
 	</div>

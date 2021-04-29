@@ -749,8 +749,8 @@ public class ClassDAO {
 			sb.append("       subject, TO_CHAR(created, 'YYYY-MM-DD') created, maxClass, curClass ");
 			sb.append(" FROM classBoard b  ");
 			sb.append(" JOIN member1 m ON b.userId=m.userId  ");
-			sb.append(" ORDER BY boardNum DESC ");
 			sb.append(" WHERE b.userId = ?");
+			sb.append(" ORDER BY boardNum DESC ");
 			sb.append(" OFFSET ? ROWS FETCH FIRST ? ROWS ONLY ");
 
 			pstmt = conn.prepareStatement(sb.toString());
@@ -868,4 +868,236 @@ public class ClassDAO {
         
         return list;
     }
+    public ClassDTO readBoard_cb(int boardNum,String userId) {
+		ClassDTO dto=null;
+		PreparedStatement pstmt=null;
+		ResultSet rs=null;
+		StringBuffer sb=new StringBuffer();
+		
+		try {
+			sb.append("SELECT boardNum, b.userId, m.nickName, subject, ");
+			sb.append("    content, created, maxClass, curClass ");
+			sb.append(" FROM classBoard b  ");
+			sb.append(" JOIN member1 m ON b.userId=m.userId  ");
+			sb.append(" WHERE boardNum=? AND b.userid= ? ");
+			
+			pstmt=conn.prepareStatement(sb.toString());
+			pstmt.setInt(1, boardNum);
+			pstmt.setString(2, userId);
+			rs=pstmt.executeQuery();
+			
+			if(rs.next()) {
+				dto=new ClassDTO();
+				dto.setBoardNum(rs.getInt("boardNum"));
+				dto.setUserId(rs.getString("userId"));
+				dto.setNickName(rs.getString("nickName"));
+				dto.setSubject(rs.getString("subject"));
+				dto.setContent(rs.getString("content"));
+				dto.setMaxClass(rs.getInt("maxClass"));
+				dto.setCurClass(rs.getInt("curClass"));
+				dto.setCreated(rs.getString("created"));
+			}
+					
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if(rs!=null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+				}
+			}
+				
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+		
+		return dto;
+	}
+    public int readClass_cb(int boardNum,String userId) throws SQLException {
+		int result = 0;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		
+		try {
+			sql = "SELECT NVL(COUNT(*), 0) FROM dayClass WHERE boardNum = ? AND userId = ?";
+			
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setInt(1, boardNum);
+			pstmt.setString(2, userId);
+			
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				result = rs.getInt(1);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if(rs!=null) {
+				try {
+					rs.close();
+				} catch (Exception e2) {
+				}
+			}
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+		
+		return result;
+	}
+    // 이전글
+	  public ClassDTO preReadBoard_cb(int num, String condition, String keyword,String userId) {
+	        ClassDTO dto=null;
+
+	        PreparedStatement pstmt=null;
+	        ResultSet rs=null;
+	        StringBuilder sb = new StringBuilder();
+
+	        try {
+	        	if(keyword.length() != 0) {
+	                sb.append("SELECT boardNum, subject FROM classBoard b ");
+	                sb.append(" JOIN member1 m ON b.userId = m.userId ");
+	                if(condition.equals("all")) {
+	                    sb.append(" WHERE ( INSTR(subject, ?) >= 1 OR INSTR(content, ?) >= 1  ) AND b.userId = ?");
+	                } else if(condition.equals("created")) {
+	                	keyword = keyword.replaceAll("(\\-|\\/|\\.)", "");
+	                    sb.append(" WHERE (TO_CHAR(created, 'YYYYMMDD') = ?) AND b.userId = ?");
+	                } else {
+	                    sb.append(" WHERE ( INSTR("+condition+", ?) > 0) AND b.userId = ? ");
+	                }
+	                sb.append("            AND (boardNum < ? ) ");
+	                sb.append(" ORDER BY boardNum DESC ");
+	                sb.append(" FETCH  FIRST  1  ROWS  ONLY ");
+
+	                pstmt=conn.prepareStatement(sb.toString());
+	                
+	                if(condition.equals("all")) {
+	                    pstmt.setString(1, keyword);
+	                    pstmt.setString(2, keyword);
+	                    pstmt.setString(3, userId);
+	                   	pstmt.setInt(4, num);
+	                } else {
+	                    pstmt.setString(1, keyword);
+	                    pstmt.setString(2, userId);
+	                   	pstmt.setInt(3, num);
+	                }
+	            } else {
+	                sb.append("SELECT boardNum, subject FROM classBoard ");
+	                sb.append(" WHERE boardNum < ? ");
+	                sb.append(" ORDER BY boardNum DESC ");
+	                sb.append(" FETCH  FIRST  1  ROWS  ONLY ");
+
+	                pstmt=conn.prepareStatement(sb.toString());
+	                pstmt.setInt(1, num);
+	            }
+	        	
+	            rs=pstmt.executeQuery();
+
+	            if(rs.next()) {
+	                dto=new ClassDTO();
+	                dto.setBoardNum(rs.getInt("boardNum"));
+	                dto.setSubject(rs.getString("subject"));
+	            }
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				if(rs!=null) {
+					try	{
+						rs.close();
+					}catch (SQLException e2){
+					}
+				}
+				if(pstmt!=null) {
+					try	{
+						pstmt.close();
+					}catch (SQLException e2){
+					}
+				}
+			}
+	    
+	        return dto;
+	    }
+
+	    // 다음글
+  public ClassDTO nextReadBoard_cb(int boardNum, String condition, String keyword,String userId) {
+      ClassDTO dto=null;
+
+      PreparedStatement pstmt=null;
+      ResultSet rs=null;
+      StringBuilder sb = new StringBuilder();
+
+      try {
+      	if(keyword.length() != 0) {
+              sb.append("SELECT boardNum, subject FROM classBoard b ");
+              sb.append(" JOIN member1 m ON  b.userId = m.userId ");
+              if(condition.equals("all")) {
+                  sb.append(" WHERE ( INSTR(subject, ?) >= 1 OR INSTR(content, ?) >= 1  ) AND b.userId = ? ");
+              } else if(condition.equals("created")) {
+              	keyword = keyword.replaceAll("(\\-|\\/|\\.)", "");
+                  sb.append(" WHERE (TO_CHAR(created, 'YYYYMMDD') = ?) AND b.userId = ? ");
+              } else {
+                  sb.append(" WHERE ( INSTR("+condition+", ?) > 0) AND b.userId = ? ");
+              }
+              sb.append("          AND (boardNum > ? ) ");
+              sb.append(" ORDER BY boardNum ASC ");
+              sb.append(" FETCH  FIRST  1  ROWS  ONLY ");
+
+              pstmt=conn.prepareStatement(sb.toString());
+              if(condition.equals("all")) {
+                  pstmt.setString(1, keyword);
+                  pstmt.setString(2, keyword);
+                  pstmt.setString(3, userId);
+                 	pstmt.setInt(4, boardNum);
+              } else {
+                  pstmt.setString(1, keyword);
+                  pstmt.setString(2, userId);
+                 	pstmt.setInt(3, boardNum);
+	                }
+	            } 
+      	else {
+          	sb.append("SELECT boardNum, subject FROM classBoard ");
+          	sb.append(" WHERE boardNum > ? ");
+          	sb.append(" ORDER BY boardNum ASC ");
+          	sb.append(" FETCH  FIRST  1  ROWS  ONLY ");
+
+              pstmt=conn.prepareStatement(sb.toString());
+              pstmt.setInt(1, boardNum);
+          }
+
+          rs=pstmt.executeQuery();
+
+          if(rs.next()) {
+             dto=new ClassDTO();
+             dto.setBoardNum(rs.getInt("boardNum"));
+             dto.setSubject(rs.getString("subject"));
+	        }
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if(rs!=null) {
+				try	{
+					rs.close();
+				}catch (SQLException e2){
+				}
+			}
+			if(pstmt!=null) {
+				try	{
+					pstmt.close();
+				}catch (SQLException e2){
+				}
+			}
+		}
+
+      return dto;
+	}
 }

@@ -110,6 +110,22 @@
 			      <td align="left" width="100">
 			          <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/member/cb_list.do';">우동클래스</button>
 			      </td>
+			      <td align="left" width="100">
+			          <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/member/nb_list.do';">우동자랑</button>
+			      </td>
+			      <tr height="40">
+			      <td align="left" width="100">
+			          <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/member/qa_list.do';">우동지식</button>
+			      </td>
+			      <td align="left" width="100">
+			          <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/member/st_list.do';">우동홍보</button>
+			      </td>
+			      <td align="left" width="100">
+			          <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/member/ud_list.do';">우동이야기</button>
+			      </td>
+			      <td align="left" width="100">
+			          <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/member/used_list.do';">중고거래</button>
+			      </td>
 			   </tr>
 			</c:if>
         </div>
