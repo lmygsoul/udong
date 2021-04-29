@@ -70,7 +70,7 @@ function deleteBoard(num) {
 			</tr>
 			<tr class="row-2">
 			    <td  height="40">
-			    <b>${dto.price} 원</b> 
+			    <b>${dto.price} 원</b>  
 			   </td>
 			</tr>
 			<tr class="row-2">
