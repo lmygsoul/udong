@@ -111,7 +111,7 @@ public class UdongPhotoDAO {
 		StringBuilder sb=new StringBuilder();
 		
 		try {
-			sb.append("SELECT num, p.userId, userName, subject, imageFilename  ");
+			sb.append("SELECT num, p.userId, userName, subject, imageFilename, hitCount, TO_CHAR(created, 'YYYY-MM-DD') created  ");
 			sb.append(" FROM udongphoto p JOIN member1 m ON p.userId = m.userId  ");
 			sb.append(" ORDER BY num DESC  ");
 			sb.append(" OFFSET ? ROWS FETCH FIRST ? ROWS ONLY");
@@ -129,6 +129,8 @@ public class UdongPhotoDAO {
 				dto.setUserName(rs.getString("userName"));
 				dto.setSubject(rs.getString("subject"));
 				dto.setImageFilename(rs.getString("imageFilename"));
+				dto.setHitCount(rs.getInt("hitCount"));
+				dto.setCreated(rs.getString("created"));
 				list.add(dto);
 			}
 		} catch (SQLException e) {

@@ -128,7 +128,7 @@ li {
     border : 1px solid #E9ECEF; /*  테두리 회색 */
     border-radius: 5px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 5px 20px;
 }
 
 .body-title {
@@ -388,6 +388,44 @@ li {
 }
 
 
+/* photo */
+
+.body-photo {
+	width: 100%;
+}
+
+.body-photo img {
+	height: 190px;
+	width: 190px;
+}
+
+.body-photo .imgLayout {
+	width: 190px;
+	height: 278px;
+	margin: 5px 5px 20px;
+	border: 1px solid #ccc;
+    cursor: pointer;
+}
+
+.body-photo .subject {
+     display: inline-block;
+     font-weight: 500;
+     white-space:nowrap;
+     overflow:hidden;
+     text-overflow:ellipsis;
+     text-align: left;
+     padding: 0 10px;
+}
+
+.body-photo .subject2 {
+	 display: inline-block;
+     font-weight: 300;
+     white-space:nowrap;
+     overflow:hidden;
+     text-overflow:ellipsis;
+     padding: 8px 10px 3px;
+}
+	
 /* footer */
 .footer {
 	clear:both;

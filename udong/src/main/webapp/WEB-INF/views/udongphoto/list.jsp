@@ -9,29 +9,6 @@
 <meta charset="UTF-8">
 <title>spring</title>
 <jsp:include page="/WEB-INF/views/layout/staticHeader.jsp"/>
-
-<style type="text/css">
-.imgLayout{
-	width: 190px;
-	height: 205px;
-	padding: 10px 5px 10px;
-	margin: 5px;
-	border: 1px solid #DAD9FF;
-     cursor: pointer;
-}
-.subject {
-     display: inline-block;
-     width:180px;
-     height:25px;
-     line-height:25px;
-     margin:5px auto;
-     border-top: 1px solid #DAD9FF;
-     white-space:nowrap;
-     overflow:hidden;
-     text-overflow:ellipsis;
-}
-</style>
-
 </head>
 <body>
 
@@ -40,13 +17,19 @@
 </div>
 	
 <div class="container">
-    <div class="body-container" style="width: 1000px;">
-        <div class="body-title">
-            <h3><i class="far fa-image"></i> 우동사진 </h3>
+    <div class="body-container" style="border:0;">
+        <div class="list-title">
+        	<table style="width: 100%; margin: 0px auto; border-spacing: 0px;">
+        		<tr>
+        			<td align="left">
+        				<h3>&nbsp;우리동네 사진</h3>
+        			</td>
+			      </tr>
+        	</table>
         </div>
         
-        <div>
-        	<table style="width: 630px; margin: 0 auto; border-spacing: 0">
+        <div class="body-photo">
+        	<table style="width: 100%; margin: 35px auto 0px; border-spacing: 0px; border-collapse: collapse;">
 				<c:forEach var="dto" items="${list}" varStatus="status">
 					<c:if test="${status.index==0}">
 						<tr>
@@ -56,16 +39,36 @@
 					</c:if>
 					<td width="210" align="center">
 						<div class="imgLayout" onclick="javascript:location.href='${articleUrl}&num=${dto.num}';">
-							<img src="${pageContext.request.contextPath}/uploads/photo/${dto.imageFilename}" width="180" height="180">
-							<span class="subject">${dto.subject}</span>
+							<img src="${pageContext.request.contextPath}/uploads/photo/${dto.imageFilename}"  >
+							<table style="border-collapse: collapse;">
+								<tr>
+									<td colspan="2" width="190">
+									<span class="subject">${dto.subject}</span>
+									</td>
+								</tr>
+								<tr>
+									<td colspan="2" width="190">
+									<span class="subject" style="font-weight: 300;">${dto.userName}</span>
+									</td>
+								</tr>
+								<tr style="background-color: #F8F9FA;">
+									<td width="95" align="left">
+									<span class="subject2"><i class="fas fa-eye"></i>&nbsp;&nbsp;${dto.hitCount}</span>
+									</td>
+									<td width="95" align="right">
+									<span class="subject2">${dto.created}</span>
+									</td>
+								</tr>
+							</table>
 						</div>
 					</td>
 				</c:forEach>
 				
+				<!-- 공백 -->
 				<c:set var="n" value="${list.size()}"/>
 				<c:if test="${n > 0 && n%3 != 0}">
 					<c:forEach var="i" begin="${n%3+1}" end="3">
-						<td width="210">
+						<td width="210" align="center">
 							<div class="imgLayout">&nbsp;</div>
 						</td>
 					</c:forEach>
@@ -75,24 +78,34 @@
 				</c:if>
 			</table>
            
-           <table style="width:100%; border-spacing:0px;">
-              <tr height="50">
-                 <td align="center">
-                   ${dataCount==0?"등록된 게시물이 없습니다.":paging}
-                 </td>
-              </tr>
-           </table>
-
-			<table style="width: 100%; margin: 10px auto; border-spacing: 0px;">
+          <!-- 없을 때 -->
+			<c:if test="${dataCount==0}">
+			<table style="width: 100%; margin: 0px auto; border-spacing: 0px;">
+			   <tr height="35">
+				<td align="center">
+			      등록된 게시물이 없습니다.
+				</td>
+			   </tr>
+			</table>
+			</c:if>
+			
+			<!-- 하단 -->
+			<table style="width: 100%; margin: 10px auto; margin-top: 30px; border-spacing: 0px;">
 			   <tr height="40">
-			      <td align="left" width="50%">
-			          &nbsp;
+			      <td align="left" width="100">
+			          <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/udongPhoto/list.do';">새로고침</button>
 			      </td>
-			      <td align="right" width="50%">
-			          <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/udongphoto/created.do';">사진올리기</button>
+			      <c:if test="${dataCount!=0}">
+			      <td align="center">
+			      	${paging}
+			      </td>
+			      </c:if>
+			      <td align="right" width="200">
+			          <button type="button" class="btn btnCreate" onclick="javascript:location.href='${pageContext.request.contextPath}/udongphoto/created.do';"><i class="fab fa-telegram-plane"></i>&nbsp;&nbsp;사진 올리기</button>
 			      </td>
 			   </tr>
 			</table>
+			
 			<c:if test="${mode=='myContent' }">
 			<table style="width: 100%; margin: 10px auto; border-spacing: 0px;">
 			   <tr height="40">

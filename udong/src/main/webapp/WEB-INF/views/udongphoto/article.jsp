@@ -30,42 +30,39 @@ function deletePhoto(num) {
 </div>
 	
 <div class="container">
-    <div class="body-container" style="width: 1000px;">
-        <div class="body-title">
-            <h3><i class="far fa-image"></i> 우동사진 </h3>
-        </div>
+    <div class="body-container">
         
         <div>
-			<table style="width: 100%; margin: 20px auto 0px; border-spacing: 0px; border-collapse: collapse;">
-			<tr height="35" style="border-top: 1px solid #cccccc; border-bottom: 1px solid #cccccc;">
-			    <td colspan="2" align="center">
+			<table style="width: 100%; margin: 0 auto; border-bottom: 1px solid #E9ECEF; border-spacing: 0px; border-collapse: collapse;">
+			<tr height="35" class="row-3">
+			    <td colspan="2" align="left" class="col-1">
 				   ${dto.subject}
 			    </td>
 			</tr>
 			
-			<tr height="35" style="border-bottom: 1px solid #cccccc;">
-			    <td width="50%" align="left" style="padding-left: 5px;">
+			<tr height="35" class="row-2">
+			    <td width="50%" align="left" class="col-2">
 			       이름 : ${dto.userName}
 			    </td>
-			    <td width="50%" align="right" style="padding-right: 5px;">
+			    <td width="50%" align="right" class="col-2">
 			        ${dto.created} | 조회 ${dto.hitCount}
 			    </td>
 			</tr>
 	
 			<tr>
-			  <td colspan="2" align="left" style="padding: 10px 5px;">
+			  <td colspan="2" align="left" style="padding: 15px 5px;">
 			      <img src="${pageContext.request.contextPath}/uploads/photo/${dto.imageFilename}" style="max-width:100%; height:auto; resize:both;">
 			   </td>
 			</tr>
 						
-			<tr style="border-bottom: 1px solid #cccccc;">
-			  <td colspan="2" align="left" style="padding: 10px 5px 10px;">
+			<tr>
+			  <td colspan="2" align="left" style="padding: 0 5px;" valign="top" height="200">
 			      ${dto.content}
 			   </td>
 			</tr>
 			</table>
 			
-			<table style="width: 100%; margin: 0 auto 20px; border-spacing: 0px;">
+			<table style="width: 100%; margin: 10px auto; border-spacing: 0px;">
 			<tr height="45">
 			    <td width="300" align="left">
 			    	<c:choose>
@@ -87,7 +84,7 @@ function deletePhoto(num) {
 			    </td>
 			
 			    <td align="right">
-			        <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/udongphoto/list.do?page=${page}';">리스트</button>
+			        <button type="button" class="btn btnList" onclick="javascript:location.href='${pageContext.request.contextPath}/udongphoto/list.do?page=${page}';">리스트</button>
 			    </td>
 			</tr>
 			</table>
