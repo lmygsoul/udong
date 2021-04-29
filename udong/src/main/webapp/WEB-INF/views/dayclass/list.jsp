@@ -116,7 +116,7 @@
 			</c:if>
 			
 			<c:if test="${mode=='myContent' }">
-			<table style="width: 100%; margin: 10px auto; border-spacing: 0px;">
+			<table style="width: 100%; margin: 10px auto; margin-top: 30px; border-spacing: 0px;">
 			   <tr height="40">
 			      <td align="left" width="100">
 			          <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/member/cb_list.do';">새로고침</button>
