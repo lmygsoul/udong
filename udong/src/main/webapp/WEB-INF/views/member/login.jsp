@@ -36,7 +36,7 @@ function sendLogin() {
 	    <jsp:include page="/WEB-INF/views/layout/header.jsp"></jsp:include>
 	</div>
 		
-	<div class="container" style="background-color: #FBF7F2;">
+	<div class="container" style="background-color: #FBF7F2; border-top: 0;">
 	    <div class="main-container">
 	    	<div style="margin: 0 auto; width:410px;">
 	    	<div style="text-align: center; padding-top: 150px;">

@@ -50,7 +50,7 @@
 <div class="container">
     <div class="body-container" style="width: 700px;">
         <div class="body-title" style="margin-bottom: 0; border-bottom: 0;">
-            <h3><i class="fas fa-flag"></i><span>&nbsp;&nbsp;공지사항</span></h3>
+            <h3>공지사항</h3>
         </div>
         
         <div>

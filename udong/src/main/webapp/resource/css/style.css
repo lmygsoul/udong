@@ -30,8 +30,8 @@ a:hover, a:active {
 	background-color:#ffffff;
 	text-align:center;
 	cursor:pointer;
-	padding:3px 10px 5px;
-	border-radius:4px;
+	padding:5px 15px 7px;
+	border-radius: 2px;
 }
 .btn:active, .btn:focus, .btn:hover {
 	background-color: #ddd;
@@ -61,14 +61,18 @@ a:hover, a:active {
 	width: 360px;
 	height: 50px;
 	line-height: 50px;
-	border-radius:4px;
+	border-radius: 2px;
 }
 
 .btnCreate, .btnList {
 	color: white;
-	background: #FF9933;
-	border: 1px solid #FF9933;
+	background: #495057;
+	border: 1px solid #495057;
 	font-weight: 700;
+}
+
+.btnSearch {
+	padding:3px 15px 5px;
 }
 
 .btnTab {
@@ -124,9 +128,9 @@ textarea:focus, input:focus{
 }
 
 .boxTF {
-	padding:3px 5px 5px;
+	padding:5px 5px 5px;
 	border:1px solid #ccc;
-	border-radius:4px;
+	border-radius:2px;
 	background-color:#ffffff;
 }
 .boxTF[readonly] {
@@ -135,9 +139,9 @@ textarea:focus, input:focus{
 }
 
 .selectField {
-	padding:2px 5px 4px;
+	padding:5px 5px 5px;
 	border:1px solid #ccc;
-	border-radius:4px;
+	border-radius:2px;
 }
 
 .boxTA {
@@ -145,7 +149,7 @@ textarea:focus, input:focus{
 	height:150px;
 	padding:3px 5px;
 	resize : none;  /* 크롬등 크기 고정 */
-	border-radius:4px;
+	border-radius:2px;
 	background-color:#ffffff;
 }
 

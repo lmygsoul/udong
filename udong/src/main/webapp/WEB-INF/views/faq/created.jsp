@@ -42,7 +42,7 @@
 <div class="container">
     <div class="body-container">
         <div class="body-title" style="margin-bottom: 0; border-bottom: 0;">
-            <h3><span style="font-family: Webdings">4</span> FAQ </h3>
+            <h3>FAQ</h3>
         </div>
         
         <div>

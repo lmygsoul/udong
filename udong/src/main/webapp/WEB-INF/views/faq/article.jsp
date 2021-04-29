@@ -32,23 +32,15 @@ function deleteFaq(num) {
 <div class="container">
     <div class="body-container" style="width: 700px;">
         <div class="body-title" style="margin: 0;">
-            <h3><span style="font-family: Webdings">4</span> FAQ </h3>
+            <button type="button" class="btnArticle" onclick="javascript:location.href='${pageContext.request.contextPath}/faq/list.do';">
+            > FAQ</button>
         </div>
         
         <div>
 			<table style="width: 100%; margin: 0 auto; border-spacing: 0px; border-collapse: collapse;">
-			<tr height="35" class="row-3">
-			    <td colspan="2" align="left" class="col-1">
-				   ${dto.subject}
-			    </td>
-			</tr>
-			
 			<tr height="35" class="row-2">
-			    <td width="50%" align="left" class="col-2">
-			       이름 : ${dto.userName}
-			    </td>
-			    <td width="50%" align="right" class="col-2">
-			        ${dto.created}
+			    <td colspan="2" align="left" class="col-1" style="padding-bottom: 10px;">
+				   ${dto.subject}
 			    </td>
 			</tr>
 			
@@ -77,24 +69,10 @@ function deleteFaq(num) {
 			</tr>
 			<tr height="45">
 			    <td class="col-4">
-			    	<c:choose>
-			    		<c:when test="${dto.userId == sessionScope.member.userId}">
-			          		<button type="button" class="btn" style="margin-right: 3px;" onclick="javascript:location.href='${pageContext.request.contextPath}/faq/update.do?num=${dto.num}&page=${page}';">수정</button>
-			    		</c:when>
-			    		<c:otherwise>
-			    			<button type="button" class="btn" disabled="disabled">수정</button>
-			    		</c:otherwise>
-			    	</c:choose>
-			    	
-			    	<c:choose>
-			    		<c:when test="${dto.userId == sessionScope.member.userId || sessionScope.member.userId=='admin'}">
-				        	<button type="button" class="btn" onclick="deleteFaq('${dto.num}');">삭제</button>
-			    		</c:when>
-			    		<c:otherwise>
-			    			<button type="button" class="btn" disabled="disabled">삭제</button>
-			    		</c:otherwise>
-			    	</c:choose>
-			    	
+			    	<c:if test="${dto.userId == sessionScope.member.userId || sessionScope.member.userId=='admin'}">
+			    		<button type="button" class="btn" style="margin-right: 3px;" onclick="javascript:location.href='${pageContext.request.contextPath}/faq/update.do?num=${dto.num}&page=${page}';">수정</button>
+				        <button type="button" class="btn" onclick="deleteFaq('${dto.num}');">삭제</button>
+			    	</c:if>
 			    </td>
 			
 			    <td align="right" class="col-4">

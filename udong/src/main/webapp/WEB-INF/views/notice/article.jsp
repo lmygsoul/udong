@@ -31,7 +31,8 @@ function deleteNotice(num) {
 <div class="container">
     <div class="body-container" style="width: 700px;">
         <div class="body-title" style="margin: 0;">
-            <h3><i class="fas fa-flag"></i><span>&nbsp;&nbsp;공지사항</span></h3>
+            <button type="button" class="btnArticle" onclick="javascript:location.href='${pageContext.request.contextPath}/notice/list.do';">
+            > 공지사항</button>
         </div>
         
         <div>
@@ -90,23 +91,10 @@ function deleteNotice(num) {
 			
 			<tr height="45">
 			    <td class="col-4">
-			    	<c:choose>
-			    		<c:when test="${sessionScope.member.userId==dto.userId}">
-			    			<button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/notice/update.do?num=${dto.num}&page=${page}';">수정</button>
-			    		</c:when>
-			    		<c:otherwise>
-			    			<button type="button" class="btn" disabled="disabled">수정</button>
-			    		</c:otherwise>
-			    	</c:choose>
-			    	
-			    	<c:choose>
-			    		<c:when test="${sessionScope.member.userId==dto.userId || sessionScope.member.userId=='admin'}">
-			    			<button type="button" class="btn" onclick="deleteNotice('${dto.num}');">삭제</button>
-			    		</c:when>
-			    		<c:otherwise>
-			    			<button type="button" class="btn" disabled="disabled">삭제</button>
-			    		</c:otherwise>
-			    	</c:choose>
+			    	<c:if test="${dto.userId == sessionScope.member.userId || sessionScope.member.userId=='admin'}">
+			    		<button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/notice/update.do?num=${dto.num}&page=${page}';">수정</button>
+				        <button type="button" class="btn" onclick="deleteNotice('${dto.num}');">삭제</button>
+			    	</c:if>
 			    </td>
 			
 			   <td align="right" class="col-4">

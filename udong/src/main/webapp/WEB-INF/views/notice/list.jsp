@@ -56,9 +56,28 @@
 </div>
 	
 <div class="container">
-    <div class="body-container">
-        <div class="body-title">
-            <h3><i class="fas fa-flag"></i><span>&nbsp;&nbsp;공지사항</span></h3>
+    <div class="body-container" style="border:0;">
+        <div class="list-title">
+        	<table style="width: 100%; margin: 0px auto; border-spacing: 0px;">
+        		<tr>
+        			<td align="left">
+        				<h3>&nbsp;공지사항</h3>
+        			</td>
+	        		<td align="right">
+				          <form name="searchForm" action="${pageContext.request.contextPath}/notice/list.do" method="post">
+				              <select name="condition" class="selectField">
+				                  <option value="all"         ${condition=="all"?"selected='selected'":"" }>제목+내용</option>
+				                  <option value="subject"     ${condition=="subject"?"selected='selected'":"" }>제목</option>
+				                  <option value="userName"    ${condition=="userName"?"selected='selected'":"" }>작성자</option>
+				                  <option value="content"     ${condition=="content"?"selected='selected'":"" }>내용</option>
+				                  <option value="created"     ${condition=="created"?"selected='selected'":"" }>등록일</option>
+				            </select>
+				            <input type="text" name="keyword" class="boxTF" value="${keyword}">
+				            <button type="button" class="btn btnSearch" onclick="searchList()">검색</button>
+				        </form>
+				      </td>
+			      </tr>
+        	</table>
         </div>
         
         <div class="body-board">
@@ -67,7 +86,7 @@
 			   <tr height="35">
 			      <td align="left" width="50%">
 			         <c:if test="${sessionScope.member.userId=='admin'}">
-			          	<button type="button" class="btn" id="btnDeleteList" style="margin: 0 5px 5px 0;">삭제</button>
+			          	<button type="button" class="btn" id="btnDeleteList" style="margin: 0 5px 10px 0;">삭제</button>
 			          	<input type="hidden" name="page" value="${page}">  <!-- 삭제할때도 page 번호를 넘겨야함  -->
 			          </c:if>
 			          	${dataCount}개(${page}/${total_page} 페이지)
@@ -86,12 +105,12 @@
 				  	  	<input type="checkbox" name="chkAll" id="chkAll" style="margin-top: 3px;">
 				  	  </th>
 			  	  </c:if> 
-			      <th width="60" style="color: #787878;">번호</th>
-			      <th style="color: #787878;">제목</th>
-			      <th width="100" style="color: #787878;">작성자</th>
-			      <th width="80" style="color: #787878;">작성일</th>
-			      <th width="60" style="color: #787878;">조회수</th>
-			      <th width="50" style="color: #787878;">첨부</th>
+			      <th width="60">번호</th>
+			      <th>제목</th>
+			      <th width="100">작성자</th>
+			      <th width="80">작성일</th>
+			      <th width="60">조회수</th>
+			      <th width="50">첨부</th>
 			  </tr>
 			 
 			 
@@ -106,8 +125,8 @@
 			      <td align="left" style="padding-left: 14px;">
 			           <span class="notice-badge">공지</span>
 			      </td>
-			      <td align="left" style="padding-left: 10px; font-weight: 500;">
-			           <a href="${articleUrl}&num=${dto.num}"><span style="color: #FE6671;">${dto.subject}</span></a>
+			      <td align="left" style="padding-left: 10px;">
+			           <a href="${articleUrl}&num=${dto.num}">${dto.subject}</a>
 			      </td>
 			      <td>${dto.userName}</td>
 			      <td>${dto.created}</td>
@@ -146,35 +165,18 @@
 			</table>
 			 </form>
 			 
-			<table style="width: 100%; margin: 0px auto; border-spacing: 0px;">
-			   <tr height="35">
-				<td align="center">
-			        ${dataCount==0?"등록된 게시물이 없습니다.":paging}
-				</td>
-			   </tr>
-			</table>
-			
-			<table style="width: 100%; margin: 10px auto; border-spacing: 0px;">
+			 <!-- 하단 -->
+			<table style="width: 100%; margin: 10px auto; margin-top: 30px; border-spacing: 0px;">
 			   <tr height="40">
 			      <td align="left" width="100">
 			          <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/notice/list.do';">새로고침</button>
 			      </td>
 			      <td align="center">
-			          <form name="searchForm" action="${pageContext.request.contextPath}/notice/list.do" method="post">
-			              <select name="condition" class="selectField">
-			                  <option value="all"         ${condition=="all"?"selected='selected'":"" }>제목+내용</option>
-			                  <option value="subject"     ${condition=="subject"?"selected='selected'":"" }>제목</option>
-			                  <option value="userName"    ${condition=="userName"?"selected='selected'":"" }>작성자</option>
-			                  <option value="content"     ${condition=="content"?"selected='selected'":"" }>내용</option>
-			                  <option value="created"     ${condition=="created"?"selected='selected'":"" }>등록일</option>
-			            </select>
-			            <input type="text" name="keyword" class="boxTF" value="${keyword}">
-			            <button type="button" class="btn" onclick="searchList()">검색</button>
-			        </form>
-			      </td>
+			        ${dataCount==0?"등록된 게시물이 없습니다.":paging}
+				</td>
 			      <td align="right" width="100">
 			      	<c:if test="${sessionScope.member.userId=='admin'}">
-			          <button type="button" class="btn btnCreate" onclick="javascript:location.href='${pageContext.request.contextPath}/notice/created.do';">글올리기</button>
+			          <button type="button" class="btn btnCreate" onclick="javascript:location.href='${pageContext.request.contextPath}/notice/created.do';"><i class="fab fa-telegram-plane"></i>&nbsp;&nbsp;글쓰기</button>
 			         </c:if>
 			      </td>
 			   </tr>

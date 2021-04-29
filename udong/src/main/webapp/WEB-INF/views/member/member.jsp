@@ -114,7 +114,7 @@ function changeEmail() {
 	    <jsp:include page="/WEB-INF/views/layout/header.jsp"></jsp:include>
 	</div>
 		
-	<div class="container" style="height: 1430px; padding: 0; background-color: #FBF7F2;">
+	<div class="container" style="height: 1430px; padding: 0; background-color: #FBF7F2; border-top: 0;">
 	    <div class="main-container" style="height: 1430px; position: relative;">
 	    <div class="memberFormBody">
 	    <div>

@@ -22,9 +22,9 @@
 	</div>
 		
 	<div class="container" style="background-color: white; border-top: 1px solid #E9ECEF;">
-   <div class="body-container" style="background-color: white; border: 0; width: 1000px;">
-        <div class="body-title">
-            <h3><i class="fas fa-bullhorn"></i>&nbsp;&nbsp;우리동네 홍보</h3>
+   <div class="body-container" style="background-color: white; border: 0; position: relative;">
+        <div class="body-title" style="border: 0;">
+	       <h3 style="font-size: 24px;">우리동네 홍보</h3>
         </div>
         <div align="right" style="padding-right: 10px">
         	<form name="searchForm" action="${pageContext.request.contextPath}/store/list.do" method="post">

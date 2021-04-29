@@ -92,7 +92,7 @@
 			                  <option value="created" 	${condition=="created"?"selected='selected'":""}>등록일</option>
 			            </select>
 			            <input type="text" name="keyword" class="boxTF">
-			            <button type="button" class="btn" onclick="searchList()">검색</button>
+			            <button type="button" class="btn btnSearch" onclick="searchList()">검색</button>
 			        </form>
 			      </td>
 			      <td align="right" width="100">

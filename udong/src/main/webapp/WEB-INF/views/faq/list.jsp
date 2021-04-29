@@ -32,11 +32,16 @@
 	
 <div class="container">
 	
-    <div class="body-container" style="width: 700px;">
-        <div class="body-title">
-            <h3><span style="font-family: Webdings">4</span> FAQ </h3>
+    <div class="body-container" style="border: 0;">
+        <div class="list-title">
+        	<table style="width: 100%; margin: 0px auto; border-spacing: 0px;">
+        		<tr>
+        			<td align="left">
+        				<h3>&nbsp;FAQ</h3>
+        			</td>
+			      </tr>
+        	</table>
         </div>
-        
         
         <div class="body-board">
 			<table style="width: 100%; margin-top: 20px; border-spacing: 0;">
@@ -52,20 +57,16 @@
 			
 			<table style="width: 100%; border-spacing: 0; border-collapse: collapse;">
 			  <tr class="table-row1"> 
-			      <th width="60" style="color: #787878;">번호</th>
-			      <th style="color: #787878;">제목</th>
-			      <th width="100" style="color: #787878;">작성자</th>
-			      <th width="80" style="color: #787878;">작성일</th>
+			      <th width="120">번호</th>
+			      <th align="left">제목</th>
 			  </tr>
 			 
 			 <c:forEach var="dto" items="${list}">
 			  <tr class="table-row2"> 
 			      <td>${dto.listNum}</td>
-			      <td align="left" style="padding-left: 10px;">
+			      <td align="left">
 			           <a href="${articleUrl}&num=${dto.num}">${dto.subject}</a>
 			      </td>
-			      <td>${dto.userName}</td>
-			      <td>${dto.created}</td>
 			  </tr>
 			</c:forEach>
 			
@@ -79,11 +80,12 @@
 			   </tr>
 			</table>
 			
-			<table style="width: 100%; margin: 10px auto; border-spacing: 0px;">
+			<table style="width: 100%; margin: 0px auto; border-spacing: 0px;">
 			   <tr height="40">
 			      <td align="left" width="100">
 			          <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/faq/list.do';">새로고침</button>
 			      </td>
+			      <!-- 
 			      <td align="center">
 			          <form name="searchForm" action="${pageContext.request.contextPath}/faq/list.do" method="post">
 			              <select name="condition" class="selectField">
@@ -97,8 +99,11 @@
 			            <button type="button" class="btn" onclick="searchList()">검색</button>
 			        </form>
 			      </td>
+			       -->
 			      <td align="right" width="100">
-			          <button type="button" class="btn btnCreate" onclick="javascript:location.href='${pageContext.request.contextPath}/faq/created.do';">글올리기</button>
+			      	<c:if test="${sessionScope.member.userId=='admin'}">
+			          <button type="button" class="btn btnCreate" onclick="javascript:location.href='${pageContext.request.contextPath}/faq/created.do';"><i class="fab fa-telegram-plane"></i>&nbsp;&nbsp;글쓰기</button>
+			      	</c:if>
 			      </td>
 			   </tr>
 			</table>

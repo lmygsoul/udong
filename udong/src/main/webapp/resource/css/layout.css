@@ -49,9 +49,8 @@ li {
     left: 0;
     top: 150px;
     text-align:left;
-    background-color: #F8F9FA;
-    margin-top: 40px;
     padding: 60px 0;
+    border-top: 1px solid #ccc;
 }
 
 .main-container {
@@ -111,7 +110,7 @@ li {
 }
 
 .body-side h3 {
-	font-size: 18px;
+	font-size: 16px;
 }
 
 .body-side li {
@@ -122,24 +121,38 @@ li {
     clear:both;
     width: 700px;
     min-height: 375px;
-    border: 1px solid #E9ECEF;
+    border : 1px solid #E9ECEF;
     border-radius: 5px;
-    background-color: white;
     margin: 0 auto;
     padding: 5px 20px;
 }
 
 .body-title {
-    color: #495057; /* 짙은 회색 */
     padding: 15px;
     margin: 0 0 25px 0;
     border-bottom: 1px solid #E9ECEF;
 }
+
 .body-title h3 {
-    font-size: 18px;
+	color: #495057; /* 짙은 회색 */
+    font-size: 16px;
+    font-weight: 500;
     min-width: 300px;
-    margin: 0 0 -5px 0;
     display: inline-block;
+}
+
+.btnArticle {
+	border:0; 
+	background-color: white;
+	color: gray;
+	font-size: 16px;
+	font-weight: 500;
+	cursor: pointer;
+	font-family: "Noto Sans KR";
+}
+
+.body-title button:hover {
+	color: #FF8A3D;
 }
 
 /* table */
@@ -159,8 +172,9 @@ li {
 .table-row1 {
 	text-align: center;
 	background-color: white;
+	color: #495057;
 	height: 35px;
-	border-top: 1px solid #ccc; 
+	border-top: 1px solid #495057; 
 	border-bottom: 1px solid #E9ECEF;
 }
 
@@ -192,6 +206,26 @@ li {
 
 .artiBox{
 	padding: 20px 20px;
+}
+
+/* list */
+
+.list-table {
+	width: 100%; 
+	margin: 0px auto; 
+	border-spacing: 0px;
+}
+
+.list-title {
+    padding: 15px;
+    margin: 0 0 25px 0;
+    background-color: #F8F9FA;
+}
+
+.list-title h3 {
+	color: #495057; /* 짙은 회색 */
+    font-size: 16px;
+    font-weight: 500;
 }
 
 /* create */
@@ -238,7 +272,7 @@ li {
 	padding: 1px 5px; 
 	color: white; 
 	border-radius: 4px;
-	background: #FE6671; 
+	background: #FF8A3D;
 	font-weight: 500;
 }
 
@@ -290,7 +324,7 @@ li {
 }
 
 .memberFormBody .formCol-2 {
-	width: 80%;
+	width: 78%;
 	text-align: left;
 }
 
