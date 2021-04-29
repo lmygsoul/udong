@@ -21,23 +21,30 @@
 	    <jsp:include page="/WEB-INF/views/layout/header.jsp"></jsp:include>
 	</div>
 		
-	<div class="container" style="background-color: white; border-top: 1px solid #E9ECEF;">
-   <div class="body-container" style="background-color: white; border: 0; position: relative;">
-        <div class="body-title" style="border: 0;">
-	       <h3 style="font-size: 24px;">우리동네 홍보</h3>
+	<div class="container">
+    <div class="body-container" style="border:0; width: 830px">
+        <div class="list-title">
+        	<table style="width: 100%; margin: 0px auto; border-spacing: 0px; padding-left: 20px; padding-right: 20px;">
+        		<tr>
+        			<td align="left">
+        				<h3>우리동네 홍보</h3>
+        			</td>
+	        		<td align="right">
+			        	<form name="searchForm" action="${pageContext.request.contextPath}/store/list.do" method="post">
+						      <span style="margin-right: 10px;">지역선택</span>
+						      <select name="keyword" class="selectField" onchange="searchLocation()">
+						                  <option value="ALL" ${keyword=="ALL"?"selected='selected'":"" }>전체</option>
+						                  <option value="서울" ${keyword=="서울"?"selected='selected'":"" }>서울</option>
+						                  <option value="경기" ${keyword=="경기"?"selected='selected'":"" }>경기</option>
+						                  <option value="인천" ${keyword=="인천"?"selected='selected'":"" }>인천</option>
+						                  <option value="기타" ${keyword=="기타"?"selected='selected'":"" }>기타</option> 
+						      </select>
+						 </form>
+					</td>
+				</tr>
+			</table>
         </div>
-        <div align="right" style="padding-right: 10px">
-        	<form name="searchForm" action="${pageContext.request.contextPath}/store/list.do" method="post">
-			      지역선택
-			      <select name="keyword" class="selectField" onchange="searchLocation()">
-			                  <option value="ALL" ${keyword=="ALL"?"selected='selected'":"" }>전체</option>
-			                  <option value="서울" ${keyword=="서울"?"selected='selected'":"" }>서울</option>
-			                  <option value="경기" ${keyword=="경기"?"selected='selected'":"" }>경기</option>
-			                  <option value="인천" ${keyword=="인천"?"selected='selected'":"" }>인천</option>
-			                  <option value="기타" ${keyword=="기타"?"selected='selected'":"" }>기타</option> 
-			      </select>
-			 </form>
-       	</div>
+        
         <div>
         	<table style="width: 800px; margin: 10px auto; border-spacing: 0">
         	<c:forEach var="dto" items="${list}" varStatus="status">
@@ -66,22 +73,17 @@
         	</c:if>
         	</table>
         
-			<table style="width: 100%; border-spacing: 0;">
-			   <tr height="35">
-				<td align="center">
-			        ${dataCount==0?"등록된 게시물이 없습니다.":paging}
-				</td>
-			   </tr>
-			</table>
-			
-			<table style="width: 100%; margin-top: 10px; margin-left: 10px; margin-right: 10px; border-spacing: 0;">
+			<table style="width: 100%; margin-top: 10px auto;  margin-top: 30px; border-spacing: 0;">
 			   <tr height="40" >
 			      <td align="left" width="100">
 			          <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/store/list.do';">새로고침</button>
 			      </td>
+				<td align="center">
+			        ${dataCount==0?"등록된 게시물이 없습니다.":paging}
+				</td>
 			      <c:if test="${sessionScope.member.type==0 || sessionScope.member.type==2}">
 			      	<td align="right" width="100">
-			          	<button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/store/created.do';">글올리기</button>
+			          	<button type="button" class="btn btnCreate" onclick="javascript:location.href='${pageContext.request.contextPath}/store/created.do';"><i class="fab fa-telegram-plane"></i>&nbsp;&nbsp;글쓰기</button>
 			      	</td>
 			      </c:if>
 			   </tr>

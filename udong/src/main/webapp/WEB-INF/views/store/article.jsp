@@ -40,7 +40,7 @@ function score(){
 <div class="container">
     <div class="body-container" style="width: 1000px;">
         <div class="body-title">
-            <h3><span style="font-family: Webdings">2</span> 우리동네 홍보 </h3>
+            <h3>우리동네 홍보</h3>
         </div>
         
         <div>
