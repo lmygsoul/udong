@@ -22,14 +22,32 @@
 	
 <div class="container">
 	
-    <div class="body-container" style="width: 700px;">
-        <div class="body-title">
-            <h3><span style="font-family: Webdings">4</span> ${title } </h3>
+       <div class="body-container" style="border:0;">
+        <div class="list-title">
+        	<table style="width: 100%; margin: 0px auto; border-spacing: 0px;">
+        		<tr>
+        			<td align="left">
+        				<h3>&nbsp;보낸 쪽지함</h3>
+        			</td>
+	        		<td align="right">
+	        			<form name="searchForm" action="${pageContext.request.contextPath}/member/sm_list.do" method="post">
+			              <select name="condition" class="selectField">
+			              	  <option value="all" 		${condition=="all"?"selected='selected'":""}>제목+내용</option>
+			                  <option value="subject" 	${condition=="subject"?"selected='selected'":""}>제목</option>
+			                  <option value="receiveUser" 	${condition=="receiveUser"?"selected='selected'":""}>받는사람</option>
+			                  <option value="content" 	${condition=="content"?"selected='selected'":""}>내용</option>
+			                  <option value="sendTime" 	${condition=="sendTime"?"selected='selected'":""}>등록일</option>
+			            </select>
+			            <input type="text" name="keyword" class="boxTF">
+			            <button type="button" class="btn btnSearch" onclick="searchList()">검색</button>
+			        </form>
+				    </td>
+			    </tr>
+        	</table>
         </div>
         
-        
         <div class="body-board">
-			<table style="width: 100%; margin-top: 20px; border-spacing: 0;">
+			<table style="width: 100%; margin: 20px auto 0px; border-spacing: 0;">
 			   <tr height="35">
 			      <td align="left" width="50%">
 			           ${dataCount}개(${page}/${total_page} 페이지)
@@ -40,16 +58,16 @@
 			   </tr>
 			</table>
 			
-			<table style="width: 100%; border-spacing: 0; border-collapse: collapse;">
-			  <tr align="center" bgcolor="white" height="35" style="border-top: 1px solid #cccccc; border-bottom: 1px solid #cccccc;"> 
-			      <th width="60" style="color: #787878;">번호</th>
-			      <th style="color: #787878;">제목</th>
+			<table style="width: 100%; margin: 0px auto; border-spacing: 0; border-collapse: collapse;">
+				<tr class="table-row1"> 
+			      <th width="60">번호</th>
+			      <th>제목</th>
 			      <c:if test="${sessionScope.member.type=='0' }">
-			      	<th width="100" style="color: #787878;">보낸사람</th>
+			      	<th width="100">보낸사람</th>
 			      </c:if>
-			      <th width="100" style="color: #787878;">받는사람</th>
-			      <th width="80" style="color: #787878;">작성일</th>
-			      <th width="80" style="color: #787878;">상태</th>
+			      <th width="100">받는사람</th>
+			      <th width="80">작성일</th>
+			      <th width="80">상태</th>
 			  </tr>		
 			<c:forEach var="mdto" items="${list}">
 				<c:if test="${sessionScope.member.userId==mdto.sendUser || sessionScope.member.type == '0'}">
@@ -68,35 +86,29 @@
 			  </c:if>
 			</c:forEach>	
 			</table>
-			 
+			
+			<c:if test="${dataCount==0}">
 			<table style="width: 100%; margin: 0px auto; border-spacing: 0px;">
 			   <tr height="35">
 				<td align="center">
-			       ${dataCount==0?"등록된 게시물이 없습니다.":paging}
+			      등록된 게시물이 없습니다.
 				</td>
 			   </tr>
 			</table>
+			</c:if>
 			
-			<table style="width: 100%; margin: 10px auto; border-spacing: 0px;">
-			   <tr>
+			<table style="width: 100%; margin: 10px auto;  margin-top: 30px; border-spacing: 0px;">
+			    <tr height="40">
 			   	<td align="left" width="100">
 			          <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/member/sm_list.do';">새로고침</button>
 			      </td>
+			      <c:if test="${dataCount!=0}">
 			      <td align="center">
-			          <form name="searchForm" action="${pageContext.request.contextPath}/member/sm_list.do" method="post">
-			              <select name="condition" class="selectField">
-			              	  <option value="all" 		${condition=="all"?"selected='selected'":""}>제목+내용</option>
-			                  <option value="subject" 	${condition=="subject"?"selected='selected'":""}>제목</option>
-			                  <option value="receiveUser" 	${condition=="receiveUser"?"selected='selected'":""}>받는사람</option>
-			                  <option value="content" 	${condition=="content"?"selected='selected'":""}>내용</option>
-			                  <option value="sendTime" 	${condition=="sendTime"?"selected='selected'":""}>등록일</option>
-			            </select>
-			            <input type="text" name="keyword" class="boxTF">
-			            <button type="button" class="btn" onclick="searchList()">검색</button>
-			        </form>
+			      	${paging}
 			      </td>
-			       <td align="right" width="100">
-			          <button type="button" class="btn btnCreate" onclick="javascript:location.href='${pageContext.request.contextPath}/member/sm_created.do';">쪽지 보내기</button>
+			      </c:if>
+			       <td align="right" width="200">
+			       		<button type="button" class="btn btnCreate" onclick="javascript:location.href='${pageContext.request.contextPath}/member/sm_created.do';"><i class="fab fa-telegram-plane"></i>&nbsp;&nbsp;쪽지 보내기</button>
 			      </td>
 			   </tr>
 			</table>

@@ -29,7 +29,7 @@ function deleteNotice(num) {
 </div>
 	
 <div class="container">
-    <div class="body-container" style="width: 700px;">
+    <div class="body-container">
         <div class="body-title" style="margin: 0;">
             <button type="button" class="btnArticle" onclick="javascript:location.href='${pageContext.request.contextPath}/notice/list.do';">
             > 공지사항</button>

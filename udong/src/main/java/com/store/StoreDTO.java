@@ -1,17 +1,17 @@
 package com.store;
 
 public class StoreDTO {
-	int num;
-	String userId;
-	String nickname;
-	String subject;
-	String content;
-	String imageFileName;
-	String created;
-	double score;
-	int recnum;
-	String addr;
-	String addrsub;
+	private int num;
+	private String userId;
+	private String nickname;
+	private String subject;
+	private String content;
+	private String imageFileName;
+	private String created;
+	private double score;
+	private int recnum;
+	private String addr;
+	private String addrsub;
 	public int getRecnum() {
 		return recnum;
 	}

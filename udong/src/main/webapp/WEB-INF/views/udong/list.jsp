@@ -24,12 +24,31 @@
 </div>
 	
 <div class="container">
-    <div class="body-container" style="width: 900px;">
-        <div class="body-title">
-            <h3><i class="fas fa-chalkboard"></i> 우동이야기 </h3>
+    <div class="body-container" style="border:0;">
+        <div class="list-title">
+        	<table style="width: 100%; margin: 0px auto; border-spacing: 0px;">
+        		<tr>
+        			<td align="left">
+        				<h3>&nbsp;우리동네 이야기</h3>
+        			</td>
+	        		<td align="right">
+				          <form name="searchForm" action="${pageContext.request.contextPath}/udong/list.do" method="post">
+			              <select name="condition" class="selectField">
+			                  <option value="all"         ${condition=="all"?"selected='selected'":"" }>제목+내용</option>
+			                  <option value="subject"     ${condition=="subject"?"selected='selected'":"" }>제목</option>
+			                  <option value="userName"    ${condition=="userName"?"selected='selected'":"" }>작성자</option>
+			                  <option value="content"     ${condition=="content"?"selected='selected'":"" }>내용</option>
+			                  <option value="created"     ${condition=="created"?"selected='selected'":"" }>등록일</option>
+			            </select>
+			            <input type="text" name="keyword" class="boxTF" value="${keyword}">
+			            <button type="button" class="btn btnSearch" onclick="searchList()">검색</button>
+			        </form>
+				      </td>
+			      </tr>
+        	</table>
         </div>
         
-        <div>
+        <div class="body-board">
 			<table style="width: 100%; margin: 20px auto 0px; border-spacing: 0px;">
 			   <tr height="35">
 			      <td align="left" width="50%">
@@ -42,16 +61,16 @@
 			</table>
 			
 			<table style="width: 100%; margin: 0px auto; border-spacing: 0px; border-collapse: collapse;">
-			  <tr align="center" bgcolor="#eeeeee" height="35" style="border-top: 1px solid #cccccc; border-bottom: 1px solid #cccccc;"> 
-			      <th width="60" style="color: #787878;">번호</th>
-			      <th style="color: #787878;">제목</th>
-			      <th width="100" style="color: #787878;">작성자</th>
-			      <th width="80" style="color: #787878;">작성일</th>
-			      <th width="60" style="color: #787878;">조회수</th>
+			   <tr class="table-row1"> 
+			      <th width="60">번호</th>
+			      <th>제목</th>
+			      <th width="100">작성자</th>
+			      <th width="80">작성일</th>
+			      <th width="60">조회수</th>
 			  </tr>
 			 
 			 <c:forEach var="dto" items="${list}">
-			  <tr align="center" bgcolor="#ffffff" height="35" style="border-bottom: 1px solid #cccccc;"> 
+			    <tr class="table-row2">
 			      <td>${dto.listNum}</td>
 			      <td align="left" style="padding-left: 10px;">
 			           <a href="${articleUrl}&num=${dto.num}">${dto.subject}</a>
@@ -63,34 +82,30 @@
 			</c:forEach> 
 			</table>
 			 
+			<!-- 없을 때 -->
+			<c:if test="${dataCount==0}">
 			<table style="width: 100%; margin: 0px auto; border-spacing: 0px;">
 			   <tr height="35">
 				<td align="center">
-			        ${dataCount==0?"등록된 게시물이 없습니다.":paging}
+			      등록된 게시물이 없습니다.
 				</td>
 			   </tr>
 			</table>
+			</c:if>
 			
-			<table style="width: 100%; margin: 10px auto; border-spacing: 0px;">
+			<!-- 하단 -->
+			<table style="width: 100%; margin: 10px auto; margin-top: 30px; border-spacing: 0px;">
 			   <tr height="40">
 			      <td align="left" width="100">
 			          <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/udong/list.do';">새로고침</button>
 			      </td>
+			      <c:if test="${dataCount!=0}">
 			      <td align="center">
-			          <form name="searchForm" action="${pageContext.request.contextPath}/udong/list.do" method="post">
-			              <select name="condition" class="selectField">
-			                  <option value="all"         ${condition=="all"?"selected='selected'":"" }>제목+내용</option>
-			                  <option value="subject"     ${condition=="subject"?"selected='selected'":"" }>제목</option>
-			                  <option value="userName"    ${condition=="userName"?"selected='selected'":"" }>작성자</option>
-			                  <option value="content"     ${condition=="content"?"selected='selected'":"" }>내용</option>
-			                  <option value="created"     ${condition=="created"?"selected='selected'":"" }>등록일</option>
-			            </select>
-			            <input type="text" name="keyword" class="boxTF" value="${keyword}">
-			            <button type="button" class="btn" onclick="searchList()">검색</button>
-			        </form>
+			      	${paging}
 			      </td>
+			      </c:if>
 			      <td align="right" width="100">
-			          <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/udong/created.do';">글올리기</button>
+			      	<button type="button" class="btn btnCreate" onclick="javascript:location.href='${pageContext.request.contextPath}/udong/created.do';"><i class="fab fa-telegram-plane"></i>&nbsp;&nbsp;글쓰기</button>
 			      </td>
 			   </tr>
 			</table>

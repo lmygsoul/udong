@@ -6,19 +6,24 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.sql.Connection;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
 
+import com.member.SessionInfo;
 import com.util.DBConn;
+import com.util.FileManager;
 import com.util.MyUploadServlet;
 import com.util.MyUtil;
 
 @WebServlet("/neighbor/*")
-
+@MultipartConfig
 public class NeighborServlet extends MyUploadServlet {
 
 	private static final long serialVersionUID = 1L;
@@ -39,7 +44,6 @@ public class NeighborServlet extends MyUploadServlet {
 		req.setCharacterEncoding("utf-8");
 
 		String uri = req.getRequestURI();
-		String cp = req.getContextPath();
 		HttpSession session = req.getSession();
 
 		String root = session.getServletContext().getRealPath("/");
@@ -59,6 +63,8 @@ public class NeighborServlet extends MyUploadServlet {
 			delete(req, resp);
 		} else if (uri.indexOf("article.do") != -1) {
 			article(req, resp);
+		} else if (uri.indexOf("rec.do")!= -1) {
+			rec(req,resp);
 		}
 	}
 
@@ -87,6 +93,7 @@ public class NeighborServlet extends MyUploadServlet {
 			dataCount = dao.dataCount();
 		else
 			dataCount = dao.dataCount(condition, keyword);
+		
 		int rows = 10;
 		int total_page = util.pageCount(rows, dataCount);
 		if (current_page > total_page)
@@ -116,7 +123,7 @@ public class NeighborServlet extends MyUploadServlet {
 		}
 
 		String listUrl = cp + "/neighbor/list.do";
-		String articleUrl = cp + "/neighbor/list.do?page=" + current_page;
+		String articleUrl = cp + "/neighbor/article.do?page=" + current_page;
 		if (query.length() != 0) {
 			listUrl += "?" + query;
 			articleUrl += "&" + query;
@@ -139,28 +146,170 @@ public class NeighborServlet extends MyUploadServlet {
 
 	protected void created(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		req.setAttribute("mode", "created");
-
 		forward(req, resp, "/WEB-INF/views/neighbor/created.jsp");
 	}
 
 	protected void createdSubmit(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-
+		String cp = req.getContextPath();
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		NeighborDAO dao = new NeighborDAO();
+		NeighborDTO dto = new NeighborDTO();
+		
+		try {
+			dto.setUserId(info.getUserId());
+			dto.setSubject(req.getParameter("subject"));
+			dto.setContent(req.getParameter("content"));
+			
+			String filename = null;
+			Part p = req.getPart("selectFile");
+			Map<String, String> map = doFileUpload(p, pathname);
+			if(map!=null) {
+				filename = map.get("saveFilename");
+			}
+			if(filename != null) {
+				dto.setImageFileName(filename);
+			}
+			dao.insertNeighbor(dto);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+		resp.sendRedirect(cp+"/neighbor/list.do");
 	}
 
 	protected void updateForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
+		String cp = req.getContextPath();
+		String page = req.getParameter("page");
+		int num = Integer.parseInt(req.getParameter("num"));
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		NeighborDAO dao = new NeighborDAO();
+		NeighborDTO dto = new NeighborDTO();
+		try {
+			dto = dao.readNeighbor(num);
+			if(dto!=null && dto.getUserId().equals(info.getUserId())) {
+				req.setAttribute("dto", dto);
+				req.setAttribute("page", page);
+				req.setAttribute("mode", "update");
+				forward(req, resp, "/WEB-INF/views/neighbor/created.jsp");
+				return;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		resp.sendRedirect(cp+"/neghbor/list.do?page="+page);
 	}
 
 	protected void updateSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
+		String cp = req.getContextPath();
+		String page = req.getParameter("page");
+		int num = Integer.parseInt(req.getParameter("num"));
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		NeighborDAO dao = new NeighborDAO();
+		NeighborDTO dto = new NeighborDTO();
+		try {
+			dto.setUserId(info.getUserId());
+			dto.setSubject(req.getParameter("subject"));
+			dto.setContent(req.getParameter("content"));
+			dto.setNum(num);
+			
+			String imageFileName = req.getParameter("imageFileName");
+			Part p = req.getPart("selectFile");
+			Map<String, String> map = doFileUpload(p, pathname);
+			if(map !=null) {
+				String fileName= map.get("saveFilename");
+				FileManager.doFiledelete(pathname, imageFileName);
+				dto.setImageFileName(fileName);
+			} else {
+				dto.setImageFileName(imageFileName);
+			}
+			dao.updateNeighbor(dto);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		resp.sendRedirect(cp+"/neighbor/list.do?page="+page);
 	}
 
 	protected void delete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
+		String cp = req.getContextPath();
+		String page = req.getParameter("page");
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		NeighborDAO dao = new NeighborDAO();
+		try {
+			if(info.getUserId().equals(req.getParameter("userid")) || info.getType().equals("0")){
+				int num = Integer.parseInt(req.getParameter("num"));
+				dao.deleteNeighbor(num);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+		resp.sendRedirect(cp+"/neighbor/list.do?page="+page);
 	}
 
 	protected void article(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		String cp = req.getContextPath();
+		String page = req.getParameter("page");
+		String query = "page="+page;
+		Boolean isRec = true;
+		
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
 
+		NeighborDAO dao = new NeighborDAO();
+		NeighborDTO dto = new NeighborDTO();
+		try {
+			int num = Integer.parseInt(req.getParameter("num"));
+			
+			dto = dao.readNeighbor(num);
+			
+			if(dto == null) {
+				resp.sendRedirect(cp+"/neighbor/list.do?"+query);
+			}
+			dao.updateHitCount(num);
+			dto.setContent(dto.getContent().replaceAll("\n", "<br>"));
+			
+			req.setAttribute("dto", dto);
+			req.setAttribute("page", page);
+			req.setAttribute("query", query);
+			req.setAttribute("num", num);
+			if(info != null) {
+				NeighborDTO rec = new NeighborDTO();
+				rec.setNum(num);
+				rec.setUserId(info.getUserId());
+				isRec = dao.recCheck(rec);
+				req.setAttribute("isRec", isRec);
+			}
+			list(req, resp);
+			return;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		resp.sendRedirect(cp+"/neighbor/article.do?page="+page+"&num="+dto.getNum());
+		return;
+	}
+	protected void rec(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		NeighborDAO dao = new NeighborDAO();
+		NeighborDTO dto = new NeighborDTO();
+		String cp = req.getContextPath();
+		String page = req.getParameter("page");
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		
+		try {
+			dto.setNum(Integer.parseInt(req.getParameter("num")));
+			dto.setUserId(info.getUserId());
+			dto.setRec(Integer.parseInt(req.getParameter("selectRec")));
+			if(dao.recCheck(dto)) {
+				dao.updateRec(dto);
+			} 
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		resp.sendRedirect(cp+"/neighbor/list.do?page="+page+"&num="+dto.getNum());
+		return;	
 	}
 }

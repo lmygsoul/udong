@@ -165,15 +165,28 @@
 			</table>
 			 </form>
 			 
-			 <!-- 하단 -->
+			<!-- 없을 때 -->
+			<c:if test="${dataCount==0}">
+			<table style="width: 100%; margin: 0px auto; border-spacing: 0px;">
+			   <tr height="35">
+				<td align="center">
+			      등록된 게시물이 없습니다.
+				</td>
+			   </tr>
+			</table>
+			</c:if>
+			
+			<!-- 하단 -->
 			<table style="width: 100%; margin: 10px auto; margin-top: 30px; border-spacing: 0px;">
 			   <tr height="40">
 			      <td align="left" width="100">
 			          <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/notice/list.do';">새로고침</button>
 			      </td>
+			      <c:if test="${dataCount!=0}">
 			      <td align="center">
-			        ${dataCount==0?"등록된 게시물이 없습니다.":paging}
-				</td>
+			      	${paging}
+			      </td>
+			      </c:if>
 			      <td align="right" width="100">
 			      	<c:if test="${sessionScope.member.userId=='admin'}">
 			          <button type="button" class="btn btnCreate" onclick="javascript:location.href='${pageContext.request.contextPath}/notice/created.do';"><i class="fab fa-telegram-plane"></i>&nbsp;&nbsp;글쓰기</button>
@@ -182,7 +195,6 @@
 			   </tr>
 			</table>
         </div>
-
     </div>
 </div>
 

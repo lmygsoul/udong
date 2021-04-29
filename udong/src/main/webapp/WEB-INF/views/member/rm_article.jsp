@@ -77,8 +77,8 @@ function deleteBoard(num) {
 			    	</c:choose>
 			    </td>
 			    <td align="right" class="col-4">
-			    	<button type="button" class="btn btnCreate" onclick="javascript:location.href='${pageContext.request.contextPath}/member/sm_created.do';">답장하기</button>
 			        <button type="button" class="btn btnList" onclick="javascript:location.href='${pageContext.request.contextPath}/member/rm_list.do?${query}';">리스트</button>
+			    	<button type="button" class="btn btnCreate" onclick="javascript:location.href='${pageContext.request.contextPath}/member/sm_created.do';"><i class="fab fa-telegram-plane"></i>&nbsp;&nbsp;답장하기</button>
 			    </td>
 			    
 			</tr>

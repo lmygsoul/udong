@@ -1,4 +1,4 @@
-﻿<%@ page contentType="text/html; charset=UTF-8" %>
+<%@ page contentType="text/html; charset=UTF-8" %>
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
@@ -16,7 +16,7 @@ function deleteBoard(num) {
     var query = "num="+num+"&${query}";
     var url = "${pageContext.request.contextPath}/udong/delete.do?" + query;
 
-    if(confirm("위 자료를 삭제 하시 겠습니까 ? ")) {
+    if(confirm("위 자료를 삭제 하시겠습니까 ? ")) {
     	location.href=url;
     }
 }
@@ -30,56 +30,51 @@ function deleteBoard(num) {
 </div>
 	
 <div class="container">
-    <div class="body-container" style="width: 900px;">
-        <div class="body-title">
-            <h3><i class="fas fa-chalkboard"></i> 우동이야기 </h3>
-        </div>
+    <div class="body-container">
         
         <div>
-			<table style="width: 100%; margin: 20px auto 0px; border-spacing: 0px; border-collapse: collapse;">
-			<tr height="35" style="border-top: 1px solid #cccccc; border-bottom: 1px solid #cccccc;">
-			    <td colspan="2" align="center">
+			<table style="width: 100%; margin: 0 auto; border-spacing: 0px; border-collapse: collapse;">
+			<tr height="35" class="row-3">
+			    <td colspan="2" align="left" class="col-1">
 				   ${dto.subject}
 			    </td>
 			</tr>
 			
-			<tr height="35" style="border-bottom: 1px solid #cccccc;">
-			    <td width="50%" align="left" style="padding-left: 5px;">
+			<tr height="35" class="row-2">
+			    <td width="50%" align="left" class="col-2">
 			       이름 : ${dto.userName}
 			    </td>
-			    <td width="50%" align="right" style="padding-right: 5px;">
+			    <td width="50%" align="right" class="col-2">
 			        ${dto.created} | 조회 ${dto.hitCount}
 			    </td>
 			</tr>
 			
-			<tr style="border-bottom: 1px solid #cccccc;">
-			  <td colspan="2" align="left" style="padding: 10px 5px;" valign="top" height="200">
+			<tr class="row-2">
+			  <td colspan="2" align="left" class="artiBox" valign="top" height="200">
 			      ${dto.content}
 			   </td>
 			</tr>
 			
-			<tr height="35" style="border-bottom: 1px solid #cccccc;">
-			    <td colspan="2" align="left" style="padding-left: 5px;">
-			       이전글 :
-			         <c:if test="${not empty preReadDto}">
-			              <a href="${pageContext.request.contextPath}/udong/article.do?${query}&num=${preReadDto.num}">${preReadDto.subject}</a>
-			        </c:if>
+			<tr height="35" class="row-2">
+			    <td colspan="2" align="left" class="col-3">
+			       이전글 : 
+					<c:if test="${not empty preReadDto}">
+						<a href="${pageContext.request.contextPath}/udong/article.do?num=${preReadDto.num}&${query}">${preReadDto.subject}</a>
+					</c:if>
 			    </td>
 			</tr>
 			
-			<tr height="35" style="border-bottom: 1px solid #cccccc;">
-			    <td colspan="2" align="left" style="padding-left: 5px;">
-			    다음글 :
-			         <c:if test="${not empty nextReadDto}">
-			              <a href="${pageContext.request.contextPath}/udong/article.do?${query}&num=${nextReadDto.num}">${nextReadDto.subject}</a>
-			        </c:if>
+			<tr height="35" class="row-2">
+			    <td colspan="2" align="left" class="col-3">
+			       다음글 :
+			       	<c:if test="${not empty nextReadDto}">
+						<a href="${pageContext.request.contextPath}/udong/article.do?num=${nextReadDto.num}&${query}">${nextReadDto.subject}</a>
+					</c:if>
 			    </td>
 			</tr>
-			</table>
 			
-			<table style="width: 100%; margin: 0px auto 20px; border-spacing: 0px;">
 			<tr height="45">
-			    <td width="300" align="left">
+			    <td class="col-4">
 			    	<c:choose>
 			    		<c:when test="${sessionScope.member.userId==dto.userId}">
 			    			<button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/udong/update.do?num=${dto.num}&page=${page}';">수정</button>
@@ -99,8 +94,8 @@ function deleteBoard(num) {
 			    	</c:choose>
 			    </td>
 			
-			    <td align="right">
-			        <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/udong/list.do?${query}';">리스트</button>
+			    <td align="right" class="col-4">
+			        <button type="button" class="btn btnCreate" onclick="javascript:location.href='${pageContext.request.contextPath}/udong/list.do?${query}';">리스트</button>
 			    </td>
 			</tr>
 			</table>

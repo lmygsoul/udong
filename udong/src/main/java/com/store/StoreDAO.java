@@ -452,6 +452,256 @@ private Connection conn = DBConn.getConnection();
 		}
 		return is_rec;
 	}
+	public int dataCount_st(String userId){
+		int result = 0;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		try {
+			sql = "SELECT NVL(COUNT(*), 0) FROM store_bbs WHERE userid = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, userId);
+			rs=pstmt.executeQuery();
+			if(rs.next()) {
+				result=rs.getInt(1);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if(rs!=null) {
+				try {
+					rs.close();					
+				} catch (Exception e2) {
+				}
+			}
+			if(pstmt!=null) {
+				try {
+					pstmt.close();					
+				} catch (Exception e2) {
+				}
+			}
+		}
+		return result;
+	}
+	
+	public int dataCount_st(String keyword,String userId){
+		int result = 0;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		try {
+			if(keyword.equals("기타")) {
+				sql = "SELECT NVL(COUNT(*), 0) FROM store_bbs"
+					+ " WHERE INSTR(addr, ?) < 1 AND INSTR(addr, ?) < 1 AND INSTR(addr, ?) < 1 AND userid = ?";
+			} else {
+			sql = "SELECT NVL(COUNT(*), 0) FROM store_bbs WHERE INSTR(addr, ?) >= 1 AND userid = ?";
+			}
+			
+			pstmt = conn.prepareStatement(sql);
+			if(keyword.equals("기타")) {
+				pstmt.setString(1, "서울");
+				pstmt.setString(2, "인천");
+				pstmt.setString(3, "경기");	
+				pstmt.setString(4, userId);
+			} else {
+				pstmt.setString(1, keyword);
+				pstmt.setString(2, userId);
+			}
+			rs=pstmt.executeQuery();
+			if(rs.next()) {
+				result=rs.getInt(1);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if(rs!=null) {
+				try {
+					rs.close();					
+				} catch (Exception e2) {
+				}
+			}
+			if(pstmt!=null) {
+				try {
+					pstmt.close();					
+				} catch (Exception e2) {
+				}
+			}
+		}
+		return result;
+	}
+	public List<StoreDTO> listStore_st(int offset, int rows,String userId) {
+		List<StoreDTO> list = new ArrayList<StoreDTO>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		StringBuilder sb = new StringBuilder();
+		
+		try {
+			sb.append(" SELECT s.num, s.userid, nickname, subject, content, imageFileName, created, score, addr, recnum");
+			sb.append(" FROM store_bbs s");
+			sb.append(" LEFT OUTER JOIN member1 m ON s.userid=m.userid");
+			sb.append(" LEFT OUTER JOIN (SELECT num, ROUND(AVG(score),2) score, COUNT(*) recnum FROM store_rec GROUP BY num) r ON s.num=r.num");
+			sb.append(" WHERE s.userid = ? ");
+			sb.append(" ORDER BY num DESC ");
+			sb.append(" OFFSET ? ROWS FETCH FIRST ? ROW ONLY");
+			
+			pstmt = conn.prepareStatement(sb.toString());
+			pstmt.setString(1, userId);
+			pstmt.setInt(2, offset);
+			pstmt.setInt(3, rows);
+			
+			rs=pstmt.executeQuery();
+			while(rs.next()) {
+				StoreDTO dto = new StoreDTO();
+				dto.setNum(rs.getInt("num"));
+				dto.setUserId(rs.getString("userId"));
+				dto.setNickname(rs.getString("nickname"));
+				dto.setSubject(rs.getString("subject"));
+				dto.setContent(rs.getString("content"));
+				dto.setImageFileName(rs.getString("imageFileName"));
+				dto.setCreated(rs.getString("created"));
+				dto.setScore(rs.getDouble("score"));
+				dto.setAddr(rs.getString("addr"));
+				dto.setRecnum(rs.getInt("recnum"));
+				list.add(dto);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
 
+	public List<StoreDTO> listStore_st(int offset, int rows, String keyword,String userId) {
+		List<StoreDTO> list = new ArrayList<StoreDTO>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		StringBuilder sb = new StringBuilder();
+		
+		try {
+			sb.append(" SELECT s.num, s.userid, nickname, subject, content, imageFileName, created, score, addr, recnum ");
+			sb.append(" FROM store_bbs s");
+			sb.append(" LEFT OUTER JOIN member1 m ON s.userid=m.userid");
+			sb.append(" LEFT OUTER JOIN (SELECT num, ROUND(AVG(score),2) score, COUNT(*) recnum FROM store_rec GROUP BY num) r ON s.num=r.num");
+			if(keyword.equals("기타")) {
+				sb.append(" WHERE INSTR(addr, ?) < 1 AND INSTR(addr, ?) < 1 AND INSTR(addr, ?) < 1 AND s.userid = ?");
+				sb.append(" ORDER BY num DESC ");
+				sb.append(" OFFSET ? ROWS FETCH FIRST ? ROW ONLY");	
+			}else {
+				sb.append(" WHERE INSTR(addr, ?) >= 1 AND s.userid = ? ");
+				sb.append(" ORDER BY num DESC ");
+				sb.append(" OFFSET ? ROWS FETCH FIRST ? ROW ONLY");
+			}
+			pstmt = conn.prepareStatement(sb.toString());
+			if(keyword.equals("기타")) {
+				pstmt.setString(1, "서울");
+				pstmt.setString(2, "경기");
+				pstmt.setString(3, "인천");
+				pstmt.setString(4, userId);
+				pstmt.setInt(5, offset);
+				pstmt.setInt(6, rows);	
+			} else {
+				pstmt.setString(1, keyword);
+				pstmt.setString(2, userId);
+				pstmt.setInt(3, offset);
+				pstmt.setInt(4, rows);
+			}
+			rs=pstmt.executeQuery();
+			while(rs.next()) {
+				StoreDTO dto = new StoreDTO();
+				dto.setNum(rs.getInt("num"));
+				dto.setUserId(rs.getString("userId"));
+				dto.setNickname(rs.getString("nickname"));
+				dto.setSubject(rs.getString("subject"));
+				dto.setContent(rs.getString("content"));
+				dto.setImageFileName(rs.getString("imageFileName"));
+				dto.setAddr(rs.getString("addr"));
+				dto.setCreated(rs.getString("created"));
+				dto.setScore(rs.getDouble("score"));
+				dto.setRecnum(rs.getInt("recnum"));
+				list.add(dto);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+	public StoreDTO preReadStore_st(int num,String userId) {
+		StoreDTO dto =null;
+		PreparedStatement pstmt = null;
+		StringBuilder sb = new StringBuilder();
+		ResultSet rs = null;
+		try {
+			sb.append(" SELECT num, subject");
+			sb.append(" FROM store_bbs");
+			sb.append(" WHERE num<? AND userid =? ");
+			sb.append(" ORDER BY num DESC");
+			sb.append(" FETCH FIRST 1 ROWS ONLY");
+			pstmt = conn.prepareStatement(sb.toString());
+			pstmt.setInt(1, num);
+			pstmt.setString(2, userId);
+			
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				dto = new StoreDTO();
+				dto.setNum(rs.getInt("num"));
+				dto.setSubject(rs.getString("subject"));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if(rs!=null) {
+				try {
+					rs.close();
+				} catch (Exception e2) {
+				}
+			}
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+		}
+		
+		return dto;
+	}
 
+	public StoreDTO nextReadStore_st(int num,String userId) {
+		StoreDTO dto =null;
+		PreparedStatement pstmt = null;
+		StringBuilder sb = new StringBuilder();
+		ResultSet rs = null;
+		try {
+			sb.append(" SELECT num, subject");
+			sb.append(" FROM store_bbs");
+			sb.append(" WHERE num>? AND userid = ?");
+			sb.append(" ORDER BY num ASC");
+			sb.append(" FETCH FIRST 1 ROWS ONLY");
+			pstmt = conn.prepareStatement(sb.toString());
+			pstmt.setInt(1, num);
+			pstmt.setString(2, userId);
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				dto = new StoreDTO();
+				dto.setNum(rs.getInt("num"));
+				dto.setSubject(rs.getString("subject"));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if(rs!=null) {
+				try {
+					rs.close();
+				} catch (Exception e2) {
+				}
+			}
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+		}
+		
+		return dto;
+	}
 }

@@ -729,4 +729,218 @@ public class GreetingDAO {
 			
 			return list;
 		}
+		public int updateHitCount_gt(int num,String userId) throws SQLException {
+			int result = 0;
+			PreparedStatement pstmt = null;
+			String sql;
+			
+			try {
+				sql = "UPDATE greeting SET hitCount = hitCount + 1 WHERE num = ? AND userId = ?";
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setInt(1, num);  //해당되는 num일 경우 hitCount+1을 줘야함
+				pstmt.setString(2, userId);
+				result = pstmt.executeUpdate();
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				if(pstmt !=null) {
+					try {
+						pstmt.close();
+					} catch (Exception e2) {
+					}
+				}
+			}
+			return result;
+		}
+		//이전글
+		public GreetingDTO preReadGreeting_gt(int num, String condition, String keyword,String userId) {
+			GreetingDTO dto = null;
+			
+			PreparedStatement pstmt =null;
+			ResultSet rs = null;
+			StringBuilder sb = new StringBuilder();
+			
+			try {
+				if(keyword.length() != 0) {//검색
+	                sb.append("SELECT num, subject FROM greeting g JOIN member1 m ON g.userId = m.userId "); //게시물번호, 제목
+	                
+	                if(condition.equals("all")) {//제목또는 내용으로 검색
+	                    sb.append(" WHERE ( INSTR(subject, ?) >= 1 OR INSTR(content, ?) >=1 AND g.userId = ?");
+	                } else if(condition.equals("created")) { //등록일자로 검색
+	                	keyword = keyword.replaceAll("(\\-|\\/|\\.)", "");
+	                    sb.append(" WHERE (TO_CHAR(created, 'YYYYMMDD') = ?)AND g.userId = ? ");
+	                } else {//username, subject, contet 중 하나일 때 
+	                    sb.append(" WHERE ( INSTR("+condition+", ?) > 0) AND g.userId = ?");//제목,내용,이름 다 검색 가능
+	                }
+	                sb.append("            AND (num > ? ) "); //num이 커야함
+	                sb.append(" ORDER BY num ASC "); //큰것 중에 오름차순 정렬
+	                sb.append(" FETCH  FIRST  1  ROWS  ONLY "); //정렬한 것 중에 첫번째 데이터(제일 작은거)만 가져온다
+
+	                pstmt=conn.prepareStatement(sb.toString());
+	                
+	                if(condition.equals("all")) {
+	                    pstmt.setString(1, keyword);
+	                    pstmt.setString(2, keyword);
+	                    pstmt.setString(3, userId);
+	                   	pstmt.setInt(4, num);
+	                } else {
+	                    pstmt.setString(1, keyword);
+	                    pstmt.setString(2, userId);
+	                   	pstmt.setInt(3, num);
+	                }
+	            } else {
+	                sb.append("SELECT num, subject FROM greeting ");
+	                sb.append(" WHERE num > ? AND g.userId = ?");
+	                sb.append(" ORDER BY num ASC ");
+	                sb.append(" FETCH  FIRST  1  ROWS  ONLY ");
+
+	                pstmt=conn.prepareStatement(sb.toString());
+	                pstmt.setInt(1, num);
+	                pstmt.setString(2, userId);
+	            }
+	        	
+	            rs=pstmt.executeQuery();
+
+	            if(rs.next()) {
+	                dto=new GreetingDTO();
+	                dto.setNum(rs.getInt("num"));
+	                dto.setSubject(rs.getString("subject"));
+	            }
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				if(rs!=null) {
+					try {
+						rs.close();
+					} catch (Exception e) {
+					}
+				}
+				if(pstmt!=null) {
+					try {
+						pstmt.close();
+					} catch (Exception e) {
+					}
+				}
+			}
+			return dto;
+			
+	}	
+			
+    		
+	//다음글 
+	public GreetingDTO nextReadGreeting_gt(int num, String condition, String keyword,String userId) {
+      GreetingDTO dto=null;
+
+	  PreparedStatement pstmt=null;
+	  ResultSet rs=null;
+	  StringBuilder sb = new StringBuilder();
+	       
+	  try {
+		  if(keyword.length() != 0) {
+			  sb.append("SELECT num, subject FROM greeting g ");
+			  sb.append(" JOIN member1 m ON  g.userId = m.userId ");
+			  if(condition.equals("all")) {
+				  sb.append(" WHERE ( INSTR(subject, ?) >= 1 OR INSTR(content, ?) >= 1  ) AND g.userId = ? ");
+			  } else if(condition.equals("created")) {
+				  keyword = keyword.replaceAll("(\\-|\\/|\\.)", "");
+				  sb.append(" WHERE (TO_CHAR(created, 'YYYYMMDD') = ?) AND g.userId = ?");
+			  } else {
+				  sb.append(" WHERE ( INSTR("+condition+", ?) > 0) AND g.userId = ? ");
+			  }
+			  sb.append("          AND (num < ? ) ");
+			  sb.append(" ORDER BY num DESC ");
+			  sb.append(" FETCH  FIRST  1  ROWS  ONLY ");
+
+			  pstmt=conn.prepareStatement(sb.toString());
+			  if(condition.equals("all")) {
+				  pstmt.setString(1, keyword);
+				  pstmt.setString(2, keyword);
+				  pstmt.setString(3, userId);
+				  pstmt.setInt(4, num);
+			  } else {
+				  pstmt.setString(1, keyword);
+				  pstmt.setString(2, userId);
+				  pstmt.setInt(3, num);
+			  }
+		  } else {
+			  sb.append("SELECT num, subject FROM greeting ");
+			  sb.append(" WHERE num < ? AND g.userId = ? ");
+			  sb.append(" ORDER BY num DESC ");
+			  sb.append(" FETCH  FIRST  1  ROWS  ONLY ");
+
+			  pstmt=conn.prepareStatement(sb.toString());
+			  pstmt.setInt(1, num);
+			  pstmt.setString(2, userId);
+		  }
+
+		  rs=pstmt.executeQuery();
+
+		  if(rs.next()) {
+			  dto=new GreetingDTO();
+			  dto.setNum(rs.getInt("num"));
+			  dto.setSubject(rs.getString("subject"));
+		  }
+	  } catch (SQLException e) {
+		  e.printStackTrace();
+	  } finally {
+		  if(rs!=null) {
+			  try	{
+				  rs.close();
+			  }catch (SQLException e2){
+			  }
+		  }
+		  if(pstmt!=null) {
+			  try	{
+				  pstmt.close();
+			  }catch (SQLException e2){
+			  }
+		  }
+	  }
+
+	  return dto;
+	}
+	public GreetingDTO readGreeting_gt(int num,String userId) {
+		GreetingDTO dto = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		
+		try {
+			sql = "SELECT num, g.userId, nickName, subject, content, hitCount, created FROM greeting g " //userId 가져와야 게시글 올린사람만 수정 및 삭제 가능
+					+ " JOIN member1 m ON g.userId = m.userId "
+					+ " WHERE num = ? AND g.userId = ? ";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1,num);
+			pstmt.setString(2, userId);
+			
+			rs= pstmt.executeQuery();
+			if(rs.next()) {
+				dto = new GreetingDTO();
+				dto.setNum(rs.getInt("num"));
+				dto.setUserId(rs.getString("userId"));
+				dto.setNickName(rs.getString("nickName"));
+				dto.setSubject(rs.getString("subject"));
+				dto.setContent(rs.getString("content"));
+				dto.setHitCount(rs.getInt("hitCount"));
+				dto.setCreated(rs.getString("created"));
+			}						
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if(rs!=null) {
+				try {
+					rs.close();
+				} catch (Exception e2) {
+				}
+			}
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+		}
+		return dto;
+	}
 	}

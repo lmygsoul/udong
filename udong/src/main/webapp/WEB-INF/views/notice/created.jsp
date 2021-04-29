@@ -48,7 +48,7 @@
 </div>
 	
 <div class="container">
-    <div class="body-container" style="width: 700px;">
+    <div class="body-container">
         <div class="body-title" style="margin-bottom: 0; border-bottom: 0;">
             <h3>공지사항</h3>
         </div>
@@ -105,7 +105,7 @@
 			  
 			  </table>
 			
-			  <table style="width: 100%; border-spacing: 0px; margin-top: 5px;">
+			  <table class="create-table2">
 			     <tr height="45"> 
 			      <td align="center" >
 			        <button type="button" class="btn btnCreate" onclick="sendNotice();">${mode=='update'?'수정완료':'등록하기'}</button>
