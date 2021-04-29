@@ -31,15 +31,11 @@ function deleteFaq(num) {
 	
 <div class="container">
     <div class="body-container" style="width: 700px;">
-        <div class="body-title" style="margin: 0;">
-            <button type="button" class="btnArticle" onclick="javascript:location.href='${pageContext.request.contextPath}/faq/list.do';">
-            > FAQ</button>
-        </div>
         
         <div>
 			<table style="width: 100%; margin: 0 auto; border-spacing: 0px; border-collapse: collapse;">
 			<tr height="35" class="row-2">
-			    <td colspan="2" align="left" class="col-1" style="padding-bottom: 10px;">
+			    <td colspan="2" align="left" class="col-1" style="padding-bottom: 20px;">
 				   ${dto.subject}
 			    </td>
 			</tr>

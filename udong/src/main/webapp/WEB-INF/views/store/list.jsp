@@ -15,6 +15,49 @@
 		f.submit();
 	}
 </script>
+<style type="text/css">
+.store-adr {
+	background-color: #FF8A3D;
+	color: white;
+	font-size: 15px;
+	padding: 0 10px;
+}
+.store-subject {
+	font-size: 15px;
+	font-weight: 500;
+}
+
+.store-rate {
+	font-size: 14px;
+	color: gray;
+}
+
+.store-detail {
+	padding-left: 35px;
+	border-top: 1px solid #ddd; 
+	margin: 10px 0;
+}
+
+.store-detail li {
+	margin: 10px 0;
+}
+
+.store-detail ul {
+	display: inline-block;
+	width: 50%;
+	float: left;
+}
+
+.store-detail button {
+	border: 0;
+	background-color: #E9ECEF;
+	color: #495057;
+	font-weight: bold;
+	padding: 10px 30px;
+	padding-bottom: 12px;
+}
+
+</style>
 </head>
 <body>
 	<div class="header">
@@ -22,7 +65,7 @@
 	</div>
 		
 	<div class="container">
-    <div class="body-container" style="border:0; width: 830px">
+    <div class="body-container" style="border:0;">
         <div class="list-title">
         	<table style="width: 100%; margin: 0px auto; border-spacing: 0px; padding-left: 20px; padding-right: 20px;">
         		<tr>
@@ -46,22 +89,38 @@
         </div>
         
         <div>
-        	<table style="width: 100%; border-spacing: 0">
+        	<table style="width: 100%; border-spacing: 0; border-bottom: 1px solid #ddd;">
         	<c:forEach var="dto" items="${list}" varStatus="status">
         		<tr>
         		<c:if test="${status.index !=0 && status.index%3 ==0}">
         			<c:out value="</tr><tr>" escapeXml="false"/>
         		</c:if>
-        		<td width="210" align="center" onclick="location.href='${articleUrl}&num=${dto.num}';" >
-        			<div class="imgLayout">
+        		<td width="210" align="center" style="border-top: 1px solid #ddd">
+        			<div class="imgLayout" style="margin-top: 12px; margin-bottom: 9px;">
         				<img src="${pageContext.request.contextPath}/uploads/photo/${dto.imageFileName}" width="230" height="230"><br>
         			</div>
         		</td>
-        		<td style="padding-left: 10px;">
-        			<div>
-	        			<span class="subject">[${dto.addrsub}] ${dto.subject}</span><br>
-	        			<span class="subject" style="color: gray; font-size: 11px">평점 ${dto.score} / 5.0 (참여 ${dto.recnum})</span>
-        			</div>
+        		<td class="store-detail">
+        			<ul>
+        				<li>
+        					<span class="store-adr">${dto.addrsub}</span>
+        				</li>
+        				<li>
+        					<span class="store-subject">${dto.subject}</span>
+        				</li>
+        				<li>
+        					<span class="store-rate">평점 ${dto.score} / 5.0 (참여 ${dto.recnum})</span>
+        				</li>
+        			</ul>
+        			<ul>
+        				<li>&nbsp;</li>
+        				<li>
+        					<button type="button" style="float: right;" onclick="location.href='${articleUrl}&num=${dto.num}';">
+        					상세보기&nbsp;&nbsp;&nbsp;
+        					<i class="fas fa-caret-right"></i></button>
+        				</li>
+        				<li>&nbsp;</li>
+        			</ul>
         		</td>
         	</c:forEach>
         	
@@ -69,15 +128,14 @@
         	<c:if test="${n>0 && n%3 !=0}">
         		<c:forEach var="i" begin="${n%3+1}" end="3">
         			<tr>
-        			<td width="210">
-        				<div class="imgLayout" style="border: 1px solid #ccc;">
+        			<td width="210" align="center" style="border-top: 1px solid #ddd">
+        				<div style="margin: 10px 0; border: 1px solid #ccc;">
         					<img src="${pageContext.request.contextPath}/resource/images/store_soon.png" width="229" height="229">
         				</div>
         			</td>
-        			<td>
-        				<div>
-        				<span class="subject">[${dto.addrsub}] ${dto.subject}</span><br>
-        				<span class="subject" style="color: gray; font-size: 11px">평점 ${dto.score} / 5.0 (참여 ${dto.recnum})</span>
+        			<td style="border-top: 1px solid #ddd">
+        				<div style="padding-left: 35px;">
+        				<span>준비 중입니다</span>
         				</div>
         		</td>
         		</c:forEach>

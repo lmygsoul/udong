@@ -38,29 +38,31 @@ function score(){
 	    <jsp:include page="/WEB-INF/views/layout/header.jsp"></jsp:include>
 	</div>
 <div class="container">
-    <div class="body-container" style="width: 1000px;">
-        <div class="body-title">
-            <h3>우리동네 홍보</h3>
-        </div>
+    <div class="body-container">
         
         <div>
-			<table style="width: 100%; margin: 20px auto 0px; border-spacing: 0px; border-collapse: collapse;">
-			<tr height="35" style="border-top: 1px solid #cccccc; border-bottom: 1px solid #cccccc;">
-			    <td colspan="2" align="center">
+			<table style="width: 100%; margin: 0 auto; border-spacing: 0px; border-collapse: collapse;">
+			<tr height="35" class="row-3">
+			    <td colspan="2" align="left" class="col-1">
 				  	${dto.subject}
-			    </td>
+			    </td> 
 			</tr>
 			
-			<tr height="35" style="border-bottom: 1px solid #cccccc;">
-			    <td width="50%" align="left" style="padding-left: 5px;">
-			       이름 : ${dto.nickname}
+			<tr height="35" class="row-2">
+			    <td width="50%" align="left" class="col-2">
+			       작성자 : ${dto.nickname}
 			    </td>
-			    <td width="50%" align="right" style="padding-right: 5px;">
-			        ${dto.created} | 평점 : ${dto.score}/5.0
+			    <td width="50%" align="right" class="col-2">
+			        ${dto.created}
 			    </td>
 			</tr>
-			<tr height="35" style="border-bottom: 1px solid #cccccc;">
-			    <td colspan="2" align="left" style="padding-left: 5px;">
+			<tr height="35" class="row-2" style="border-bottom: 0;">
+				<td colspan="2" align="left" class="col-2" style="padding-top: 10px; padding-bottom: 5px;">
+			       <strong style="color: #FF8A3D">평점&nbsp;&nbsp;</strong><strong>${dto.score} / 5.0</strong>
+			    </td>
+			</tr>
+			<tr height="35" class="row-2">
+				<td colspan="2" align="left" class="col-2">
 			       주소 : ${dto.addr}
 			    </td>
 			</tr>
@@ -80,7 +82,7 @@ function score(){
 			<tr height="35" style="border-top: 1px solid #cccccc;">
 			    <td colspan="2" align="right">
 			    <form name="scoreForm" action="${pageContext.request.contextPath}/store/score.do" method="post">
-				       평점등록 : <select id="selectScore" name="selectScore" class="selectField">
+				       평점등록 &nbsp;:&nbsp;<select id="selectScore" name="selectScore" class="selectField" style="width: 70px; margin: 10px;">
 				       	<option value="5">5</option>
 				       	<option value="4.5">4.5</option>
 				       	<option value="4">4</option>
@@ -95,23 +97,26 @@ function score(){
 				       </select>
 				       <input type="hidden" name="num" value="${dto.num}">
 				       <input type="hidden" name="page" value="${page}">
-			       	   <button type="button" class="btn" onclick="javascript:score();" >확인</button>
+			       	   <button type="button" class="btn" onclick="javascript:score();"
+			       	   		style="background-color: #FF8A3D; color: white; border: #FF8A3D; font-weight: bold; padding: 4px 25px 6px; margin-right: 15px;">
+			       	   		확인
+			       	   </button>
 			       </form>
 			    </td>
 			</tr>
 			</c:when>
 			</c:choose>
 
-			<tr height="35" style="border-bottom: 1px solid #cccccc; border-top: 1px solid #cccccc">
-			    <td colspan="2" align="left" style="padding-left: 5px;">
+			<tr height="35" class="row-2">
+			    <td colspan="2" align="left" class="col-3" style="border-top: 1px solid #E9ECEF;">
 			       이전글 : <c:if test="${not empty preReadDto}">
 						<a href="${pageContext.request.contextPath}/store/article.do?num=${preReadDto.num}&${query}">${preReadDto.subject}</a>
 						</c:if>	      
 			    </td>
 			</tr>
 			
-			<tr height="35" style="border-bottom: 1px solid #cccccc;">
-			    <td colspan="2" align="left" style="padding-left: 5px;">
+			<tr height="35" class="row-2">
+			    <td colspan="2" align="left" class="col-3">
 			       다음글 : <c:if	test="${not empty nextReadDto}">
 						<a href="${pageContext.request.contextPath}/store/article.do?num=${nextReadDto.num}&${query}">${nextReadDto.subject}</a>
 					</c:if>
@@ -119,7 +124,7 @@ function score(){
 			    </td>
 			</tr>
 			<tr height="45">
-			    <td>
+			    <td class="col-4">
 					<c:choose>
 			    			<c:when test="${sessionScope.member.userId==dto.userId || sessionScope.member.type==0}">
 			         			<button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/store/update.do?num=${dto.num}&page=${page}';">수정</button>
@@ -128,8 +133,8 @@ function score(){
 			    	</c:choose>
 			    </td>
 			
-			    <td align="right">
-			        <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}';">리스트</button>
+			    <td align="right" class="col-4">
+			        <button type="button" class="btn btnList" onclick="javascript:location.href='${pageContext.request.contextPath}/store/list.do?${query}';">리스트</button>
 			    </td>
 			</tr>
 			</table>
