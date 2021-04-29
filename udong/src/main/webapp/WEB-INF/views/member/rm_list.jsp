@@ -78,7 +78,7 @@
 			           <a href="${articleUrl}&num=${mdto.pageNum}">${mdto.subject}</a>
 			      </td>
 			      <c:if test="${sessionScope.member.type=='0' }">
-			      	 <td>${sessionScope.member.userId}</td>
+			      	 <td>${mdto.receiveUser}</td>
 			      </c:if>
 			      <td>${mdto.sendUser}</td>
 			      <td>${mdto.sendTime}</td>

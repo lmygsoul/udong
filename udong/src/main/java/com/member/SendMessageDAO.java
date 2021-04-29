@@ -148,12 +148,23 @@ public class SendMessageDAO {
 		String sql;
 		
 		try {
-			sql="SELECT COUNT(*) FROM sendMessage WHERE sendUser = ?";
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, userId);
-			rs=pstmt.executeQuery();
-			if(rs.next()) {
-				result=rs.getInt(1);
+			if(userId.equals("admin1")||userId.equals("admin")||userId.equals("admin2")||userId.equals("admin3")||userId.equals("admin4")||userId.equals("admin5")||userId.equals("admin6")) {
+				sql="SELECT COUNT(*) FROM sendMessage";
+				pstmt = conn.prepareStatement(sql);
+				
+				rs=pstmt.executeQuery();
+				if(rs.next()) {
+					result=rs.getInt(1);
+				}	
+			}
+			else {
+				sql="SELECT COUNT(*) FROM sendMessage WHERE sendUser = ?";
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, userId);
+				rs=pstmt.executeQuery();
+				if(rs.next()) {
+					result=rs.getInt(1);
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -228,7 +239,7 @@ public class SendMessageDAO {
 		
 		return result;
 	}
-	public List<MessageDTO> listsm(int offset, int rows){
+	public List<MessageDTO> listsm(int offset, int rows,String userId){
 		List<MessageDTO> list = new ArrayList<MessageDTO>();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -236,12 +247,13 @@ public class SendMessageDAO {
 		
 		try {
 			sql="SELECT sm.sendUser, receiveUser, subject, content, TO_CHAR(sendTime, 'YYYY-MM-DD') sendTime, messageType, pageNum FROM sendMessage sm"
-					+ " LEFT OUTER JOIN member1 m1 ON sm.sendUser = m1.userId ORDER BY pageNum DESC"
+					+ " LEFT OUTER JOIN member1 m1 ON sm.sendUser = m1.userId WHERE sm.sendUser = ? ORDER BY pageNum DESC"
 					+ " OFFSET ? ROWS FETCH FIRST ? ROWS ONLY";
 			
 			pstmt=conn.prepareStatement(sql);
-			pstmt.setInt(1, offset);
-			pstmt.setInt(2, rows);
+			pstmt.setString(1, userId);
+			pstmt.setInt(2, offset);
+			pstmt.setInt(3, rows);
 			
 			rs=pstmt.executeQuery();
 			while(rs.next()) {
@@ -277,7 +289,7 @@ public class SendMessageDAO {
 		return list;
 	}
 	
-	public List<MessageDTO> listsm(int offset, int rows,String condition, String keyword){
+	public List<MessageDTO> listsm(int offset, int rows,String condition, String keyword,String userId){
 		List<MessageDTO> list = new ArrayList<MessageDTO>();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -287,26 +299,28 @@ public class SendMessageDAO {
 			sql="SELECT sm.sendUser, receiveUser, subject, content, TO_CHAR(sendTime, 'YYYY-MM-DD') sendTime, messageType, pageNum FROM sendMessage sm"
 					+ " LEFT OUTER JOIN member1 m1 ON sm.sendUser = m1.userId ";
 			if(condition.equals("all")) {
-				sql += "  WHERE INSTR(subject, ?) >= 1 OR INSTR(content, ?) >=1";
+				sql += "  WHERE INSTR(subject, ?) >= 1 OR INSTR(content, ?) >=1 AND sm.sendUser = ?";
 			} else if (condition.equals("sendTime")) {
 				keyword = keyword.replaceAll("(\\-|\\/|\\.)", "");
-				sql +=" WHERE TO_CHAR(sendTime, 'YYYYMMDD') = ? ";
+				sql +=" WHERE TO_CHAR(sendTime, 'YYYYMMDD') = ? AND sm.sendUser = ?";
 			} else {
-				sql += " WHERE INSTR(" + condition + ", ?) >= 1";
+				sql += " WHERE INSTR(" + condition + ", ?) >= 1 AND sm.sendUser = ?";
 			}
-			sql += " ORDER BY pageNum DESC OFFSET ? ROWS FETCH FIRST ? ROWS ONLY";
+			sql += " ORDER BY pageNum DESC OFFSET ? ROWS FETCH FIRST ? ROWS ONLY AND sm.sendUser = ?";
 			
 			pstmt=conn.prepareStatement(sql);
 			
 			if(condition.equals("all")) {
 				pstmt.setString(1, keyword);
 				pstmt.setString(2, keyword);
-				pstmt.setInt(3, offset);
-				pstmt.setInt(4, rows);
+				pstmt.setString(3, userId);
+				pstmt.setInt(4, offset);
+				pstmt.setInt(5, rows);
 			}else {
 				pstmt.setString(1, keyword);
-				pstmt.setInt(2, offset);
-				pstmt.setInt(3, rows);
+				pstmt.setString(2, userId);
+				pstmt.setInt(3, offset);
+				pstmt.setInt(4, rows);
 			}
 			
 			rs=pstmt.executeQuery();
@@ -493,7 +507,7 @@ public class SendMessageDAO {
 		
 		return result;
 	}
-	public List<MessageDTO> listrm(int offset, int rows){
+	public List<MessageDTO> listrm(int offset, int rows,String userId){
 		List<MessageDTO> list = new ArrayList<MessageDTO>();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -501,12 +515,13 @@ public class SendMessageDAO {
 		
 		try {
 			sql="SELECT rm.receiveUser, sendUser, subject, content, TO_CHAR(sendTime, 'YYYY-MM-DD') sendTime, messageType, pageNum FROM reciveMessage rm"
-					+ " LEFT OUTER JOIN member1 m1 ON rm.receiveUser = m1.userId ORDER BY pageNum DESC"
+					+ " LEFT OUTER JOIN member1 m1 ON rm.receiveUser = m1.userId WHERE rm.receiveUser = ? ORDER BY pageNum DESC"
 					+ " OFFSET ? ROWS FETCH FIRST ? ROWS ONLY";
 			
 			pstmt=conn.prepareStatement(sql);
-			pstmt.setInt(1, offset);
-			pstmt.setInt(2, rows);
+			pstmt.setString(1, userId);
+			pstmt.setInt(2, offset);
+			pstmt.setInt(3, rows);
 			
 			rs=pstmt.executeQuery();
 			while(rs.next()) {
@@ -542,7 +557,7 @@ public class SendMessageDAO {
 		return list;
 	}
 	
-	public List<MessageDTO> listrm(int offset, int rows,String condition, String keyword){
+	public List<MessageDTO> listrm(int offset, int rows,String condition, String keyword, String userId){
 		List<MessageDTO> list = new ArrayList<MessageDTO>();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -552,12 +567,12 @@ public class SendMessageDAO {
 			sql="SELECT rm.receiveUser, sendUser, subject, content, TO_CHAR(sendTime, 'YYYY-MM-DD') sendTime, messageType, pageNum FROM reciveMessage rm"
 					+ " LEFT OUTER JOIN member1 m1 ON rm.receiveUser = m1.userId ";
 			if(condition.equals("all")) {
-				sql += "  WHERE INSTR(subject, ?) >= 1 OR INSTR(content, ?) >=1";
+				sql += "  WHERE INSTR(subject, ?) >= 1 OR INSTR(content, ?) >=1 AND rm.receivUser = ?";
 			} else if (condition.equals("sendTime")) {
 				keyword = keyword.replaceAll("(\\-|\\/|\\.)", "");
-				sql +=" WHERE TO_CHAR(sendTime, 'YYYYMMDD') = ? ";
+				sql +=" WHERE TO_CHAR(sendTime, 'YYYYMMDD') = ? AND rm.receivUser = ? ";
 			} else {
-				sql += " WHERE INSTR(" + condition + ", ?) >= 1";
+				sql += " WHERE INSTR(" + condition + ", ?) >= 1 AND rm.receivUser = ?";
 			}
 			sql += " ORDER BY pageNum DESC OFFSET ? ROWS FETCH FIRST ? ROWS ONLY";
 			
@@ -566,12 +581,14 @@ public class SendMessageDAO {
 			if(condition.equals("all")) {
 				pstmt.setString(1, keyword);
 				pstmt.setString(2, keyword);
-				pstmt.setInt(3, offset);
-				pstmt.setInt(4, rows);
+				pstmt.setString(3, userId);
+				pstmt.setInt(4, offset);
+				pstmt.setInt(5, rows);
 			}else {
 				pstmt.setString(1, keyword);
-				pstmt.setInt(2, offset);
-				pstmt.setInt(3, rows);
+				pstmt.setString(2, userId);
+				pstmt.setInt(3, offset);
+				pstmt.setInt(4, rows);
 			}
 			
 			rs=pstmt.executeQuery();
@@ -721,12 +738,22 @@ public class SendMessageDAO {
 		String sql;
 		
 		try {
-			sql="SELECT COUNT(*) FROM reciveMessage WHERE receiveUser = ?";
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, userId);
-			rs=pstmt.executeQuery();
-			if(rs.next()) {
-				result=rs.getInt(1);
+			if(userId.equals("admin1")||userId.equals("admin")||userId.equals("admin2")||userId.equals("admin3")||userId.equals("admin4")||userId.equals("admin5")||userId.equals("admin6")) {
+				sql="SELECT COUNT(*) FROM reciveMessage";
+				pstmt = conn.prepareStatement(sql);
+				
+				rs=pstmt.executeQuery();
+				if(rs.next()) {
+					result=rs.getInt(1);
+				}	
+			} else {
+				sql="SELECT COUNT(*) FROM reciveMessage WHERE receiveUser = ?";
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, userId);
+				rs=pstmt.executeQuery();
+				if(rs.next()) {
+					result=rs.getInt(1);
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -317,12 +317,8 @@ public class MemberServlet extends MyServlet{
 		int dataCount;
 		if(keyword.length()==0) {
 			dataCount = dao.dataCount_sm(info.getUserId());
-			if(info.getType().equals("0"))
-				dataCount+=3;
 		} else {
 			dataCount = dao.dataCount_sm(info.getUserId(),condition, keyword);
-			if(info.getType().equals("0"))
-				dataCount+=3;
 		}
 		int rows = 10;
 		int total_page = util.pageCount(rows, dataCount);
@@ -334,15 +330,13 @@ public class MemberServlet extends MyServlet{
 		if(offset <0) offset = 0;
 		List<MessageDTO> list = null;
 		if(keyword.length()==0) {
-			list=dao.listsm(offset, rows);
+			list=dao.listsm(offset, rows,info.getUserId());
 		} else {
-			list=dao.listsm(offset, rows, condition, keyword);
+			list=dao.listsm(offset, rows, condition, keyword,info.getUserId());
 		}
-		int listNum, n=0;
+		int listNum=1, n=0;
 		for(MessageDTO mdto : list) {
 				listNum = dataCount - (offset+n);
-				if(listNum==0)
-					listNum=1;
 				mdto.setListNum(listNum);
 				n++;
 		}
@@ -495,12 +489,8 @@ public class MemberServlet extends MyServlet{
 		int dataCount;
 		if(keyword.length()==0) {
 			dataCount = dao.dataCount_rm(info.getUserId());
-			if(info.getType().equals("0"))
-				dataCount+=3;
 		} else {
 			dataCount = dao.dataCount_rm(info.getUserId(),condition, keyword);
-			if(info.getType().equals("0"))
-				dataCount+=3;
 		}
 		int rows = 10;
 		int total_page = util.pageCount(rows, dataCount);
@@ -512,15 +502,13 @@ public class MemberServlet extends MyServlet{
 		if(offset <0) offset = 0;
 		List<MessageDTO> list = null;
 		if(keyword.length()==0) {
-			list=dao.listrm(offset, rows);
+			list=dao.listrm(offset, rows,info.getUserId());
 		} else {
-			list=dao.listrm(offset, rows, condition, keyword);
+			list=dao.listrm(offset, rows, condition, keyword,info.getUserId());
 		}
 		int listNum, n=0;
 		for(MessageDTO mdto : list) {
 				listNum = dataCount - (offset+n);
-				if(listNum==0)
-					listNum=1;
 				mdto.setListNum(listNum);
 				n++;
 		}
