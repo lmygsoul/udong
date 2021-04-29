@@ -87,7 +87,7 @@
 			              <select name="condition" class="selectField">
 			              	  <option value="all" 		${condition=="all"?"selected='selected'":""}>제목+내용</option>
 			                  <option value="subject" 	${condition=="subject"?"selected='selected'":""}>제목</option>
-			                  <option value="receiveUser" 	${condition=="receiveUser"?"selected='selected'":""}>받는사람</option>
+			                  <option value="receiveUser" 	${condition=="sendUser"?"selected='selected'":""}>보낸사람</option>
 			                  <option value="content" 	${condition=="content"?"selected='selected'":""}>내용</option>
 			                  <option value="sendTime" 	${condition=="sendTime"?"selected='selected'":""}>등록일</option>
 			            </select>

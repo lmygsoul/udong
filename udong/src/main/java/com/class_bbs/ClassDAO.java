@@ -651,4 +651,221 @@ public class ClassDAO {
 		
 		return result;
 	}
+	public int dataCount_cb(String userId) {
+		int result=0;
+		PreparedStatement pstmt=null;
+		ResultSet rs=null;
+		String sql;
+		
+		try {
+			sql="SELECT NVL(COUNT(*), 0) FROM classBoard WHERE userId= ?";
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setString(1, userId);
+			rs=pstmt.executeQuery();
+			if(rs.next()) {
+				result=rs.getInt(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if(rs!=null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+				}
+			}
+				
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+		
+		return result;
+	}
+	
+	// 검색 에서 전체의 개수
+    public int dataCount_cb(String condition, String keyword,String userId) {
+        int result=0;
+        PreparedStatement pstmt=null;
+        ResultSet rs=null;
+        String sql;
+
+        try {
+        	sql="SELECT NVL(COUNT(*), 0) FROM classBoard b JOIN member1 m ON b.userId=m.userId ";
+        	if(condition.equals("created")) {
+        		keyword = keyword.replaceAll("(\\-|\\/|\\.)", "");
+        		sql+="  WHERE TO_CHAR(created, 'YYYYMMDD') = ?  AND b.userId= ?";
+        	} else if(condition.equals("all")) {
+        		sql+="  WHERE INSTR(subject, ?) >= 1 OR INSTR(content, ?) >= 1 AND b.userId= ?";
+        	} else {
+        		sql+="  WHERE INSTR(" + condition + ", ?) >= 1 AND b.userId= ?";
+        	}
+        	
+            pstmt=conn.prepareStatement(sql);
+            pstmt.setString(1, keyword);
+            if(condition.equals("all")) {
+                pstmt.setString(2, keyword);
+                pstmt.setString(3, userId);
+            } else {
+            	pstmt.setString(2, userId);
+            }
+
+            rs=pstmt.executeQuery();
+
+            if(rs.next())
+                result=rs.getInt(1);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+			if(rs!=null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+				}
+			}
+				
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+        
+        return result;
+    }
+    
+	public List<ClassDTO> listBoard_cb(int offset, int rows,String userId) {
+		List<ClassDTO> list=new ArrayList<ClassDTO>();
+		PreparedStatement pstmt=null;
+		ResultSet rs=null;
+		StringBuffer sb=new StringBuffer();
+		
+		try {
+			sb.append("SELECT boardNum, b.userId, m.nickName,");
+			sb.append("       subject, TO_CHAR(created, 'YYYY-MM-DD') created, maxClass, curClass ");
+			sb.append(" FROM classBoard b  ");
+			sb.append(" JOIN member1 m ON b.userId=m.userId  ");
+			sb.append(" ORDER BY boardNum DESC ");
+			sb.append(" WHERE b.userId = ?");
+			sb.append(" OFFSET ? ROWS FETCH FIRST ? ROWS ONLY ");
+
+			pstmt = conn.prepareStatement(sb.toString());
+			pstmt.setString(1, userId);
+			pstmt.setInt(2, offset);
+			pstmt.setInt(3, rows);
+
+			rs=pstmt.executeQuery();
+			
+			while (rs.next()) {
+				ClassDTO dto=new ClassDTO();
+				dto.setBoardNum(rs.getInt("boardNum"));
+				dto.setUserId(rs.getString("userId"));
+				dto.setNickName(rs.getString("nickName"));
+				dto.setSubject(rs.getString("subject"));
+				dto.setCreated(rs.getString("created"));
+				dto.setMaxClass(rs.getInt("maxClass"));
+				dto.setCurClass(rs.getInt("curClass"));
+				
+				list.add(dto);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if(rs!=null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+				}
+			}
+				
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+		
+		return list;
+	}
+	
+	// 검색에서 리스트
+    public List<ClassDTO> listBoard_cb(int offset, int rows, String condition, String keyword,String userId) {
+        List<ClassDTO> list=new ArrayList<ClassDTO>();
+
+        PreparedStatement pstmt=null;
+        ResultSet rs=null;
+        StringBuffer sb = new StringBuffer();
+
+        try {
+			sb.append("SELECT boardNum, b.userId, m.nickName, ");
+			sb.append("       subject, TO_CHAR(created, 'YYYY-MM-DD') created, maxClass, curClass ");
+			sb.append(" FROM classBoard b  ");
+			sb.append(" JOIN member1 m ON b.userId=m.userId  ");
+			if(condition.equals("created")) {
+				keyword = keyword.replaceAll("(\\-|\\/|\\.)", "");
+				sb.append(" WHERE TO_CHAR(created, 'YYYYMMDD') = ? AND b.userId= ? ");
+			} else if(condition.equals("all")) {
+				sb.append(" WHERE INSTR(subject, ?) >= 1 OR INSTR(content, ?) >= 1 AND b.userId= ?");
+			} else {
+				sb.append(" WHERE INSTR(" + condition + ", ?) >= 1 AND b.userId= ? ");
+			}
+			
+			sb.append(" ORDER BY boardNum DESC  ");
+			sb.append(" OFFSET ? ROWS FETCH FIRST ? ROWS ONLY ");
+            
+			pstmt=conn.prepareStatement(sb.toString());
+            if(condition.equals("all")) {
+    			pstmt.setString(1, keyword);
+    			pstmt.setString(2, keyword);
+    			pstmt.setString(3, userId);
+    			pstmt.setInt(4, offset);
+    			pstmt.setInt(5, rows);
+            } else {
+    			pstmt.setString(1, keyword);
+    			pstmt.setString(2, userId);
+    			pstmt.setInt(3, offset);
+    			pstmt.setInt(4, rows);
+            }
+            
+            rs=pstmt.executeQuery();
+            
+            while(rs.next()) {
+                ClassDTO dto=new ClassDTO();
+				dto.setBoardNum(rs.getInt("boardNum"));
+				dto.setUserId(rs.getString("userId"));
+				dto.setNickName(rs.getString("nickName"));
+				dto.setSubject(rs.getString("subject"));
+				dto.setMaxClass(rs.getInt("maxClass"));
+				dto.setCurClass(rs.getInt("curClass"));
+				dto.setCreated(rs.getString("created"));
+            
+                list.add(dto);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+			if(rs!=null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+				}
+			}
+				
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+        
+        return list;
+    }
 }

@@ -526,7 +526,207 @@ public class GreetingDAO {
 			}
 			return result;
 		}
+		public int dataCount_gt(String userId) { 
+			int result = 0;
+			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+			String sql;
 			
+			try {
+				sql = "SELECT COUNT(*) FROM greeting WHERE userId = ?";
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, userId);
+				rs= pstmt.executeQuery(); //rs=실행결과
+				if(rs.next()) { 
+					result = rs.getInt(1); //위 SELECT 문에 컬럼명 없어서 첫번째라는 의미의 1
+				}
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				if(rs!=null) {
+					try {
+						rs.close();
+					} catch (Exception e2) {
+					}
+				}
+				
+				if(pstmt!=null) {
+					try {
+						pstmt.close();
+					} catch (Exception e2) {
+					}
+				}
+			}
+			return result;
+		}	
+		public int dataCount_gt(String condition, String keyword,String userId) {
+			int result = 0;
+			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+			String sql;
 			
+			try {
+				sql = "SELECT COUNT(*) FROM greeting g JOIN member1 m ON g.userId = m.userId ";
+				if(condition.equals("all")) { //제목과 내용 둘 다 검색 가능
+					sql  += " WHERE INSTR(subject, ?) >= 1 OR INSTR(content, ?) >= 1 AND g.userId = ? ";
+				}else if(condition.equals("created")) {
+					keyword = keyword.replaceAll("(\\-|\\/|\\.)", "");
+					sql += " WHERE TO_CHAR(created, YYYYMMDD') = ? AND g.userId = ?";
+				}else {
+					sql += " WHERE INSTR(" + condition + ", ?) >= 1 AND g.userId = ?";
+				}
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, keyword);
+				if(condition.equals("all")) {
+					pstmt.setString(2, keyword);
+					pstmt.setString(3, userId);
+				} else {
+					pstmt.setString(2, userId);
+				}
+				
+				rs = pstmt.executeQuery();
+				if(rs.next() ) {
+					result = rs.getInt(1);
+				}
+				
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				if(rs!=null) {
+					try {
+						rs.close();
+					} catch (Exception e2) {
+					}
+				}
+				
+				if(pstmt!=null) {
+					try {
+						pstmt.close();
+					} catch (Exception e2) {
+					}
+				}
+			}
+			return result;
+		}	
+		public List<GreetingDTO> listBoard_gt(int offset, int rows,String userId) {
+			List<GreetingDTO> list = new ArrayList<>();
+			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+			String sql;
+			
+			try {
+				sql = "SELECT num, g.userId, nickName, subject, hitCount, TO_CHAR(created, 'YYYY-MM-DD') created "
+						+ " FROM greeting g "
+						+ " JOIN member1 m ON g.userId = m.userId "
+						+ " WHERE g.userId = ?"
+						+ " ORDER BY num DESC "
+						+ " OFFSET ? ROWS FETCH FIRST ? ROWS ONLY ";
+				
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, userId);
+				pstmt.setInt(2, offset);
+				pstmt.setInt(3, rows);
+				
+				rs = pstmt.executeQuery();
+				while(rs.next()) {
+					GreetingDTO dto = new GreetingDTO();
+					dto.setNum(rs.getInt("num"));
+					dto.setNickName(rs.getString("nickName"));
+					dto.setSubject(rs.getString("subject"));
+					dto.setHitCount(rs.getInt("hitCount"));
+					dto.setCreated(rs.getString("created"));
 					
+					list.add(dto); 				
+				}
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				if(rs!=null) {
+					try {
+						rs.close();
+					} catch (Exception e2) {
+					}
+				}
+				
+				if(pstmt!=null) {
+					try {
+						pstmt.close();
+					}catch (Exception e2) {					
+					}
+				}
+			}
+			return list;
+		}	
+		public List<GreetingDTO> listBoard_gt(int offset, int rows, String condition, String keyword,String userId) {
+			List<GreetingDTO> list = new ArrayList<GreetingDTO>();
+			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+			String sql;
+			
+			try {
+				sql = "SELECT num, g.userId, nickName, subject, hitCount, TO_CHAR(created, 'YYYY-MM-DD') created "
+						+ " FROM greeting g"
+						+ " JOIN member1 m ON g.userId = m.userId ";
+				if(condition.equals("all")) {
+					sql += " WHERE INSTR(subject, ?) >= 1 OR INSTR(content, ?) >= 1 AND g.userId = ? ";
+				}else if(condition.equals("created")) {
+					keyword = keyword.replaceAll("(\\-|\\/|\\.)", "");
+					sql += " WHERE TO_CHAR(created, 'YYYYMMDD') = ? AND g.userId = ?";
+				}else {
+					sql += " WHERE INSTR(" + condition + ", ?) >=1 AND g.userId = ?";
+				}
+					sql	+= " ORDER BY num DESC "
+						+ " OFFSET ? ROWS FETCH FIRST ? ROWS ONLY";
+					
+					pstmt = conn.prepareStatement(sql);
+					
+				if(condition.equals("all")) {					
+					pstmt.setString(1, keyword);
+					pstmt.setString(2, keyword);
+					pstmt.setString(3, userId);
+					pstmt.setInt(5, offset);
+					pstmt.setInt(5, rows);
+				} else {
+					pstmt.setString(1, keyword);
+					pstmt.setString(2, userId);
+					pstmt.setInt(3, offset);
+					pstmt.setInt(4, rows);
+				}
+				rs = pstmt.executeQuery();
+				while(rs.next()) {
+					GreetingDTO dto = new GreetingDTO();
+					dto.setNum(rs.getInt("num"));
+					dto.setUserId(rs.getString("userId"));
+					dto.setNickName(rs.getString("nickName"));
+					dto.setSubject(rs.getString("subject"));
+					dto.setHitCount(rs.getInt("hitCount"));
+					dto.setCreated(rs.getString("created"));
+					
+					list.add(dto); 
+				}
+				
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				if(rs!=null) {
+					try {
+						rs.close();
+					} catch (Exception e2) {
+					}
+				}
+				
+				if(pstmt!=null) {
+					try {
+						pstmt.close();
+					} catch (Exception e2) {
+					}
+				}
+			}
+			
+			return list;
+		}
 	}

@@ -73,7 +73,7 @@
 				</td>
 			   </tr>
 			</table>
-			
+			<c:if test="${mode!='myContent' }">
 			<table style="width: 100%; margin: 10px auto; border-spacing: 0px;">
 			   <tr height="40">
 			      <td align="left" width="100">
@@ -97,6 +97,21 @@
 			      </td>
 			   </tr>
 			</table>
+			</c:if>
+			<c:if test="${mode=='myContent' }">
+			<table style="width: 100%; margin: 10px auto; border-spacing: 0px;">
+			   <tr height="40">
+			      <td align="left" width="100">
+			          <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/member/gt_list.do';">새로고침</button>
+			      </td>
+			   </tr>
+			</table>
+			<tr height="40">
+			      <td align="left" width="100">
+			          <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/member/cb_list.do';">우동클래스</button>
+			      </td>
+			   </tr>
+			</c:if>
         </div>
     </div>
 </div>

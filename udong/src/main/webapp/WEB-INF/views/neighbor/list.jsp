@@ -67,7 +67,7 @@
 				</td>
 			   </tr>
 			</table>
-			
+			<c:if test="${mode!='myContent' }">
 			<table style="width: 100%; margin: 10px auto; border-spacing: 0px;">
 			   <tr height="40">
 			      <td align="left" width="100">
@@ -95,6 +95,7 @@
 			      </td>
 		      </tr>
 			</table>
+			</c:if>
         </div>
 
     </div>

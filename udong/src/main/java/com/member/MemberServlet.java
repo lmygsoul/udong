@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -13,12 +12,24 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.class_bbs.ClassDAO;
+import com.class_bbs.ClassDTO;
+import com.greeting.GreetingDAO;
+import com.greeting.GreetingDTO;
 import com.util.MyServlet;
 import com.util.MyUtil;
 
 @WebServlet("/member/*")
 public class MemberServlet extends MyServlet{
 	private static final long serialVersionUID = 1L;
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		process(req, resp);
+	}
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		process(req, resp);
+	}
 	@Override
 	protected void process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		req.setCharacterEncoding("utf-8");
@@ -60,6 +71,14 @@ public class MemberServlet extends MyServlet{
 			receiveMessage_article(req,resp);
 		} else if(uri.indexOf("rm_delete.do")!=-1) {
 			rm_Message_delete(req,resp);
+		} else if(uri.indexOf("cb_list.do")!=-1) {
+			cb_list(req,resp);
+		}  else if (uri.indexOf("cb_article.do") != -1) {
+			cb_article(req, resp);
+		} else if(uri.indexOf("gt_list.do")!=-1) {
+			gt_list(req,resp);
+		}  else if (uri.indexOf("gt_article.do") != -1) {
+			gt_article(req, resp);
 		}
 		
 	}
@@ -572,5 +591,277 @@ public class MemberServlet extends MyServlet{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	private void cb_list(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		ClassDAO dao = new ClassDAO();
+		HttpSession session=req.getSession();
+		SessionInfo info=(SessionInfo)session.getAttribute("member");
+		MyUtil util = new MyUtil();
+		String cp = req.getContextPath();
+
+		String page = req.getParameter("page");
+		int current_page = 1;
+		if(page != null) {
+			current_page = Integer.parseInt(page);
+		}
+
+		String condition = req.getParameter("condition");
+		String keyword = req.getParameter("keyword");
+		if(condition == null) {
+			condition = "all";
+			keyword="";
+		}
+
+		if(req.getMethod().equalsIgnoreCase("GET")) {
+			keyword = URLDecoder.decode(keyword, "utf-8");
+		}
+
+
+		int dataCount;
+		if(keyword.length()==0) {
+			dataCount = dao.dataCount_cb(info.getUserId());
+		} else {
+			dataCount = dao.dataCount_cb(condition, keyword,info.getUserId());
+		}
+
+		int rows = 10;
+		int total_page = util.pageCount(rows, dataCount);
+		if (current_page > total_page) {
+			current_page = total_page;
+		}
+
+		int offset = (current_page - 1) * rows;
+		if(offset < 0) offset = 0;
+
+		List<ClassDTO> list;
+		if (keyword.length() == 0)
+			list = dao.listBoard_cb(offset, rows,info.getUserId());
+		else
+			list = dao.listBoard_cb(offset, rows, condition, keyword,info.getUserId());
+
+		int listNum, n = 0;
+		for(ClassDTO dto : list) {
+			listNum = dataCount - (offset + n);
+			dto.setListNum(listNum);
+			n++;
+		}
+
+		String query = "";
+		if (keyword.length() != 0) {
+			query = "condition=" + condition + "&keyword=" + URLEncoder.encode(keyword, "utf-8");
+		}
+
+		String listUrl = cp + "/dayclass/list.do";
+		String articleUrl = cp + "/dayclass/article.do?page=" + current_page;
+		if (query.length() != 0) {
+			listUrl += "?" + query;
+			articleUrl += "&" + query;
+		}
+
+		String paging = util.paging(current_page, total_page, listUrl);
+
+		req.setAttribute("list", list);
+		req.setAttribute("dataCount", dataCount);
+		req.setAttribute("page", current_page);
+		req.setAttribute("total_page", total_page);
+		req.setAttribute("articleUrl", articleUrl);
+		req.setAttribute("paging", paging);
+		req.setAttribute("condition", condition);
+		req.setAttribute("keyword", keyword);
+		req.setAttribute("mode", "myContent");
+
+		forward(req, resp, "/WEB-INF/views/dayclass/list.jsp");
+	}
+	protected void cb_article(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		// 글보기
+		ClassDAO dao=new ClassDAO();
+		String cp=req.getContextPath();
+		String page = req.getParameter("page");
+		String query="page="+page;
+
+		try {
+			int boardNum = Integer.parseInt(req.getParameter("boardNum"));
+
+			String condition = req.getParameter("condition");
+			String keyword = req.getParameter("keyword");
+			if(condition==null) {	
+				condition="all";
+				keyword="";
+			}
+			keyword = URLDecoder.decode(keyword, "utf-8");
+
+			if(keyword.length()!=0) {
+				query+="&condition="+condition+
+						"&keyword="+URLEncoder.encode(keyword, "utf-8");
+			}
+
+			ClassDTO dto=dao.readBoard(boardNum);
+			int curClass = dao.readClass(boardNum);
+			
+			if(dto==null) {
+				resp.sendRedirect(cp+"/member/cb_list.do?"+query);
+				return;
+			}
+
+			MyUtil util=new MyUtil();
+			dto.setContent(util.htmlSymbols(dto.getContent()));
+
+
+			ClassDTO preReadDto=dao.preReadBoard(dto.getBoardNum(), condition, keyword);
+			ClassDTO nextReadDto=dao.nextReadBoard(dto.getBoardNum(), condition, keyword);
+
+
+			req.setAttribute("dto", dto);
+			req.setAttribute("preReadDto", preReadDto);
+			req.setAttribute("nextReadDto", nextReadDto);
+			req.setAttribute("query", query);
+			req.setAttribute("page", page);
+			req.setAttribute("curClass", curClass);
+
+			forward(req, resp, "/WEB-INF/views/member/cb_article.jsp");
+			return;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		resp.sendRedirect(cp+"/member/cb_list.do?"+query);
+	}
+	protected void gt_list(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {		
+		GreetingDAO dao = new GreetingDAO();
+		HttpSession session=req.getSession();
+		SessionInfo info=(SessionInfo)session.getAttribute("member");
+		MyUtil util = new MyUtil();
+		String cp = req.getContextPath();		
+		
+		//파라미터로 넘어온 페이지 번호
+		String page = req.getParameter("page");
+		int current_page = 1;
+		if(page !=null) {
+			current_page = Integer.parseInt(page);
+		}
+		//검색
+		String condition = req.getParameter("condition");
+		String keyword = req.getParameter("keyword");
+		if(condition == null) {
+			condition = "all";
+			keyword="";
+		}
+		
+		//GET 방식일 경우 디코딩
+		if(req.getMethod().equalsIgnoreCase("GET")) {
+			keyword = URLDecoder.decode(keyword, "utf-8");
+		}
+		
+		//전체 데이터 개수
+		int dataCount;
+		if(keyword.length()==0) {
+			dataCount = dao.dataCount_gt(info.getUserId());
+		} else {
+			dataCount = dao.dataCount_gt(condition, keyword,info.getUserId());
+		}
+		//전체 페이지 수 
+		int rows = 10; 
+		int total_page = util.pageCount(rows, dataCount);
+		if(current_page> total_page) {
+			current_page = total_page;
+		}
+		int offset = (current_page -1) * rows;
+		if(offset < 0) offset = 0;
+		
+		//게시글 가져오기
+		List<GreetingDTO> list = null;
+		if(keyword.length()==0) {
+			list = dao.listBoard_gt(offset, rows,info.getUserId());
+		}else {
+			list = dao.listBoard_gt(offset, rows, condition, keyword,info.getUserId());
+		}		
+		
+		//리스트 글번호 만들기
+		int listNum, n=0;
+		for(GreetingDTO dto : list) {
+			listNum = dataCount - (offset+n);
+			dto.setListNum(listNum);
+			n++;
+		}
+		
+		String query="";
+		if(keyword.length()!=0) {
+			query="condition="+condition+"&keyword="+URLEncoder.encode(keyword, "utf-8");
+		}
+		
+		//페이징 처리
+		String listUrl = cp+"/greeting/list.do";
+		String articleUrl = cp+"/greeting/article.do?page="+current_page;
+		if(query.length()!=0) {
+			listUrl += "?" +query;
+			articleUrl += "&" +query;
+		}
+		String paging= util.paging(current_page, total_page, listUrl);
+		
+		//포워딩할 JSP로 넘길 속성
+		req.setAttribute("list", list);
+		req.setAttribute("paging",paging);
+		req.setAttribute("page", current_page );
+		req.setAttribute("dataCount", dataCount );
+		req.setAttribute("total_page", dataCount );
+		req.setAttribute("articleUrl", articleUrl );
+		req.setAttribute("condition", condition);
+		req.setAttribute("keyword", keyword );
+		req.setAttribute("mode", "myContent");
+		
+		//JSP로 포워딩
+		forward(req, resp, "/WEB-INF/views/greeting/list.jsp");
+	}
+	protected void gt_article(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		//게시글 보기(페이지번호는 무조건 넘어오고 condition,keyword는 검색일 때만 넘어옴)
+		GreetingDAO dao = new GreetingDAO();
+		String cp = req.getContextPath();
+		String page = req.getParameter("page");
+		String query = "page="+page;
+		HttpSession session=req.getSession();
+		SessionInfo info=(SessionInfo)session.getAttribute("member");
+								
+		try {
+			int num = Integer.parseInt(req.getParameter("num"));
+									
+			String condition = req.getParameter("condition");
+			String keyword = req.getParameter("keyword");
+			if(condition == null) {//검색이 x 때 
+				condition = "all";
+				keyword = "";
+			}
+			keyword = URLDecoder.decode(keyword, "utf-8");//넘어온 방식이GET방식이기 때문에 인코딩되어 넘어와서 다시 디코딩 해줌
+									
+			if(keyword.length() !=0) {//검색일 때 
+					query += "&condition="+condition+"&keyword="+URLEncoder.encode(keyword,"utf-8");
+			}
+									
+			//조회수
+			dao.updateHitCount(num);
+									
+			//게시글 가져오기 
+			GreetingDTO dto = dao.readGreeting(num);
+			if(dto == null) {
+				resp.sendRedirect(cp+"/greeting/list.do?"+query);
+				return;
+			}
+			dto.setContent(dto.getContent().replace("\n", "<br>"));	
+			GreetingDTO preReadDto = dao.preReadGreeting(num, condition, keyword);
+			GreetingDTO nextReadDto =dao.nextReadGreeting(num, condition, keyword);
+									
+			req.setAttribute("dto", dto);
+			req.setAttribute("preReadDto", preReadDto);
+			req.setAttribute("nextReadDto", nextReadDto);
+			req.setAttribute("page", page);
+			req.setAttribute("query", query);
+									
+			forward(req, resp, "/WEB-INF/views/greeting/article.jsp");
+			return;			
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+								
+			resp.sendRedirect(cp+"/greeting/list.do?"+query);	
+		
 	}
 }
