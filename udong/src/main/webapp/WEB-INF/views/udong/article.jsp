@@ -58,20 +58,20 @@ function deleteBoard(num) {
 			   </td>
 			</tr>
 			
-			<tr height="35" style="border-bottom: 1px solid #cccccc;">
-			    <td colspan="2" align="left" style="padding-left: 5px;">
-			       이전글 :
-			         <c:if test="${not empty preReadDto}">
-			              <a href="${pageContext.request.contextPath}/udong/article.do?${query}&num=${preReadDto.num}">${preReadDto.subject}</a>
-			        </c:if>
-			    </td>
-			</tr>
 			
 			<tr height="35" style="border-bottom: 1px solid #cccccc;">
 			    <td colspan="2" align="left" style="padding-left: 5px;">
-			    다음글 :
+			    이전글 :
 			         <c:if test="${not empty nextReadDto}">
 			              <a href="${pageContext.request.contextPath}/udong/article.do?${query}&num=${nextReadDto.num}">${nextReadDto.subject}</a>
+			        </c:if>
+			    </td>
+			</tr>
+			<tr height="35" style="border-bottom: 1px solid #cccccc;">
+			    <td colspan="2" align="left" style="padding-left: 5px;">
+			       다음글 :
+			         <c:if test="${not empty preReadDto}">
+			              <a href="${pageContext.request.contextPath}/udong/article.do?${query}&num=${preReadDto.num}">${preReadDto.subject}</a>
 			        </c:if>
 			    </td>
 			</tr>
