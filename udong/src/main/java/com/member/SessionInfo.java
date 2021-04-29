@@ -3,7 +3,16 @@ package com.member;
 public class SessionInfo {
 	private String userId, userName;
 	private String type;
+	private String created;
 	
+	
+	
+	public String getCreated() {
+		return created;
+	}
+	public void setCreated(String created) {
+		this.created = created;
+	}
 	public String getType() {
 		return type;
 	}

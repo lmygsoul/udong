@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
-
 import java.util.List;
 import java.util.Map;
 
@@ -17,6 +16,8 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 
 import com.member.SessionInfo;
+import com.member.receiveUserDAO;
+import com.member.receiveUserDTO;
 import com.util.FileManager;
 import com.util.MyUploadServlet;
 import com.util.MyUtil;
@@ -27,7 +28,14 @@ public class UsedServlet extends MyUploadServlet {
 	private static final long serialVersionUID = 1L;
 
 	private String pathname;
-	
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		process(req, resp);
+	}
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		process(req, resp);
+	}
 	@Override
 	protected void process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		req.setCharacterEncoding("utf-8");
@@ -63,9 +71,10 @@ public class UsedServlet extends MyUploadServlet {
 			delete(req, resp);
 		} else if(uri.indexOf("like.do")!=-1) {
 			updateLike(req, resp); 
+		} else if(uri.indexOf("message_ready.do")!=-1) {
+			message_ready(req,resp);
 		}
 	}
-	
 	//게시물 리스트
 	private void list(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		UsedDAO dao = new UsedDAO();
@@ -413,5 +422,17 @@ public class UsedServlet extends MyUploadServlet {
 		//resp.sendRedirect(cp+"/used/article.do?"+query);
 	
 	}
-	
+	private void message_ready(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		receiveUserDTO rdto = new receiveUserDTO();
+		receiveUserDAO rdao = new receiveUserDAO();
+		String cp = req.getContextPath();
+		try {
+			rdto.setReceiveUser(req.getParameter("userId"));
+			rdao.insertUser(rdto);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		resp.sendRedirect(cp+"/member/another_profile.do?");
+		return;	
+	}
 }

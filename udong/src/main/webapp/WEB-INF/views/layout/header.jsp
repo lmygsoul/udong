@@ -63,7 +63,7 @@ $(function(){
         <li>
             <a href="#"><span>커뮤니티</span></a>
             <ul>
-                <li><a href="#" style="margin-left:235px; " onmouseover="this.style.marginLeft='235px';">출석체크</a></li>
+                <li><a href="${pageContext.request.contextPath}/member/check_list.do" style="margin-left:235px; " onmouseover="this.style.marginLeft='235px';">출석체크</a></li>
                 <li><a href="${pageContext.request.contextPath}/greeting/list.do">가입인사</a></li>
                 <li><a href="${pageContext.request.contextPath}/udong/list.do">우동이야기</a></li>
                 <li><a href="${pageContext.request.contextPath}/udongphoto/list.do">우동사진</a></li>

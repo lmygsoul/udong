@@ -109,6 +109,12 @@ public class MemberServlet extends MyServlet{
 			used_list(req, resp);
 		}  else if (uri.indexOf("used_article.do") != -1) {
 			used_article(req, resp);
+		}  else if (uri.indexOf("check_list.do") != -1) {
+			check_list(req, resp);
+		} else if (uri.indexOf("check_ok.do") != -1) {
+			check_ok(req, resp);
+		} else if (uri.indexOf("check_delete.do") != -1) {
+			check_delete(req, resp);
 		} 
 		
 	}
@@ -1499,5 +1505,100 @@ public class MemberServlet extends MyServlet{
 								
 			resp.sendRedirect(cp+"/member/used_list.do?"+query);	
 		
-	}	
+	}
+	private void check_list(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
+		AtCheckDAO aao = new AtCheckDAO();
+		MyUtil util= new MyUtil();
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		String page = req.getParameter("page");
+		String cp = req.getContextPath();
+		int current_page = 1;
+		
+		if (info==null) {
+			resp.sendRedirect(cp+"/member/login.do");
+			return;
+		}
+		if(page!=null) {
+			current_page = Integer.parseInt(page);
+		}
+		int dataCount = aao.dataCount();
+	
+		int rows = 10;
+		int total_page = util.pageCount(rows, dataCount);
+		
+		if(current_page > total_page) {
+			current_page = total_page ;
+		}
+		int offset = (current_page -1 ) * rows;
+		if(offset <0) offset = 0;
+		List<AtCheckDTO> list = aao.listBoard(offset, rows);
+		
+		int listNum, n=0;
+		for(AtCheckDTO ato : list) {
+				listNum = dataCount - (offset+n);
+				ato.setListNum(listNum);
+				n++;
+		}
+		String query="";
+		String listUrl = cp+"/member/check_list.do";
+		if(query.length()!=0) {
+			listUrl += "?"+query;
+		}
+		String paging = util.paging(current_page, total_page,listUrl);
+		
+		req.setAttribute("list", list);
+		req.setAttribute("paging", paging);
+		req.setAttribute("page", current_page);
+		req.setAttribute("dataCount", dataCount);
+		req.setAttribute("total_page", total_page);
+		req.setAttribute("mode", "check");
+		req.setAttribute("title", "출석체크");
+		
+		forward(req, resp, "/WEB-INF/views/member/atcheck.jsp");
+		return;
+		
+	}
+	private void check_ok(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		AtCheckDAO aao = new AtCheckDAO();
+		AtCheckDTO ato = new AtCheckDTO();
+		HttpSession session=req.getSession();
+		String cp = req.getContextPath();
+		try {
+			if(ato.getCheckType()!=2) {
+			SessionInfo info=(SessionInfo)session.getAttribute("member");
+			String date = req.getParameter(info.getCreated());
+			ato.setUserId(info.getUserId());
+			ato.setContent(req.getParameter("content"));
+			ato.setUserName(req.getParameter("userName"));
+			aao.insertBoard(ato);
+			
+			req.setAttribute("title", "출석체크");
+			req.setAttribute("adto", ato);
+			req.setAttribute("created_date", date);
+			}
+			resp.sendRedirect(cp+"/member/check_list.do");
+			return;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+	private void check_delete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		AtCheckDAO aao = new AtCheckDAO();
+		HttpSession session=req.getSession();
+		String cp = req.getContextPath();
+		try {
+			SessionInfo info=(SessionInfo)session.getAttribute("member");
+			
+			aao.deleteBoard(info.getUserId());
+			
+			req.setAttribute("title", "출석체크");
+			
+			resp.sendRedirect(cp+"/member/check_list.do");
+			return;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }

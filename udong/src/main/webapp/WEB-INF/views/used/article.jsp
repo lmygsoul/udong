@@ -22,17 +22,11 @@ function deleteBoard(num) {
 </c:if>
 function sendMessage(){
 	var f = document.boardForm;
-
-	var str = f.userId.value;
-	if(document.boardForm.userId.value ==""){
-		alert("Id가 없습니다.");
-		return;
-	} 
-	
-	f.action="${pageContext.request.contextPath}/member/another_Profile.do";
+	f.action="${pageContext.request.contextPath}/used/message_ready.do?num=${dto.num}&page=${page}"
 	f.submit();
 	
 }
+
 $(".btn btnList").click(() {
 	  $(this).attr('disabled',true);
 	});
@@ -51,7 +45,7 @@ $(".btn btnList").click(() {
         <div class="body-title" style="margin: 0;">
             <h3><span style="font-family: Webdings">4</span> 중고거래 </h3>
         </div>
-        <form name="boardForm" method="post">
+        
         <div>
 			<table style="width: 100%; margin: 0 auto; border-spacing: 0px; border-collapse: collapse;">
 			<tr height="35" class="row-3">
@@ -99,8 +93,11 @@ $(".btn btnList").click(() {
 		    </tr>
 			<tr class="row-2">			
 			    <c:if test ="${sessionScope.member.userId != null && sessionScope.member.userId != dto.userId}">	
-			    <td height="50" style="margin: 0 auto; text-align: center;">			    
-			  	<button type="button" class="btn btnList" value="${dto.userId }" name="userId" style="width: 45%; height: 85%;" onclick="sendMessage();">구매 문의 쪽지</button>
+			    <td height="50" style="margin: 0 auto; text-align: center;">
+			    <form name="boardForm" method="post">
+			    	<input 	type="hidden" name="userId" value="${dto.userId }">    
+			  		<button type="button" class="btn btnList" style="width: 45%; height: 85%;" onclick="javascript:location.href='${pageContext.request.contextPath}/used/message_ready.do?num=${dto.num}&page=${page}';">구매 문의 쪽지</button>
+			  	</form>
 			    </td>
 			    </c:if>
 			</tr>
@@ -153,7 +150,6 @@ $(".btn btnList").click(() {
 			</tr>
 			</table>
         </div>
-	</form>
     </div>
 </div>
 
