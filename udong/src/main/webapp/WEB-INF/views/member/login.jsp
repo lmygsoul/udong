@@ -37,7 +37,7 @@ function sendLogin() {
 	</div>
 		
 	<div class="container" style="background-color: #FBF7F2; border-top: 0;">
-	    <div class="main-container">
+	    <div class="body-container" style="border:0; padding: 0 0 40px;">
 	    	<div style="margin: 0 auto; width:410px;">
 	    	<div style="text-align: center; padding-top: 150px;">
 	        	<span style="font-weight: 500; font-size:27px; color: #424951;">회원 로그인</span>

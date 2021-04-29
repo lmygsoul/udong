@@ -115,7 +115,7 @@ function changeEmail() {
 	</div>
 		
 	<div class="container" style="height: 1430px; padding: 0; background-color: #FBF7F2; border-top: 0;">
-	    <div class="main-container" style="height: 1430px; position: relative;">
+	    <div class="main-container" style="height: 1430px; width: 700px; position: relative;">
 	    <div class="memberFormBody">
 	    <div>
             <h3 class="member-title"> ${title} </h3>

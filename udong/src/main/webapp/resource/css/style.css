@@ -23,6 +23,10 @@ a:hover, a:active {
 	text-decoration: underline;
 }
 
+button:hover {
+	cursor: pointer;
+}
+
 .btn {
 	color:black;
 	font-weight:500;
