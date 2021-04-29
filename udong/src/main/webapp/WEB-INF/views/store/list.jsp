@@ -96,7 +96,7 @@
         			<c:out value="</tr><tr>" escapeXml="false"/>
         		</c:if>
         		<td width="210" align="center" style="border-top: 1px solid #ddd">
-        			<div class="imgLayout" style="margin: 10px 0;">
+        			<div class="imgLayout" style="margin-top: 12px; margin-bottom: 9px;">
         				<img src="${pageContext.request.contextPath}/uploads/photo/${dto.imageFileName}" width="230" height="230"><br>
         			</div>
         		</td>
@@ -134,7 +134,7 @@
         				</div>
         			</td>
         			<td style="border-top: 1px solid #ddd">
-        				<div style="padding-left: 20px;">
+        				<div style="padding-left: 35px;">
         				<span>준비 중입니다</span>
         				</div>
         		</td>
