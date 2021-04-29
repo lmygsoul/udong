@@ -21,7 +21,9 @@ function deleteBoard(num) {
 }
 </c:if>
 
-
+$(".btn btnList").click(() {
+	  $(this).attr('disabled',true);
+	});
 
 
 </script>
@@ -77,16 +79,18 @@ function deleteBoard(num) {
 			    <td  height="40" style="#BDBDBD;"> ${dto.area} </td>
 			</tr>
 			<tr class="row-2">			   
-			   <td  height="40">  
+				<td  height="40">  
 			       <c:if test ="${sessionScope.member.userId != null && sessionScope.member.userId != dto.userId}">
-			       <a onclick="return confirm('관심글에 추가할까요?')" href="${pageContext.request.contextPath}/used/like.do?num=${dto.num}&page=${page}">관심 글에 추가 ♡</a>
+			       <button type="button" class="btn btnList" style="width: 45%; height: 85%;" onclick="javascript:location.href='${pageContext.request.contextPath}/used/like.do?num=${dto.num}&page=${page}';">관심글에 추가</button>
 			       </c:if>
 			    </td>
-			</tr>
-			<tr class="row-2">				
-			    <td  height="50" style="margin: 0 auto; text-align: center;">			    
+		    </tr>
+			<tr class="row-2">			
+			    <c:if test ="${sessionScope.member.userId != null && sessionScope.member.userId != dto.userId}">	
+			    <td height="50" style="margin: 0 auto; text-align: center;">			    
 			  	<button type="button" class="btn btnList" style="width: 45%; height: 85%;" onclick="">구매 문의 쪽지</button>
-			   </td>
+			    </td>
+			    </c:if>
 			</tr>
 			<tr class="row-2">
 			  <td colspan="2" align="left" class="artiBox" valign="top" height="200">
