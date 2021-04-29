@@ -84,7 +84,7 @@ public class StoreServlet extends MyUploadServlet{
 		else
 			dataCount=dao.dataCount(keyword);
 		
-		int rows = 6;
+		int rows = 3;
 		int total_page = util.pageCount(rows, dataCount);
 		if (current_page>total_page) {
 			current_page = total_page;

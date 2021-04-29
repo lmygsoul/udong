@@ -46,19 +46,21 @@
         </div>
         
         <div>
-        	<table style="width: 800px; margin: 10px auto; border-spacing: 0">
+        	<table style="width: 100%; border-spacing: 0">
         	<c:forEach var="dto" items="${list}" varStatus="status">
-        		<c:if test = "${status.index==0}">
-        			<tr>
-        		</c:if>
+        		<tr>
         		<c:if test="${status.index !=0 && status.index%3 ==0}">
         			<c:out value="</tr><tr>" escapeXml="false"/>
         		</c:if>
         		<td width="210" align="center" onclick="location.href='${articleUrl}&num=${dto.num}';" >
         			<div class="imgLayout">
         				<img src="${pageContext.request.contextPath}/uploads/photo/${dto.imageFileName}" width="230" height="230"><br>
-        				<span class="subject">[${dto.addrsub}] ${dto.subject}</span><br>
-        				<span class="subject" style="color: gray; font-size: 11px">평점 ${dto.score} / 5.0 (참여 ${dto.recnum})</span>
+        			</div>
+        		</td>
+        		<td style="padding-left: 10px;">
+        			<div>
+	        			<span class="subject">[${dto.addrsub}] ${dto.subject}</span><br>
+	        			<span class="subject" style="color: gray; font-size: 11px">평점 ${dto.score} / 5.0 (참여 ${dto.recnum})</span>
         			</div>
         		</td>
         	</c:forEach>
@@ -66,13 +68,25 @@
         	<c:set var="n" value="${list.size()}"/>
         	<c:if test="${n>0 && n%3 !=0}">
         		<c:forEach var="i" begin="${n%3+1}" end="3">
+        			<tr>
         			<td width="210">
-        				<div class="imgLayout"></div>
+        				<div class="imgLayout" style="border: 1px solid #ccc;">
+        					<img src="${pageContext.request.contextPath}/resource/images/store_soon.png" width="229" height="229">
+        				</div>
         			</td>
+        			<td>
+        				<div>
+        				<span class="subject">[${dto.addrsub}] ${dto.subject}</span><br>
+        				<span class="subject" style="color: gray; font-size: 11px">평점 ${dto.score} / 5.0 (참여 ${dto.recnum})</span>
+        				</div>
+        		</td>
         		</c:forEach>
         	</c:if>
+        	<c:if test="${n!=0}">
+        		<c:out value="</tr>" escapeXml="false"/>
+        	</c:if>
         	</table>
-        <c:if test="${mode!='myContent' }">
+        
 			<table style="width: 100%; margin-top: 10px auto;  margin-top: 30px; border-spacing: 0;">
 			   <tr height="40" >
 			      <td align="left" width="100">
@@ -88,33 +102,6 @@
 			      </c:if>
 			   </tr>
 			</table>
-			</c:if>
-			<c:if test="${mode=='myContent' }">
-			<table style="width: 100%; margin: 10px auto; border-spacing: 0px;">
-			   <tr height="40">
-			   		<td align="left" width="100">
-			          <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/member/st_list.do';">새로고침</button>
-			      </td>
-			      <td align="left" width="100">
-			          <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/member/cb_list.do';">우동클래스</button>
-			      </td>
-			      <td align="left" width="100">
-			          <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/member/gt_list.do';">가입인사</button>
-			      </td>
-			      <td align="left" width="100">
-			          <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/member/nb_list.do';">우동자랑</button>
-			      </td>
-			      <td align="left" width="100">
-			          <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/member/qa_list.do';">우동지식</button>
-			      </td>
-			      <td align="left" width="100">
-			          <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/member/ud_list.do';">우동이야기</button>
-			      </td>
-			      <td align="left" width="100">
-			          <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/member/used_list.do';">중고거래</button>
-			      </td>
-			</table>
-			</c:if>
         </div>
     </div>
 	</div>
