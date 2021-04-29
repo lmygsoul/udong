@@ -1,5 +1,5 @@
 package com.used;
-
+ 
 public class UsedDTO {
 	private int num, listNum;
 	private String userId, nickName;
