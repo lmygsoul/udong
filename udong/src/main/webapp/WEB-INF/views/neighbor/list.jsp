@@ -82,7 +82,7 @@ function sendOk(){
         
         <!-- 아티클 -->
         <c:if test="${dto.num!=null}">
-        	<table style="width: 100%; margin: 20px auto 0px; border-spacing: 0px;">
+        	<table style="width: 100%; margin: 20px auto 0px; padding-left: 20px; border-spacing: 0px;">
 			   <tr height="35">
 			      <td align="left" width="50%">
 			         <h3>게시물 번호 : No.${dto.num}</h3>
@@ -92,9 +92,9 @@ function sendOk(){
 			      </td>
 			   </tr>
 			</table>
-		<div>
-			<table style="width: 100%; margin: 20px auto 0px; border-spacing: 0px; border-collapse: collapse;">
-			   <tr height="35" class="row-3" style="border-top: 1px solid #E9ECEF;">
+		<div style="border: 1px solid #E9ECEF; margin: 20px 0; padding-bottom: 20px;">
+			<table style="width: 100%; border-spacing: 0px; border-collapse: collapse;">
+			   <tr height="35" class="row-3">
 			    <td colspan="2" align="left" class="col-1">
 				  	${dto.subject}
 			    </td>
@@ -118,13 +118,13 @@ function sendOk(){
 			</tr>
 			
 			<tr>
-				<td colspan="2" align="left" style="padding: 10px 5px;">
+				<td colspan="2" align="left" style="padding: 20px;">
 					<img src="${pageContext.request.contextPath}/uploads/photo/${dto.imageFileName}" style="max-width:100%; height: auto; resize:both;">
 				</td>
 			</tr>
 			
 			<tr class="row-2">
-			  <td colspan="2" align="left" style="padding: 10px 5px;" valign="top" height="200">
+			  <td colspan="2" align="left" style="padding: 20px; padding-top: 0;" valign="top" height="200">
 			      ${dto.content}
 			   </td>
 			</tr>
@@ -140,45 +140,43 @@ function sendOk(){
 				       <button type="button" class="btn btnCreate" onclick="javascript:recommend1();"><i class="fas fa-thumbs-up"></i>&nbsp;&nbsp;추천</button>
 			    </form>
 			    </td>
-			    <td align="left" width="50%" style="padding-top: 20px; padding-left: 5px;">
+			    <td align="left" width="50%" style="padding-top: 20px; padding-left: 5px; position: relative;">
 			    <form name="recForm2" action="${pageContext.request.contextPath}/neighbor/rec.do" method="post" style="width:150px">
 				       <input type="hidden" name="num" value="${dto.num}">
 				       <input type="hidden" name="page" value="${page}">
 			       	   <input type="hidden" name="selectRec" value="2">
 				       <button type="button" class="btn" onclick="javascript:recommend2();"><i class="fas fa-thumbs-down"></i>&nbsp;&nbsp;비추천</button>
 		       </form>
+		       <div style="position: absolute; top: 20px; left: 195px;">
+					<c:choose>
+					<c:when test="${sessionScope.member.userId==dto.userId || sessionScope.member.type==0}">
+			         	<button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/neighbor/update.do?num=${dto.num}&page=${page}';">수정</button>
+			          	<button type="button" class="btn" onclick="deleteNeighbor('1');">삭제</button>
+					</c:when>
+					</c:choose>
+		       </div>
 			   </td>
 			</tr>
 			</c:when>
 			</c:choose>
-			
-			<tr height="45">
-			    <td colspan="2" align="right">
-					<c:choose>
-			    			<c:when test="${sessionScope.member.userId==dto.userId || sessionScope.member.type==0}">
-			         			<button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/neighbor/update.do?num=${dto.num}&page=${page}';">수정</button>
-			          			<button type="button" class="btn" onclick="deleteNeighbor('1');">삭제</button>
-			    			</c:when>
-			    	</c:choose>
-			    </td>
-			</tr>
-			</table>
+		</table>
         </div>
+        
 		<c:choose>
 		<c:when test="${sessionScope.member.userId!=null}">
 		<form name="replyForm" method="post" style="border: 1px solid lightgray">
-		<table>
+		<table style="background-color: #F8F9FA;">
 			<tr height="35" style="border-bottom: 1px solid #cccccc;">
 			    <td width="10%" align="left" style="padding-left: 5px; text-align: center;">
 			       ${sessionScope.member.userName}
 			    </td>
-			    <td width="70%" align="right" style="padding-right: 5px;">
-				   <textarea name="content" rows="2" class="boxTA" style="width: 530px; height:40px;" placeholder="댓글을 입력해 주세요."></textarea>
+			    <td width="70%" align="right" style="padding: 15px 10px 10px;">
+				   <textarea name="content" rows="2" class="boxTA" style="width: 500px; height:30px;" placeholder="댓글을 입력해 주세요."></textarea>
 			    </td>
 			    <td>
 			    	<input type="hidden" name="num" value="${dto.num}">
 				    <input type="hidden" name="page" value="${page}">
-				    <button type="button" class="btn" onclick="sendOk();">입력</button>
+				    <button type="button" class="btn btnCreate" onclick="sendOk();" >입력</button>
 			    </td>
 			</tr>
 		</table>
@@ -189,9 +187,9 @@ function sendOk(){
 		 <div class="body-board">
 			<table style="width: 100%; margin: 0px auto; border-spacing: 0px; border-collapse: collapse;">
 			<tr class="table-row2">
-			      <th width="10%">작성자</th>
-			      <th width="70%">댓글 내용</th>
-			      <th width="20%">작성일</th>
+			      <td width="10%">작성자</td>
+			      <td width="70%">댓글 내용</td>
+			      <td width="20%">작성일</td>
 			</tr>
 			 <c:forEach var="dto" items="${reply_list}">
 			    <tr class="table-row2">
