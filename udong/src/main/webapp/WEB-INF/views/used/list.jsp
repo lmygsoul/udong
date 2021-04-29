@@ -62,7 +62,7 @@
 			      </td>
 			      <td>${dto.nickName}</td>
 			      <td>${dto.created}</td>
-			      <td></td>
+			      <td>${dto.likeCount}</td>
 			      
 			  </tr>
 			</c:forEach>

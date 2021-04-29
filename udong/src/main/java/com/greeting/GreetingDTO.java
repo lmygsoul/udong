@@ -1,13 +1,13 @@
 package com.greeting;
 
 public class GreetingDTO {
-	int num, listNum;
-	String userId;
-	String nickName;
-	String subject;
-	String content;
-	String created;
-	int hitCount;
+	private int num, listNum;
+	private String userId;
+	private String nickName;
+	private String subject;
+	private String content;
+	private String created;
+	private int hitCount;
 	
 	public int getNum() {
 		return num;

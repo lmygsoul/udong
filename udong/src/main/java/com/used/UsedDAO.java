@@ -58,7 +58,7 @@ public class UsedDAO {
 			pstmt.setInt(1, num);
 			
 			result=pstmt.executeUpdate();
-			
+						
 		}catch (SQLException e) {
 			e.printStackTrace();
 			throw e;
@@ -73,22 +73,36 @@ public class UsedDAO {
 		return result;
 	}
 	
-	//관심 insert
-	public int insertLike(String userId, int num) {
-		
-		
-		String sql = "INSERT into usedLike(userId, num) VALUES (?,?)";
+	
+	//관심(좋아요) insert
+	public int insertLike(String userId, int num) throws SQLException {
+		int result=0;
+		PreparedStatement pstmt=null;
+		String sql;
+				
 		try {
-			PreparedStatement pstmt = conn.prepareStatement(sql);
+			sql = "INSERT INTO usedLike(userId, num) VALUES (?,?)";
+			
+			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, userId);
 			pstmt.setInt(2, num);
-			return pstmt.executeUpdate();
-		} catch (Exception e) {
+			
+			result=pstmt.executeUpdate();
+			
+			
+			
+		} catch (SQLException e) {
 			e.printStackTrace();
-		}
-		return -1; 
-	}
-		
+			throw e;
+		} finally {
+			if(pstmt!=null)
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+				}
+		} 
+		return result;
+	}	
 	//데이터 개수
 	public int dataCount() {
 		int result=0;
@@ -181,7 +195,7 @@ public class UsedDAO {
 		StringBuilder sb=new StringBuilder();
 		
 		try {
-			sb.append("SELECT num, u.userId, category, nickName, subject, TO_CHAR(created, 'YYYY-MM-DD') created");
+			sb.append("SELECT num, u.userId, category, nickName, subject, TO_CHAR(created, 'YYYY-MM-DD') created, likeCount");
 			sb.append(" FROM used u JOIN member1 m ON u.userId=m.userId  ");
 			sb.append(" ORDER BY num DESC  ");
 			sb.append(" OFFSET ? ROWS FETCH FIRST ? ROWS ONLY");
@@ -201,7 +215,8 @@ public class UsedDAO {
 				dto.setSubject(rs.getString("subject"));
 				dto.setCategory(rs.getString("category"));
 				dto.setCreated(rs.getString("created"));
-				//dto.setLikeCount(rs.getInt("likeCount"));
+				dto.setLikeCount(rs.getInt("likeCount"));
+				dto.setLikeCount(rs.getInt("likeCount"));
 				
 				list.add(dto);
 			}

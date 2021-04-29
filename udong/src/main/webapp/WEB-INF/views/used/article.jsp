@@ -21,6 +21,9 @@ function deleteBoard(num) {
 }
 </c:if>
 
+
+
+
 </script>
 </head>
 <body>
@@ -40,12 +43,7 @@ function deleteBoard(num) {
 			<tr height="35" class="row-3">
 			    <td width="50%" align="left" class="col-2">
 			        ${dto.subject}
-			    </td>
-			     <td width="50%" align="right" class="col-2">		   
-			       <c:if test ="${sessionScope.member.userId != null && sessionScope.member.userId != dto.userId}">
-			       <a onclick="return confirm('관심글에 추가할까요?')" href="${pageContext.request.contextPath}/used/like.do?num=${dto.num}&page=${page}">관심👍</a>
-			       </c:if>
-			    </td>
+			    </td>     
 			</tr>
 			
 			<tr height="35" class="row-2">
@@ -58,26 +56,36 @@ function deleteBoard(num) {
 			</tr>
 			
 			<tr class="row-2">
-			  <td  rowspan="4" height="50">
-			    <img src="${pageContext.request.contextPath}/uploads/photo/${dto.imageFilename}" style="max-width:100%; height:auto; resize:both;">
+			  <td  rowspan="6" height="50">
+			    <img src="${pageContext.request.contextPath}/uploads/photo/${dto.imageFilename}" style="max-width:85%; height:auto; resize:both;">
 			   </td>
-			    <td  height="50">
+			    <td  height="25">
 			    > ${dto.category}
 			   </td>
 			</tr>
 			<tr class="row-2">
-			    <td  height="50">
-			   동네: ${dto.area}
+			    <td  height="40">
+			    ${dto.subject}
 			   </td>
 			</tr>
 			<tr class="row-2">
-			    <td  height="50">
-			    ${dto.price} 원
+			    <td  height="40">
+			    <b>${dto.price} 원</b> 
 			   </td>
 			</tr>
 			<tr class="row-2">
-			    <td  height="50">
-			   관심: 관심도 숫자 넣기
+			    <td  height="40" style="#BDBDBD;"> ${dto.area} </td>
+			</tr>
+			<tr class="row-2">			   
+			   <td  height="40">  
+			       <c:if test ="${sessionScope.member.userId != null && sessionScope.member.userId != dto.userId}">
+			       <a onclick="return confirm('관심글에 추가할까요?')" href="${pageContext.request.contextPath}/used/like.do?num=${dto.num}&page=${page}">관심 글에 추가 ♡</a>
+			       </c:if>
+			    </td>
+			</tr>
+			<tr class="row-2">				
+			    <td  height="50" style="margin: 0 auto; text-align: center;">			    
+			  	<button type="button" class="btn btnList" style="width: 45%; height: 85%;" onclick="">구매 문의 쪽지</button>
 			   </td>
 			</tr>
 			<tr class="row-2">
@@ -121,10 +129,8 @@ function deleteBoard(num) {
 			    		<c:otherwise>
 			    			<button type="button" class="btn" disabled="disabled">삭제</button>
 			    		</c:otherwise>
-			    	</c:choose>
-			    	
+			    	</c:choose>			    				    	
 			    </td>
-			
 			    <td align="right" class="col-4">
 			        <button type="button" class="btn btnList" onclick="javascript:location.href='${pageContext.request.contextPath}/used/list.do?${query}';">리스트</button>
 			    </td>

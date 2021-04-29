@@ -181,6 +181,7 @@ public class UsedServlet extends MyUploadServlet {
 			dto.setPrice(req.getParameter("price"));
 			dto.setArea(req.getParameter("area"));
 			
+			
 			String filename = null;
 			Part p = req.getPart("selectFile"); //selectFile(이미지 넣은 input의 name)
 			Map<String, String> map = doFileUpload(p, pathname);
@@ -210,8 +211,7 @@ public class UsedServlet extends MyUploadServlet {
 		String query = "page="+page;
 								
 		try {
-			int num = Integer.parseInt(req.getParameter("num"));
-									
+			int num = Integer.parseInt(req.getParameter("num"));		
 			String condition = req.getParameter("condition");
 			String keyword = req.getParameter("keyword");
 			if(condition == null) {//검색이 x 때 
@@ -314,6 +314,7 @@ public class UsedServlet extends MyUploadServlet {
 			dto.setPrice(req.getParameter("price"));
 			dto.setArea(req.getParameter("area"));
 			dto.setCategory(req.getParameter("category"));
+			dto.setLikeCount(Integer.parseInt(req.getParameter("likeCount")));
 
 			String imageFilename=req.getParameter("imageFilename");
 			
@@ -379,7 +380,9 @@ public class UsedServlet extends MyUploadServlet {
 		
 		resp.sendRedirect(cp+"/used/list.do?page="+page);			
 	}
-
+	
+	
+	//관심 추가하기
 	private void updateLike(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		
 		UsedDAO dao=new UsedDAO();
@@ -387,6 +390,7 @@ public class UsedServlet extends MyUploadServlet {
 		String cp = req.getContextPath();
 		String page = req.getParameter("page");
 		String query = "page="+page;
+	
 		
 		HttpSession session=req.getSession();
 		SessionInfo info=(SessionInfo)session.getAttribute("member");
@@ -398,12 +402,16 @@ public class UsedServlet extends MyUploadServlet {
 			
 			dao.updateLikeCount(num);
 			
+			
+			
+			resp.sendRedirect(cp+"/used/article.do?num="+num+"&"+query);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		resp.sendRedirect(cp+"/used/article.do?"+query);
+		//resp.sendRedirect(cp+"/used/article.do?"+query);
 	
 	}
-		
+	
 }

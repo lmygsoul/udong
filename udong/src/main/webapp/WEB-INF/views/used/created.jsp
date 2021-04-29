@@ -161,7 +161,7 @@
 			  <tr align="left" height="43" style="border-bottom: 1px solid #ccc;"> 
 			      <td width="100" style="text-align: center;">작성자</td>
 			      <td style="padding-left:10px;"> 
-			          ${sessionScope.member.userId}
+			          ${sessionScope.member.userId} 
 			      </td>
 			  </tr>
 			  		  
@@ -184,7 +184,7 @@
 			  <tr align="left" height="43" style="border-bottom: 1px solid #ccc; border-top: 1px solid #ccc;"> 
 			      <td width="100" style="text-align: center;">지&nbsp;&nbsp;&nbsp;&nbsp;역</td>
 			      <td style="padding-left:10px;"> 
-			        <input type="text" name="area" maxlength="100" class="boxTF" style="width: 20%;" value="${dto.area}">
+			        <input type="text" name="area" maxlength="100" class="boxTF" style="width: 20%;" placeholder="동까지 입력" value="${dto.area}">
 			      </td>
 			  </tr>
 			  

@@ -9,8 +9,7 @@ public class UsedDTO {
 	private String price;
 	private String created;	
 	private String category;
-	private String imageFilename;
-	
+	private String imageFilename;	
 	private int likeCount;
 	
 	public int getNum() {
