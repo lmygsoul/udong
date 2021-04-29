@@ -8,7 +8,14 @@ public class UdongPhotoDTO {
 	private String content;
 	private String imageFilename;
 	private String created;
+	private int hitCount;
 	
+	public int getHitCount() {
+		return hitCount;
+	}
+	public void setHitCount(int hitCount) {
+		this.hitCount = hitCount;
+	}
 	public int getNum() {
 		return num;
 	}

@@ -48,7 +48,7 @@ function deletePhoto(num) {
 			       이름 : ${dto.userName}
 			    </td>
 			    <td width="50%" align="right" style="padding-right: 5px;">
-			        ${dto.created}
+			        ${dto.created} | 조회 ${dto.hitCount}
 			    </td>
 			</tr>
 	

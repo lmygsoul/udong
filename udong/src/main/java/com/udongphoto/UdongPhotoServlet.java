@@ -83,7 +83,8 @@ public class UdongPhotoServlet extends MyUploadServlet {
 		if(current_page > total_page) {
 			current_page = total_page;
 		}
-		
+	
+					
 		// 게시물 가져올 시작과 끝위치
 		int offset = (current_page-1) * rows;
 		if(offset < 0) offset = 0;
@@ -152,16 +153,16 @@ public class UdongPhotoServlet extends MyUploadServlet {
 		
 		UdongPhotoDAO dao=new UdongPhotoDAO();
 		String page=req.getParameter("page");
-		
+	
 		try {
 			int num=Integer.parseInt(req.getParameter("num"));
+			dao.updateHitCount(num);
 			
 			UdongPhotoDTO dto=dao.readPhoto(num);
 			if(dto==null) {
 				resp.sendRedirect(cp+"/udongphoto/list.do?page="+page);
 				return;
 			}
-			
 			dto.setContent(dto.getContent().replaceAll("\n", "<br>"));
 			
 			req.setAttribute("dto", dto);
@@ -176,6 +177,7 @@ public class UdongPhotoServlet extends MyUploadServlet {
 		resp.sendRedirect(cp+"/udongphoto/list.do?page="+page);
 	}
 	
+				
 	private void updateForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 수정 폼
 		String cp=req.getContextPath();

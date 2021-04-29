@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.util.DBConn;
-
 public class UdongPhotoDAO {
 	private Connection conn=DBConn.getConnection();
 	
@@ -17,8 +16,8 @@ public class UdongPhotoDAO {
 		PreparedStatement pstmt=null;
 		String sql;
 
-		sql="INSERT INTO udongphoto (num, userId, subject, content, imageFilename, created ) "
-			+ " VALUES (udongphoto_seq.NEXTVAL, ?, ?, ?, ?, SYSDATE)";
+		sql="INSERT INTO udongphoto (num, userId, subject, content, imageFilename, hitCount, created ) "
+			+ " VALUES (udongphoto_seq.NEXTVAL, ?, ?, ?, ?, 0,  SYSDATE)";
 		try {
 			pstmt = conn.prepareStatement(sql);
 			
@@ -78,6 +77,33 @@ public class UdongPhotoDAO {
 		return result;
 	}
 	
+	// 글 조회수 증가
+		public int updateHitCount(int num) throws SQLException {
+			int result = 0;
+			PreparedStatement pstmt = null;
+			String sql;
+			
+			try {
+				sql = "UPDATE udongphoto SET hitCount = hitCount + 1 WHERE num = ?";
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setInt(1, num);
+				
+				result = pstmt.executeUpdate();
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				if(pstmt!=null) {
+					try {
+						pstmt.close();
+					} catch (Exception e2) {
+					}
+				}
+			}
+			
+			return result;
+		}
+		
 	public List<UdongPhotoDTO> listPhoto(int offset, int rows) {
 		List<UdongPhotoDTO> list=new ArrayList<UdongPhotoDTO>();
 		PreparedStatement pstmt=null;
@@ -136,7 +162,7 @@ public class UdongPhotoDAO {
 		try {
 			sb.append("SELECT num, p.userId,  ");
 			sb.append("    userName, subject, content,");
-			sb.append("    created, ");
+			sb.append("    created, hitCount, ");
 			sb.append("    imageFilename ");
 			sb.append(" FROM udongphoto p");
 			sb.append(" JOIN member1 m ON p.userId=m.userId");
@@ -153,6 +179,7 @@ public class UdongPhotoDAO {
 				dto.setUserName(rs.getString("userName"));
 				dto.setSubject(rs.getString("subject"));
 				dto.setContent(rs.getString("content"));
+				dto.setHitCount(rs.getInt("hitCount"));
 				dto.setImageFilename(rs.getString("imageFilename"));
 				dto.setCreated(rs.getString("created"));
 			}
