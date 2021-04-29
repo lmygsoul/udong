@@ -259,6 +259,12 @@ li {
 	border-collapse: collapse;
 }
 
+.create-table2 {
+	width: 100%; 
+	margin: 10px 0; 
+	border-spacing: 0px; 
+}
+
 /* notice */
 .notice-row {
 	text-align: center;

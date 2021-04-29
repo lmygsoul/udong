@@ -28,9 +28,10 @@ function deleteBoard(boardNum) {
 </div>
 	
 <div class="container">
-    <div class="body-container" style="width: 700px;">
-        <div class="body-title" style="margin: 0;">
-            <h3><span style="font-family: Webdings">4</span> 우동지식 </h3>
+    <div class="body-container">
+         <div class="body-title" style="margin: 0;">
+            <button type="button" class="btnArticle" onclick="javascript:location.href='${pageContext.request.contextPath}/qa/list.do';">
+            > 우리동네 지식IN </button>
         </div>
         
         <div>
