@@ -1,18 +1,18 @@
 package com.neighbor;
 
 public class NeighborDTO {
-	int num;
-	int listNum;
-	String userId;
-	String nickName;
-	String subject;
-	String content;
-	String imageFileName;
-	int hitCount;
-	String created;
-	String addr;
-	int rec;
-	int notRec;
+	private int num;
+	private int listNum;
+	private String userId;
+	private String nickName;
+	private String subject;
+	private String content;
+	private String imageFileName;
+	private int hitCount;
+	private String created;
+	private String addr;
+	private int rec;
+	private int notRec;
 	public int getNum() {
 		return num;
 	}

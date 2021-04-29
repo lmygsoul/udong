@@ -152,8 +152,8 @@ public class StoreServlet extends MyUploadServlet{
 			}
 			if(filename != null) {
 				dto.setImageFileName(filename);
-				dao.insertStore(dto);
 			}
+			dao.insertStore(dto);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -222,7 +222,7 @@ public class StoreServlet extends MyUploadServlet{
 		String cp = req.getContextPath();
 		String page = req.getParameter("page");
 		try {
-			if(info.getUserId().equals(req.getParameter("userId")) || info.getType().equals("0"));{
+			if(info.getUserId().equals(req.getParameter("userId")) || info.getType().equals("0")){
 				int num = Integer.parseInt(req.getParameter("num"));
 				dao.deleteStore(num);
 			}
