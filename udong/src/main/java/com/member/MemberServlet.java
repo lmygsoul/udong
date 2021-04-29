@@ -243,10 +243,13 @@ public class MemberServlet extends MyServlet{
 	}
 	private void another_Profile(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
 		MemberDAO dao = new MemberDAO();
-		receiveUserDTO mdto= new receiveUserDTO();
 		try {
 			
-			MemberDTO dto = dao.readMember(mdto.getReceiveUser());
+			String id = req.getParameter("userId");
+			MemberDTO dto = dao.readMember(id);
+			if(dto==null) {
+				return;
+			}
 			String[] telNum = dto.getTel().split("-");
 			String tel1 = telNum[0];
 			String tel2 = telNum[1];
@@ -255,7 +258,7 @@ public class MemberServlet extends MyServlet{
 			dto.setTel1(tel1);
 			dto.setTel2(tel2);
 			dto.setTel3(tel3);
-			req.setAttribute("title", "마이프로필");
+			req.setAttribute("title", "프로필");
 			req.setAttribute("mode", "another_Profile");
 			req.setAttribute("dto", dto);
 			
@@ -392,6 +395,8 @@ public class MemberServlet extends MyServlet{
 		return;
 	}
 	private void sendMessage(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
+		
+		
 		req.setAttribute("title", "보낸쪽지함");
 		req.setAttribute("mode", "sm_created");
 		

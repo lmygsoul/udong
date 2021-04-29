@@ -191,6 +191,15 @@ function changeEmail() {
 			   		</tr>
 			    </table>
 			    </c:if>
+			    <c:if test="${mode!='myProfile' }">
+	    		<table style="width:100%; margin: 0px auto; border-spacing: 0px;">
+			     	<tr height="45"> 
+			      		<td align="center" >
+			      			<button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/member/sm_created.do?';">쪽지보내기</button>
+			      		</td>
+			   		</tr>
+			    </table>
+			    </c:if>
 	    	</form>
 	    </div>
 	</div>
