@@ -82,7 +82,7 @@
 			</table>
 			</c:if>
 			
-			<table style="width: 100%; margin: 0px auto; border-spacing: 0px;">
+			<table style="width: 100%; margin: 0px auto; margin-top: 30px; border-spacing: 0px;">
 			   <tr height="40">
 			      <td align="left" width="100">
 			          <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/faq/list.do';">새로고침</button>
