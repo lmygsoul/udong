@@ -108,9 +108,7 @@
 			      </td>
 			      </c:if>
 			       <td align="right" width="200">
-			       		<c:if test="${sessionScope.member!=null}">
 			       		<button type="button" class="btn btnCreate" onclick="javascript:location.href='${pageContext.request.contextPath}/member/sm_created.do';"><i class="fab fa-telegram-plane"></i>&nbsp;&nbsp;쪽지 보내기</button>
-			       		</c:if>
 			      </td>
 			   </tr>
 			</table>

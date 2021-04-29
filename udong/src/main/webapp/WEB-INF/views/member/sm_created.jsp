@@ -42,44 +42,44 @@
 <div class="container">
     <div class="body-container">
         <div class="body-title" style="margin-bottom: 0; border-bottom: 0;">
-            <h3><span style="font-family: Webdings">4</span> ${title } </h3>
+            <h3>${title}</h3>
         </div>
         
         <div>
 			<form name="tableNameForm" method="post" class="formBox">
-			  <table style="width: 100%; margin: 0 auto; border-spacing: 0px; border-collapse: collapse;">
-			  <tr align="left" height="43" style="border-bottom: 1px solid #ccc; border-top: 1px solid #ccc;"> 
-			      <td width="100" style="text-align: center;">받는&nbsp;&nbsp;&nbsp;사람</td>
+			   <table class="create-table">
+			  	<tr class="create-row"> 
+			      <td class="create-col1">받는&nbsp;&nbsp;&nbsp;사람</td>
 			      <td style="padding-left:10px;"> 
 			        <input type="text" name="receiveUserId" maxlength="100" class="boxTF" style="width: 97%;" value="${mdto.receiveUser}">
 			      </td>
 			  </tr>
 			
 			  <tr align="left" height="43" style="border-bottom: 1px solid #ccc;"> 
-			      <td width="100" style="text-align: center;">보내는&nbsp;&nbsp;&nbsp;사람</td>
+			      <td class="create-col1">보내는&nbsp;&nbsp;&nbsp;사람</td>
 			      <td style="padding-left:10px;"> 
 			          ${sessionScope.member.userName}
 			      </td>
 			  </tr>
 			  <tr align="left" height="43" style="border-bottom: 1px solid #ccc; border-top: 1px solid #ccc;"> 
-			      <td width="100" style="text-align: center;">제&nbsp;&nbsp;&nbsp;목</td>
+			      <td class="create-col1">제&nbsp;&nbsp;&nbsp;목</td>
 			      <td style="padding-left:10px;"> 
 			        <input type="text" name="subject" maxlength="100" class="boxTF" style="width: 97%;" value="${mdto.subject}">
 			      </td>
 			  </tr>
 			
 			  <tr align="left" style="border-bottom: 1px solid #ccc;"> 
-			      <td width="100" style="text-align: center; padding-top:10px;" valign="top">내&nbsp;&nbsp;&nbsp;&nbsp;용</td>
+			      <td class="create-col2">내&nbsp;&nbsp;&nbsp;&nbsp;용</td>
 			      <td valign="top" style="padding:10px 0px 5px 10px;"> 
 			        <textarea name="content" rows="12" class="boxTA" style="width: 97%;">${mdto.content}</textarea>
 			      </td>
 			  </tr>
 			  </table>
 			
-			  <table style="width: 100%; border-spacing: 0px; margin-top: 5px;">
+			  <table class="create-table2">
 			     <tr height="45"> 
 			      <td align="center" >
-			        <button type="button" class="btn btnCreate" onclick="sendOk();">보내기</button>
+			        <button type="button" class="btn btnCreate" onclick="sendOk();"><i class="fab fa-telegram-plane"></i>&nbsp;&nbsp;보내기</button>
 			        <button type="reset" class="btn">다시입력</button>
 			        <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/member/sm_list.do?${query }';">작성취소</button>
 			      </td>
