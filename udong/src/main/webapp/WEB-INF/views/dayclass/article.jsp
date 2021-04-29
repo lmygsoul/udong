@@ -38,11 +38,12 @@ function classSubmit(boardNum) {
 <div class="header">
     <jsp:include page="/WEB-INF/views/layout/header.jsp"></jsp:include>
 </div>
-	
+
 <div class="container">
-    <div class="body-container" style="width: 700px;">
-        <div class="body-title" style="margin: 0;">
-            <h3><span style="font-family: Webdings">4</span> 우동클래스 </h3>
+	<div class="body-container">
+         <div class="body-title" style="margin: 0;">
+            <button type="button" class="btnArticle" onclick="javascript:location.href='${pageContext.request.contextPath}/dayclass/list.do';">
+            > 우리동네 클래스 </button>
         </div>
         
         <div>
@@ -58,8 +59,16 @@ function classSubmit(boardNum) {
 			       이름 : ${dto.nickName}
 			    </td>
 			    <td width="60%" align="right" class="col-2">
-			        ${dto.created} | [모집인원]  현재 ${dto.curClass}명 / 총 ${dto.maxClass}명 
+			        ${dto.created}
 			    </td>
+			</tr>
+			<tr height="35" class="row-2">
+				<td align="left" class="col-2">
+				<span style="color: #FF8A3D; font-weight: 500;">[모집인원]&nbsp;</span> 현재 ${dto.curClass}명 / 총 ${dto.maxClass}명 
+				</td>
+				<td>
+					&nbsp;
+				</td>
 			</tr>
 			
 			<tr class="row-2">
@@ -89,14 +98,6 @@ function classSubmit(boardNum) {
 			    <td class="col-4">
 			    	
 			    	<c:choose>
-			    		<c:when test="${dto.curClass != dto.maxClass}">
-			          		<button type="button" class="btn" onclick="classSubmit('${dto.boardNum}');">신청</button>
-			    		</c:when>
-			    		<c:otherwise>
-			    			<button type="button" class="btn" disabled="disabled">신청</button>
-			    		</c:otherwise>
-			    	</c:choose>			    	
-			    	<c:choose>
 			    		<c:when test="${dto.userId == sessionScope.member.userId}">
 			          		<button type="button" class="btn" style="margin-right: 3px;" onclick="javascript:location.href='${pageContext.request.contextPath}/dayclass/update.do?boardNum=${dto.boardNum}&${query}';">수정</button>
 			    		</c:when>
@@ -121,7 +122,16 @@ function classSubmit(boardNum) {
 			    	<input type="hidden" name="condition" value="${condition}">
 			        <input type="hidden" name="keyword" value="${keyword}">
 			    	
-			        <button type="button" class="btn btnList" onclick="javascript:location.href='${pageContext.request.contextPath}/dayclass/list.do?${query}';">리스트</button>
+			        <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/dayclass/list.do?${query}';">리스트</button>
+
+			    	<c:choose>
+			    		<c:when test="${dto.curClass != dto.maxClass}">
+			          		<button type="button" class="btn btnCreate" onclick="classSubmit('${dto.boardNum}');"><i class="fab fa-telegram-plane"></i>&nbsp;&nbsp;신청</button>
+			    		</c:when>
+			    		<c:otherwise>
+			    			<button type="button" class="btn btnCreate" disabled="disabled"><i class="fab fa-telegram-plane"></i>&nbsp;&nbsp;신청</button>
+			    		</c:otherwise>
+			    	</c:choose>		
 			    </td>
 			</tr>
 			</table>
