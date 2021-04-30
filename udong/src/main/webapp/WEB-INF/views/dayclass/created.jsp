@@ -41,13 +41,6 @@
             return;
         }
         
-        str = f.maxClass.value;
-        if(str < ${dto.curClass}) {
-        	alert("현재 신청인원보다 적은 인원으로 설정할 수 없습니다.")
-        	f.maxClass.focus();
-        	return;
-        }
-        
    		f.action="${pageContext.request.contextPath}/dayclass/${mode}_ok.do";
 
         f.submit();
