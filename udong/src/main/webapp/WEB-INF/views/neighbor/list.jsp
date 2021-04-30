@@ -117,11 +117,14 @@ function sendOk(){
 			    </td>
 			</tr>
 			
+			<c:if test="${dto.imageFileName!=null}">
 			<tr>
 				<td colspan="2" align="left" style="padding: 20px;">
 					<img src="${pageContext.request.contextPath}/uploads/photo/${dto.imageFileName}" style="max-width:100%; height: auto; resize:both;">
 				</td>
 			</tr>
+			</c:if>
+
 			
 			<tr class="row-2">
 			  <td colspan="2" align="left" style="padding: 20px; padding-top: 0;" valign="top" height="200">
@@ -198,16 +201,6 @@ function sendOk(){
 			      <td>${dto.created}</td>
 			    </tr>
 			</c:forEach> 
-			</table>
-			
-			<table style="width: 100%; margin: 10px auto; margin-top: 30px; border-spacing: 0px;">
-			   <tr height="40">
-			      <c:if test="${replyCount!=0}">
-			      <td align="center">
-			      	${reppaging}
-			      </td>
-			      </c:if>
-			   </tr>
 			</table>
 			
 		</div>

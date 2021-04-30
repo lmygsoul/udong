@@ -33,7 +33,7 @@
         }
 
         var mode = "${mode}";
-        if(mode=="created" || (mode=="update" && f.selectFile.value != "")){
+        if((mode=="created" || mode=="update") && f.selectFile.value != ""){    	
         	if(!/(\.gif|\.jpg|\.png|\.jpeg)$/i.test(f.selectFile.value)	){
         		alert("이미지 파일만 가능합니다.");
         		f.selectFile.focus();
