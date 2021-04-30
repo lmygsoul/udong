@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.udong.UdongDTO;
+import com.neighbor.NeighborReplyDTO;
 import com.util.DBConn;
 
 public class UdongDAO {
@@ -947,6 +947,109 @@ public class UdongDAO {
 		
 		return dto;
 	}
- }
-	
+    public int insertReply(UdongReplyDTO dto) {
+		int result = 0;
+		String sql;
+		PreparedStatement pstmt = null;
+		
+		try {
+			sql = "INSERT INTO udong_rep(num, articleNum, userid, content, created)"
+					+ " VALUES (neighbor_rep_seq.NEXTVAL, ?, ?, ?, SYSDATE)";
+			
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setInt(1, dto.getArticlenum());
+			pstmt.setString(2, dto.getUserId());
+			pstmt.setString(3, dto.getContent());
+			
+			result = pstmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+		}
+		return result;
+	}
+    public int replyCount(int num) {
+		int result = 0;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		try {
+			sql = "SELECT NVL(COUNT(*), 0) FROM udong_rep WHERE articlenum=?";
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setInt(1, num);
+			rs=pstmt.executeQuery();
+			if(rs.next()) {
+				result = rs.getInt(1);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if(rs!=null) {
+				try {
+					rs.close();
+				} catch (Exception e2) {
+				}
+			}
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+		}
+		return result;
+	}
+	public List<UdongReplyDTO> replyBoard(int num) {
+		List<UdongReplyDTO> list = new ArrayList<UdongReplyDTO>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		try {
+			sql = " SELECT num, m.userId, userName, content, created"
+					+ " FROM Udong_rep r"
+					+ " LEFT OUTER JOIN member1 m ON r.userId = m.userId"
+					+ " WHERE articleNum = ?"
+					+ " ORDER BY num DESC";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, num);
+			
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				UdongReplyDTO dto = new UdongReplyDTO();
+				dto.setNum(rs.getInt("num"));
+				dto.setUserName(rs.getString("userName"));
+				dto.setContent(rs.getString("content"));
+				dto.setArticlenum(num);
+				dto.setUserId(rs.getString("userId"));
+				dto.setCreated(rs.getString("created"));
+				
+				list.add(dto);
+		}
+	} catch (Exception e) {
+		e.printStackTrace();
+	} finally {
+		if(rs!=null) {
+			try {
+				rs.close();
+			} catch (Exception e2) {
+			} 
+		}
+		if(pstmt!=null) {
+			try {
+				pstmt.close();
+			} catch (Exception e2) {
+			}
+		}
+	}
+	return list;
+}
+}
+
 

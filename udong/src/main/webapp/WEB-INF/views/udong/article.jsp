@@ -21,6 +21,21 @@ function deleteBoard(num) {
     }
 }
 </c:if>
+
+
+function sendOk() {
+	var f = document.replyForm;
+	str = f.content.value;
+	if(!str) {
+		alert("내용을 입력하세요. ");
+		f.content.focus();
+		return;
+	}
+	
+	f.action="${pageContext.request.contextPath}/udong/reply_ok.do"
+	f.submit();
+}
+
 </script>
 </head>
 <body>
@@ -97,10 +112,57 @@ function deleteBoard(num) {
 			    <td align="right" class="col-4">
 			        <button type="button" class="btn btnCreate" onclick="javascript:location.href='${pageContext.request.contextPath}/udong/list.do?${query}';">리스트</button>
 			    </td>
+			<c:choose>
+		<c:when test="${sessionScope.member.userId!=null}">
+		<form name="replyForm" method="post" style="border: 1px solid lightgray">
+		<table style="background-color: #F8F9FA;">
+			<tr height="35" style="border-bottom: 1px solid #cccccc;">
+			    <td width="10%" align="left" style="padding-left: 5px; text-align: center;">
+			       ${sessionScope.member.userName}
+			    </td>
+			    <td width="70%" align="right" style="padding: 15px 10px 10px;">
+				   <textarea name="content" rows="2" class="boxTA" style="width: 500px; height:30px;" placeholder="댓글을 입력해 주세요."></textarea>
+			    </td>
+			    <td>
+			    	<input type="hidden" name="num" value="${dto.num}">
+				    <input type="hidden" name="page" value="${page}">
+				    <button type="button" class="btn btnCreate" onclick="sendOk();" >입력</button>
+			    </td>
 			</tr>
-			</table>
-        </div>
+		</table>
+		</form>
+		</c:when>
+		</c:choose>
 
+		 <div class="body-board">
+			<table style="width: 100%; margin: 0px auto; border-spacing: 0px; border-collapse: collapse;">
+			<tr class="table-row2">
+			      <td width="10%">작성자</td>
+			      <td width="70%">댓글 내용</td>
+			      <td width="20%">작성일</td>
+			</tr>
+				 <c:forEach var="dto" items="${reply_list}">
+				    <tr class="table-row2">
+				      <td>${dto.userName}</td>
+				      <td style="text-align: left; padding-left: 20px">${dto.content}</td>
+				      <td>${dto.created}</td>
+				    </tr>
+				</c:forEach> 
+			</table>
+			
+			<table style="width: 100%; margin: 10px auto; margin-top: 30px; border-spacing: 0px;">
+			   <tr height="40">
+			      <c:if test="${replyCount!=0}">
+			      <td align="center">
+			      	${reppaging}
+			      </td>
+			      </c:if>
+			   </tr>
+			</table>
+			
+		</div>
+	
+		
     </div>
 </div>
 
