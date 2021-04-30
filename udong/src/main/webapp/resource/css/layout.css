@@ -16,7 +16,7 @@ li {
 /* header */
 
 .header {
-    width:1296px;
+    width:100%;
     height: 120px;
     text-align:left;
 }

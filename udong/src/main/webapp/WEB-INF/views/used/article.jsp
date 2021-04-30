@@ -79,22 +79,22 @@ $(".btn btnList").click(() {
 			    
 			    <table style="width: 100%; margin-top: 20px;">
 				    <tr>
-					    <td height="30" style="color: gray;"  colspan="2">
+					    <td colspan="2" height="30" style="color: gray;"  colspan="2">
 					    > ${dto.category}
 					    </td>
 					</tr>
 					<tr>
-					    <td height="30" style="font-weight: 700; font-size: 16px;">
+					    <td colspan="2" height="30" style="font-weight: 700; font-size: 16px;">
 					    <span style="color: #FF8A3D; margin-right: 5px;">판매</span>${dto.subject}
 					   </td>
 					</tr>
 					<tr>
-					    <td height="30" style="font-weight: 700; font-size: 16px;" colspan="2">
+					    <td colspan="2" height="30" style="font-weight: 700; font-size: 16px;" colspan="2">
 					    <b>${dto.price} 원</b>  
 					   </td>
 					</tr>
 					<tr>
-					    <td height="30" style="#BDBDBD;" colspan="2"> ${dto.area} </td>
+					    <td colspan="2" height="30" style="#BDBDBD;" colspan="2"> ${dto.area} </td>
 					</tr>
 					<tr height="50">			   
 						<td width="50%" align="left">  
