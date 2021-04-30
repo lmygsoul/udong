@@ -235,6 +235,13 @@ public class MemberServlet extends MyServlet{
 			String tel1 = telNum[0];
 			String tel2 = telNum[1];
 			String tel3 = telNum[2];
+			String[] birthNum = dto.getBirth().split("-");
+			String birth1 = birthNum[0];
+			String birth2 = birthNum[1];
+			String birth3 = birthNum[2];
+			String []endbrith = birth3.split(" ");
+			String end = endbrith[0];
+			String birth = birth1+"-"+birth2+"-"+end;
 			
 			dto.setTel1(tel1);
 			dto.setTel2(tel2);
@@ -242,6 +249,7 @@ public class MemberServlet extends MyServlet{
 			req.setAttribute("title", "마이프로필");
 			req.setAttribute("mode", "myProfile");
 			req.setAttribute("dto", dto);
+			req.setAttribute("birth", birth);
 			
 			forward(req, resp, "/WEB-INF/views/member/myProfile.jsp");
 		} catch (Exception e) {

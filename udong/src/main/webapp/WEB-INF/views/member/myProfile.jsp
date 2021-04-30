@@ -100,7 +100,7 @@ function changeEmail() {
                    </td>
                    <td class="formCol-2">
                       <input type="text" name="birth" ${mode!="member" ? "readonly='readonly' ":""}
-                            class="memberForm" value="${dto.birth}">
+                            class="memberForm" value="${birth}">
                    </td>
                 </tr>
                 <tr>
