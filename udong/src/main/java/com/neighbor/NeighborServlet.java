@@ -243,8 +243,9 @@ public class NeighborServlet extends MyUploadServlet {
 		SessionInfo info = (SessionInfo)session.getAttribute("member");
 		NeighborDAO dao = new NeighborDAO();
 		try {
-			if(info.getUserId().equals(req.getParameter("userid")) || info.getType().equals("0")){
-				int num = Integer.parseInt(req.getParameter("num"));
+			int num = Integer.parseInt(req.getParameter("num"));
+			NeighborDTO dto = dao.readNeighbor(num);
+			if(info.getUserId().equals(dto.getUserId()) || info.getType().equals("0")){
 				dao.deleteNeighbor(num);
 			}
 		} catch (Exception e) {
