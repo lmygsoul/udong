@@ -266,13 +266,10 @@ public class MemberServlet extends MyServlet{
 		MemberDAO dao = new MemberDAO();
 		try {
 			
-			String nickName = req.getParameter("nickName");
+			String id = req.getParameter("userId");
 			
 			
-			
-			
-			
-			MemberDTO dto = dao.readMember_nick(nickName);
+			MemberDTO dto = dao.readMember(id);
 			if(dto==null) {
 				return;
 			}
@@ -296,7 +293,7 @@ public class MemberServlet extends MyServlet{
 			req.setAttribute("dto", dto);
 			req.setAttribute("birth", birth);
 			
-			resp.sendRedirect("/WEB-INF/views/member/myProfile.jsp");
+			forward(req, resp, "/WEB-INF/views/member/myProfile.jsp");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

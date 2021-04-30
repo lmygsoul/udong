@@ -59,7 +59,10 @@ $(".btn btnList").click(() {
 			
 			<tr height="35" class="row-2">
 			    <td width="50%" align="left" class="col-2" >
-			        작성자 : ${dto.nickName} 
+			      <form method="post" action="/udong/member/Profile.do">
+			      	<input type="hidden" name="userId" value="${dto.userId }">
+			        <input style="border:none; background: white;" name="nickName" type="submit" value="작성자 : ${dto.nickName }"> 
+			      </form>
 			    </td>
 			    <td width="50%" align="right" class="col-2">
 			        ${dto.created}
