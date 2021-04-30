@@ -51,7 +51,7 @@
 			  	<tr class="create-row"> 
 			      <td class="create-col1">받는&nbsp;&nbsp;&nbsp;사람</td>
 			      <td style="padding-left:10px;"> 
-			        <input type="text" name="receiveUserId" maxlength="100" class="boxTF" style="width: 97%;" value="${mdto.receiveUser}">
+			        <input type="text" name="receiveUserId" maxlength="100" class="boxTF" style="width: 97%;" value="${mdto.userId}">
 			      </td>
 			  </tr>
 			

@@ -424,14 +424,14 @@ public class MemberServlet extends MyServlet{
 	}
 	private void sendMessage(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
 		
-		MessageDTO mdto = new MessageDTO();
-		SendMessageDAO mdao = new SendMessageDAO();
+		MemberDTO dto = new MemberDTO();
+		MemberDAO dao = new MemberDAO();
 		
 		try {
-			mdto = mdao.readMember(req.getParameter("userId"));		
+			dto = dao.readMember(req.getParameter("userId"));		
 			req.setAttribute("title", "보낸쪽지함");
 			req.setAttribute("mode", "sm_created");
-			req.setAttribute("mdto", mdto);
+			req.setAttribute("mdto", dto);
 			forward(req, resp, "/WEB-INF/views/member/sm_created.jsp");
 			return;
 		} catch (Exception e) {
