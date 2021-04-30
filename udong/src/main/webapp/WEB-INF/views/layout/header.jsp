@@ -39,7 +39,7 @@ $(function(){
                     &nbsp;|&nbsp;
                     <a href="${pageContext.request.contextPath}/member/logout.do">로그아웃</a>
                     &nbsp;|&nbsp;
-                    <a href="${pageContext.request.contextPath}/member/myProfile.do?mode=myProfile">정보수정</a>
+                    <a href="${pageContext.request.contextPath}/member/myProfile.do?mode=myProfile">마이프로필</a>
             </c:if>
         </div>
     </div>
