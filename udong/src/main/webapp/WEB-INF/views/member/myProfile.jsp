@@ -64,6 +64,7 @@ function changeEmail() {
                             placeholder="아이디" class="memberForm">
                    </td>
                 </tr>
+                 <c:if test="${mode=='myProfile' }">
                 <tr>
                    <td class="formCol-1">
                       <label style="font-weight: 500;">이름</label>
@@ -73,6 +74,7 @@ function changeEmail() {
                             class="memberForm">
                    </td>
                 </tr>
+                </c:if>
                 <tr>
                    <td class="formCol-1">
                       <label style="font-weight: 500;">닉네임</label>
@@ -82,6 +84,7 @@ function changeEmail() {
                             class="memberForm">
                    </td>
                 </tr>
+                 <c:if test="${mode=='myProfile' }">
                 <tr>
                    <td class="formCol-1">
                       <label style="font-weight: 500;">개인/사업자</label>
@@ -94,6 +97,7 @@ function changeEmail() {
                         </select>
                    </td>
                 </tr>
+                
                 <tr>
                    <td class="formCol-1">
                       <label style="font-weight: 500;">생년월일</label>
@@ -163,6 +167,7 @@ function changeEmail() {
                              class="memberForm" placeholder="나머지 주소">
                      </td>
                 </tr>
+                </c:if>
                 <tr >
                    <td width="100" height="50" valign="middle" style="text-align: left;">
                       <label style="font-weight: 500;">하고싶은 한 마디</label>
@@ -193,7 +198,15 @@ function changeEmail() {
                   </tr>
              </table>
              </c:if>
-          </form>
+             </form>
+             <form method="post" action="${pageContext.request.contextPath}/member/sm_created.do">
+					    <c:if test ="${sessionScope.member.userId != null && sessionScope.member.userId != dto.userId}">
+					    	<input 	type="hidden" name="userId" value="${dto.userId}">
+					  		<button type="submit" class="btn" 
+					  		style="width: 50%; color: #495057; background-color: #eee; border: 0; font-weight: 700; margin-left: 200px;">
+					  		<i class="fas fa-comment-dots"></i>&nbsp;&nbsp;쪽지 보내기</button>
+					    </c:if>
+	 </form>
        </div>
    </div>
    </div>
