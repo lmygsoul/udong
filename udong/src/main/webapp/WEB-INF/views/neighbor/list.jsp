@@ -305,9 +305,9 @@ function sendOk(){
 			</c:if>
 			
         </div>
-
     </div>
 	</div>
+	
 	<script type="text/javascript">
 	function searchList() {
 		var f=document.searchForm;

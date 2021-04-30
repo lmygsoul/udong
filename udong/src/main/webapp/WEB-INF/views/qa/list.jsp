@@ -144,7 +144,6 @@
 			   </tr>
 			</table>
 			</c:if>
-			
         </div>
     </div>
 </div>
