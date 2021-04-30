@@ -110,7 +110,7 @@ $(".btn btnList").click(() {
 					  		<button type="button" class="btn" 
 					  		style="width: 90%; color: #495057; background-color: #eee; border: 0; font-weight: 700;"
 					  		onclick="javascript:location.href='${pageContext.request.contextPath}/used/message_ready.do?num=${dto.num}&page=${page}';">
-					  		<i class="fas fa-comment"></i>&nbsp;&nbsp;구매문의 쪽지</button>
+					  		<i class="fas fa-comment-dots"></i>&nbsp;&nbsp;구매문의 쪽지</button>
 					    </c:if>
 					    <c:if test ="${sessionScope.member.userId == dto.userId}">	
 					  		<button type="button" class="btn" 

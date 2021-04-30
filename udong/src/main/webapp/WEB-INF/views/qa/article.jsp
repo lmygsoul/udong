@@ -29,10 +29,6 @@ function deleteBoard(boardNum) {
 	
 <div class="container">
     <div class="body-container">
-         <div class="body-title" style="margin: 0;">
-            <button type="button" class="btnArticle" onclick="javascript:location.href='${pageContext.request.contextPath}/qa/list.do';">
-            > 우리동네 지식IN </button>
-        </div>
         
         <div>
 			<table style="width: 100%; margin: 0 auto; border-spacing: 0px; border-collapse: collapse;">
@@ -77,7 +73,6 @@ function deleteBoard(boardNum) {
 			</tr>
 			<tr height="45">
 			    <td class="col-4">
-			    	<button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/qa/reply.do?boardNum=${dto.boardNum}&page=${page}';">답변</button>
 			    	<c:choose>
 			    		<c:when test="${dto.userId == sessionScope.member.userId}">
 			          		<button type="button" class="btn" style="margin-right: 3px;" onclick="javascript:location.href='${pageContext.request.contextPath}/qa/update.do?boardNum=${dto.boardNum}&${query}';">수정</button>
@@ -103,7 +98,8 @@ function deleteBoard(boardNum) {
 			    	<input type="hidden" name="condition" value="${condition}">
 			        <input type="hidden" name="keyword" value="${keyword}">
 			        
-			        <button type="button" class="btn btnList" onclick="javascript:location.href='${pageContext.request.contextPath}/qa/list.do?${query}';">리스트</button>
+			        <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/qa/list.do?${query}';">리스트</button>
+			    	<button type="button" class="btn btnCreate" onclick="javascript:location.href='${pageContext.request.contextPath}/qa/reply.do?boardNum=${dto.boardNum}&page=${page}';"><i class="fas fa-comment-dots"></i>&nbsp;&nbsp;답변</button>
 			    </td>
 			</tr>
 			</table>
