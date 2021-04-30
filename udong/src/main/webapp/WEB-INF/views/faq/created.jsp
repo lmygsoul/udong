@@ -7,7 +7,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>타이틀</title>
+<title>FAQ</title>
 <jsp:include page="/WEB-INF/views/layout/staticHeader.jsp"/>
 <script type="text/javascript">
     function sendOk() {
