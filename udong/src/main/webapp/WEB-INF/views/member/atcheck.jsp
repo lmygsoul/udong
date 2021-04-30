@@ -44,39 +44,43 @@ function sendOk(){
   
         <div class="body-board">
 			<table style="width: 100%; margin: 20px auto 0px; border-spacing: 0;">
+			   <tr>
+			   	<td style="padding: 0 10px 20px;">
+			   		<h3 style="font-size: 18px; font-weight: 500;">오늘도 우동사리에 와줘서 고마워요!&nbsp;<i class="fas fa-smile-wink"></i></h3>
+			   	</td>
+			   </tr>
+			   
 			   <tr height="35">
-			      <td align="left" width="50%">
-			           ${dataCount}명
+			      <td align="left" width="50%" style="padding: 0 10px">
+			           출석 인원 : ${dataCount}명
 			      </td>
 			      <td align="right">
 			          &nbsp;
 			      </td>
 			   </tr>
 			</table>
-			   <c:if test="${sessionScope.member.created==ato.created }">
+			
+			<c:if test="${sessionScope.member.created==ato.created }">
 			<form name="body" method="post"  >
-			<table style="width: 100%; border-spacing: 0; border-collapse: collapse;" >
-			   <tr class="table-row1"> 
-				  <th width="10%">등수</th>
-			      <th width="60%">이야기</th>
-			      <th width="20%">출첵일</th>
-			  </tr>
-			  <tr height="35" style="border-bottom: 1px solid #cccccc;">
-			    <td width="10%" align="left" style="padding-left: 5px; text-align: center;">
+			<table style="width: 100%; border-spacing: 0; border-collapse: collapse; background-color: #F5EBDF;" >
+			  <tr height="35">
+			    <td width="15%" align="left" style="padding-left: 5px; text-align: center;">
 			      이름 : ${sessionScope.member.userName}
 			    </td>
-			    <td width="70%" align="right" style="padding-right: 5px;">
-				   <textarea name="content" rows="2" class="boxTA" style="width: 530px; height:40px;" placeholder="출석체크를 해주세요"></textarea>
+			    <td width="55%" align="right" style="padding: 15px 0 10px;">
+				   <textarea name="content" rows="2" class="boxTA" style="width: 480px; height:17px; padding: 10px; border: 0;" placeholder="오늘의 한마디를 적어주세요"></textarea>
 			    </td>
-			    <td>
+			    <td width="13%" style="padding: 0 10px;">
 			    	<input type="hidden" name="num" value="${ato.num}">
 			    	<input type="hidden" name="num" value="${ato.userId}">
 			    	<input type="hidden" name="num" value="${ato.userName}">
 			    	<input type="hidden" name="num" value="${ato.content}">
 			    	<input type="hidden" name="num" value="${ato.created}">
 			    	<input type="hidden" name="num" value="${ato.checkType}">
-				    <button type="button" class="btn" onclick="sendOk(); this.onclick='';">입력</button>
-			    </td>
+				    <button type="button" class="btn" 
+				    style="background-color: #FF8A3D; color: white; font-weight: 700; padding: 10px 20px; border: 0;"
+				    onclick="sendOk(); this.onclick='';">출석</button>
+				 </td>
 			</tr>
 			</table>
 			</form>
@@ -106,12 +110,12 @@ function sendOk(){
 			   	<td align="left" width="100">
 			          <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/member/check_list.do';">새로고침</button>
 			      </td>
-			   </tr>
 			   <c:if  test="${sessionScope.member.userId=='admin'||sessionScope.member.userId=='admin1'||sessionScope.member.userId=='admin2'||sessionScope.member.userId=='admin3'||sessionScope.member.userId=='admin4'||sessionScope.member.userId=='admin5'||sessionScope.member.userId=='admin6'}">
-			   <td align="left" width="100">
+			   <td align="right" width="100">
 			          <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/member/check_delete.do';">삭제</button>
 			      </td>
 			   </c:if>
+			   </tr>
 			</table>
         </div>
     </div>
