@@ -67,10 +67,10 @@
 	<div class="container">
     <div class="body-container" style="border:0;">
         <div class="list-title">
-        	<table style="width: 100%; margin: 0px auto; border-spacing: 0px; padding-left: 20px; padding-right: 20px;">
+        	<table style="width: 100%; margin: 0px auto; border-spacing: 0px;">
         		<tr>
         			<td align="left">
-        				<h3>우리동네 홍보</h3>
+        				<h3>&nbsp;우리동네 홍보</h3>
         			</td>
 	        		<td align="right">
 			        	<form name="searchForm" action="${pageContext.request.contextPath}/store/list.do" method="post">
