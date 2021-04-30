@@ -10,6 +10,7 @@
 <title>타이틀</title>
 <jsp:include page="/WEB-INF/views/layout/staticHeader.jsp"/>
 
+
 <script type="text/javascript">
 // 관리자이거나 글 작성자가 아니면, 스크립트가 보이지 않게.
 <c:if test="${dto.userId == sessionScope.member.userId || sessionScope.member.userId == 'admin'}">
@@ -20,9 +21,23 @@ function deleteBoard(num) {
 	}
 }
 </c:if>
+
+function sendMessage(){
+	var f = document.boardForm;
+	f.action="${pageContext.request.contextPath}/used/message_ready.do?num=${dto.num}&page=${page}"
+	f.submit();
+}
+
+$(".btn btnlike").click((function()){
+	$(this).css({background: tomato})
+  });
+
+
+
 $(".btn btnList").click(() {
 	  $(this).attr('disabled',true);
 	});
+>>>>>>> branch 'master' of https://github.com/lmygsoul/udong.git
 </script>
 </head>
 <body>
@@ -37,16 +52,14 @@ $(".btn btnList").click(() {
         <div>
 			<table style="width: 100%; margin: 0 auto; border-spacing: 0px; border-collapse: collapse;">
 			<tr height="35" class="row-3">
-			    <td width="50%" align="left" class="col-1">
+			    <td width="50%" align="left" class="col-1" colspan="2">
 			        ${dto.subject}
 			    </td>     
 			</tr>
 			
 			<tr height="35" class="row-2">
 			    <td width="50%" align="left" class="col-2" >
-			    <form method="post" action="${pageContext.request.contextPath}/member/Profile.do">
-			        <input style="border:none; background: white;" name="nickName" type="submit" value="작성자 : ${dto.nickName}"> 
-			      </form>
+			        작성자 : ${dto.nickName} 
 			    </td>
 			    <td width="50%" align="right" class="col-2">
 			        ${dto.created}
@@ -63,7 +76,7 @@ $(".btn btnList").click(() {
 			    
 			    <table style="width: 100%; margin-top: 20px;">
 				    <tr>
-					    <td height="30" style="color: gray;" >
+					    <td height="30" style="color: gray;"  colspan="2">
 					    > ${dto.category}
 					    </td>
 					</tr>
@@ -73,27 +86,43 @@ $(".btn btnList").click(() {
 					   </td>
 					</tr>
 					<tr>
-					    <td height="30" style="font-weight: 700; font-size: 16px;">
+					    <td height="30" style="font-weight: 700; font-size: 16px;" colspan="2">
 					    <b>${dto.price} 원</b>  
 					   </td>
 					</tr>
 					<tr>
-					    <td height="30" style="#BDBDBD;"> ${dto.area} </td>
+					    <td height="30" style="#BDBDBD;" colspan="2"> ${dto.area} </td>
 					</tr>
 					<tr height="50">			   
 						<td width="50%" align="left">  
 					       <c:if test ="${sessionScope.member.userId != null && sessionScope.member.userId != dto.userId}">
-						       <button type="button" class="btn sendbtn" 
-						       style="width: 90%; color: #495057; background-color: #eee; border: 0; font-weight: 700;"
-						       onclick="javascript:location.href='${pageContext.request.contextPath}/used/like.do?num=${dto.num}&page=${page}';">
-						       <i class="fas fa-heart"></i>&nbsp;&nbsp;관심글에 추가</button>
+
+					       		<c:if test="${likeCount==0 }">
+							       <button type="button" class="btn btnlike" 
+							       style="width: 90%; color: #495057; background-color: #eee; border: 0; font-weight: 700;"
+							       onclick="javascript:location.href='${pageContext.request.contextPath}/used/like.do?num=${dto.num}&page=${page}';">
+							       <i class="fas fa-heart"></i>&nbsp;&nbsp;관심글에 추가</button>
+					       		</c:if>
+					       		<c:if test="${likeCount==1 }">
+							       <button type="button" class="btn btnlike" 
+							       style="width: 90%; color: #495057; background-color: #FFBB00; border: 0; font-weight: 700;" disabled="disabled">
+							       <i class="fas fa-heart"></i>&nbsp;&nbsp;관심글에 추가</button>
+					       		</c:if>
+
 					       </c:if>
 					       <c:if test ="${sessionScope.member.userId == dto.userId}">
+
+							       <button type="button" class="btn" 
+							       style="width: 90%; color: #495057; background-color: #eee; border: 0; font-weight: 700;"
+							       disabled="disabled">
+							       <i class="fas fa-heart"></i>&nbsp;&nbsp;관심글에 추가</button>
+
 						       <button type="button" class="btn sendbtn" 
 						       style="width: 90%; color: #495057; background-color: #eee; border: 0; font-weight: 700;"
 						       disabled="disabled"
 						       onclick="javascript:location.href='${pageContext.request.contextPath}/used/like.do?num=${dto.num}&page=${page}';">
 						       <i class="fas fa-heart"></i>&nbsp;&nbsp;관심글에 추가</button>
+
 					    	</c:if>
 					    </td>
 					    <td width="50%" align="left">

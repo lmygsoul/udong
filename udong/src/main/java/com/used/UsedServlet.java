@@ -16,6 +16,8 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 
 import com.member.SessionInfo;
+import com.member.receiveUserDAO;
+import com.member.receiveUserDTO;
 import com.util.FileManager;
 import com.util.MyUploadServlet;
 import com.util.MyUtil;
@@ -69,7 +71,9 @@ public class UsedServlet extends MyUploadServlet {
 			delete(req, resp);
 		} else if(uri.indexOf("like.do")!=-1) {
 			updateLike(req, resp); 
-		} 
+		} else if(uri.indexOf("message_ready.do")!=-1) {
+			message_ready(req,resp);
+		}
 	}
 	//게시물 리스트
 	private void list(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -179,6 +183,7 @@ public class UsedServlet extends MyUploadServlet {
 			UsedDTO dto=new UsedDTO();
 			
 			dto.setUserId(info.getUserId());
+			//dto.setNum(Integer.parseInt(req.getParameter("num")));			
 			dto.setNickName(req.getParameter("nickName"));
 			dto.setSubject(req.getParameter("subject"));
 			dto.setContent(req.getParameter("content"));
@@ -209,6 +214,8 @@ public class UsedServlet extends MyUploadServlet {
 	
 	//게시물 보기
 	private void article(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		HttpSession session=req.getSession();
+		SessionInfo info=(SessionInfo)session.getAttribute("member");
 					
 		UsedDAO dao=new UsedDAO();
 		String cp = req.getContextPath();
@@ -240,12 +247,15 @@ public class UsedServlet extends MyUploadServlet {
 			
 			UsedDTO preReadUsed = dao.preReadUsed(num, condition, keyword);
 			UsedDTO nextReadUsed =dao.nextReadUsed(num, condition, keyword);
+			
+			int likeCount = dao.likeCount(info.getUserId(), num);
 									
 			req.setAttribute("dto", dto);
 			req.setAttribute("preReadUsed", preReadUsed);
 			req.setAttribute("nextReadUsed", nextReadUsed);
 			req.setAttribute("page", page);
 			req.setAttribute("query", query);
+			req.setAttribute("likeCount", likeCount);
 									
 			forward(req, resp, "/WEB-INF/views/used/article.jsp");
 			return;			
@@ -319,7 +329,7 @@ public class UsedServlet extends MyUploadServlet {
 			dto.setPrice(req.getParameter("price"));
 			dto.setArea(req.getParameter("area"));
 			dto.setCategory(req.getParameter("category"));
-			dto.setLikeCount(Integer.parseInt(req.getParameter("likeCount")));
+			//dto.setLikeCount(Integer.parseInt(req.getParameter("likeCount")));
 
 			String imageFilename=req.getParameter("imageFilename");
 			
@@ -413,9 +423,20 @@ public class UsedServlet extends MyUploadServlet {
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
-		
-		//resp.sendRedirect(cp+"/used/article.do?"+query);
+		}		
 	
+	}
+	private void message_ready(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		receiveUserDTO rdto = new receiveUserDTO();
+		receiveUserDAO rdao = new receiveUserDAO();
+		String cp = req.getContextPath();
+		try {
+			rdto.setReceiveUser(req.getParameter("userId"));
+			rdao.insertUser(rdto);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		resp.sendRedirect(cp+"/member/another_profile.do?");
+		return;	
 	}
 }
