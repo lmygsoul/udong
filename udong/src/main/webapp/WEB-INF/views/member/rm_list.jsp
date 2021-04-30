@@ -103,9 +103,6 @@
 			   	<td align="left" width="100">
 			          <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/member/rm_list.do';">새로고침</button>
 			      </td>
-			      <td align="center">
-			      	${paging}
-			      </td>
 			   </tr>
 			</table>
         </div>

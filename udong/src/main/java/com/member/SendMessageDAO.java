@@ -246,6 +246,15 @@ public class SendMessageDAO {
 		String sql;
 		
 		try {
+			if(userId.equals("admin")||userId.equals("admin1")||userId.equals("admin2")||userId.equals("admin3")||userId.equals("admin4")||userId.equals("admin5")||userId.equals("admin6"))
+			{
+				sql="SELECT sm.sendUser, receiveUser, subject, content, TO_CHAR(sendTime, 'YYYY-MM-DD') sendTime, messageType, pageNum FROM sendMessage sm"
+						+ " LEFT OUTER JOIN member1 m1 ON sm.sendUser = m1.userId ORDER BY pageNum DESC OFFSET ? ROWS FETCH FIRST ? ROWS ONLY";
+				
+				pstmt=conn.prepareStatement(sql);
+				pstmt.setInt(1, offset);
+				pstmt.setInt(2, rows);
+			} else {
 			sql="SELECT sm.sendUser, receiveUser, subject, content, TO_CHAR(sendTime, 'YYYY-MM-DD') sendTime, messageType, pageNum FROM sendMessage sm"
 					+ " LEFT OUTER JOIN member1 m1 ON sm.sendUser = m1.userId WHERE sm.sendUser = ? ORDER BY pageNum DESC"
 					+ " OFFSET ? ROWS FETCH FIRST ? ROWS ONLY";
@@ -254,7 +263,7 @@ public class SendMessageDAO {
 			pstmt.setString(1, userId);
 			pstmt.setInt(2, offset);
 			pstmt.setInt(3, rows);
-			
+			}
 			rs=pstmt.executeQuery();
 			while(rs.next()) {
 				MessageDTO mdto = new MessageDTO();
@@ -296,6 +305,36 @@ public class SendMessageDAO {
 		String sql;
 		
 		try {
+			if(userId.equals("admin")||userId.equals("admin1")||userId.equals("admin2")||userId.equals("admin3")||userId.equals("admin4")||userId.equals("admin5")||userId.equals("admin6"))
+			{
+				sql="SELECT sm.sendUser, receiveUser, subject, content, TO_CHAR(sendTime, 'YYYY-MM-DD') sendTime, messageType, pageNum FROM sendMessage sm"
+						+ " LEFT OUTER JOIN member1 m1 ON sm.sendUser = m1.userId ";
+				
+				if(condition.equals("all")) {
+					sql += "  WHERE INSTR(subject, ?) >= 1 OR INSTR(content, ?) >=1";
+				} else if (condition.equals("sendTime")) {
+					keyword = keyword.replaceAll("(\\-|\\/|\\.)", "");
+					sql +=" WHERE TO_CHAR(sendTime, 'YYYYMMDD') = ?";
+				} else {
+					sql += " WHERE INSTR(" + condition + ", ?) >= 1";
+				}
+				sql += " ORDER BY pageNum DESC OFFSET ? ROWS FETCH FIRST ? ROWS ONLY";
+				
+				pstmt=conn.prepareStatement(sql);
+				
+				if(condition.equals("all")) {
+					pstmt.setString(1, keyword);
+					pstmt.setString(2, keyword);
+					pstmt.setString(3, userId);
+					pstmt.setInt(4, offset);
+					pstmt.setInt(5, rows);
+				}else {
+					pstmt.setString(1, keyword);
+					pstmt.setString(2, userId);
+					pstmt.setInt(3, offset);
+					pstmt.setInt(4, rows);
+				}
+			} else {
 			sql="SELECT sm.sendUser, receiveUser, subject, content, TO_CHAR(sendTime, 'YYYY-MM-DD') sendTime, messageType, pageNum FROM sendMessage sm"
 					+ " LEFT OUTER JOIN member1 m1 ON sm.sendUser = m1.userId ";
 			if(condition.equals("all")) {
@@ -322,7 +361,7 @@ public class SendMessageDAO {
 				pstmt.setInt(3, offset);
 				pstmt.setInt(4, rows);
 			}
-			
+			}
 			rs=pstmt.executeQuery();
 			while(rs.next()) {
 				MessageDTO mdto = new MessageDTO();
@@ -514,6 +553,15 @@ public class SendMessageDAO {
 		String sql;
 		
 		try {
+			if(userId.equals("admin")||userId.equals("admin1")||userId.equals("admin2")||userId.equals("admin3")||userId.equals("admin4")||userId.equals("admin5")||userId.equals("admin6"))
+			{
+				sql="SELECT sm.sendUser, receiveUser, subject, content, TO_CHAR(sendTime, 'YYYY-MM-DD') sendTime, messageType, pageNum FROM sendMessage sm"
+						+ " LEFT OUTER JOIN member1 m1 ON sm.sendUser = m1.userId ORDER BY pageNum DESC OFFSET ? ROWS FETCH FIRST ? ROWS ONLY";
+				
+				pstmt=conn.prepareStatement(sql);
+				pstmt.setInt(1, offset);
+				pstmt.setInt(2, rows);
+			} else {
 			sql="SELECT rm.receiveUser, sendUser, subject, content, TO_CHAR(sendTime, 'YYYY-MM-DD') sendTime, messageType, pageNum FROM reciveMessage rm"
 					+ " LEFT OUTER JOIN member1 m1 ON rm.receiveUser = m1.userId WHERE rm.receiveUser = ? ORDER BY pageNum DESC"
 					+ " OFFSET ? ROWS FETCH FIRST ? ROWS ONLY";
@@ -522,7 +570,7 @@ public class SendMessageDAO {
 			pstmt.setString(1, userId);
 			pstmt.setInt(2, offset);
 			pstmt.setInt(3, rows);
-			
+			}
 			rs=pstmt.executeQuery();
 			while(rs.next()) {
 				MessageDTO mdto = new MessageDTO();
@@ -564,6 +612,33 @@ public class SendMessageDAO {
 		String sql;
 		
 		try {
+			if(userId.equals("admin")||userId.equals("admin1")||userId.equals("admin2")||userId.equals("admin3")||userId.equals("admin4")||userId.equals("admin5")||userId.equals("admin6")){
+				sql="SELECT rm.receiveUser, sendUser, subject, content, TO_CHAR(sendTime, 'YYYY-MM-DD') sendTime, messageType, pageNum FROM reciveMessage rm"
+						+ " LEFT OUTER JOIN member1 m1 ON rm.receiveUser = m1.userId ";
+				
+				if(condition.equals("all")) {
+					sql += "  WHERE INSTR(subject, ?) >= 1 OR INSTR(content, ?) >=1 ";
+				} else if (condition.equals("sendTime")) {
+					keyword = keyword.replaceAll("(\\-|\\/|\\.)", "");
+					sql +=" WHERE TO_CHAR(sendTime, 'YYYYMMDD') = ?  ";
+				} else {
+					sql += " WHERE INSTR(" + condition + ", ?) >= 1 ";
+				}
+				sql += " ORDER BY pageNum DESC OFFSET ? ROWS FETCH FIRST ? ROWS ONLY";
+				
+				pstmt=conn.prepareStatement(sql);
+				
+				if(condition.equals("all")) {
+					pstmt.setString(1, keyword);
+					pstmt.setString(2, keyword);
+					pstmt.setInt(3, offset);
+					pstmt.setInt(4, rows);
+				}else {
+					pstmt.setString(1, keyword);
+					pstmt.setInt(2, offset);
+					pstmt.setInt(3, rows);
+				}
+			} else {
 			sql="SELECT rm.receiveUser, sendUser, subject, content, TO_CHAR(sendTime, 'YYYY-MM-DD') sendTime, messageType, pageNum FROM reciveMessage rm"
 					+ " LEFT OUTER JOIN member1 m1 ON rm.receiveUser = m1.userId ";
 			if(condition.equals("all")) {
@@ -590,7 +665,7 @@ public class SendMessageDAO {
 				pstmt.setInt(3, offset);
 				pstmt.setInt(4, rows);
 			}
-			
+			}
 			rs=pstmt.executeQuery();
 			while(rs.next()) {
 				MessageDTO mdto = new MessageDTO();

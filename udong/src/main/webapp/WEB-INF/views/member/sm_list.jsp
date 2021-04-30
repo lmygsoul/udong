@@ -103,9 +103,6 @@
 			          <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/member/sm_list.do';">새로고침</button>
 			      </td>
 			      <c:if test="${dataCount!=0}">
-			      <td align="center">
-			      	${paging}
-			      </td>
 			      </c:if>
 			       <td align="right" width="200">
 			       		<button type="button" class="btn btnCreate" onclick="javascript:location.href='${pageContext.request.contextPath}/member/sm_created.do';"><i class="fab fa-telegram-plane"></i>&nbsp;&nbsp;쪽지 보내기</button>
