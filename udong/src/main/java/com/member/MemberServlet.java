@@ -24,6 +24,8 @@ import com.store.StoreDAO;
 import com.store.StoreDTO;
 import com.udong.UdongDAO;
 import com.udong.UdongDTO;
+import com.udongphoto.UdongPhotoDAO;
+import com.udongphoto.UdongPhotoDTO;
 import com.used.UsedDAO;
 import com.used.UsedDTO;
 import com.util.MyServlet;
@@ -60,8 +62,8 @@ public class MemberServlet extends MyServlet{
 			memberSubmit(req,resp);
 		} else if(uri.indexOf("myProfile.do")!=-1) {
 			myProfile(req,resp);
-		} else if(uri.indexOf("another_Profile.do")!=-1) {
-			another_Profile(req,resp);
+		} else if(uri.indexOf("Profile.do")!=-1) {
+			Profile(req,resp);
 		} else if(uri.indexOf("update.do")!=-1) {
 			update(req,resp);
 		} else if(uri.indexOf("update_ok.do")!=-1) {
@@ -116,6 +118,10 @@ public class MemberServlet extends MyServlet{
 			check_ok(req, resp);
 		} else if (uri.indexOf("check_delete.do") != -1) {
 			check_delete(req, resp);
+		}  else if (uri.indexOf("up_list.do") != -1) {
+			up_list(req, resp);
+		}  else if (uri.indexOf("up_article.do") != -1) {
+			up_article(req, resp);
 		} 
 		
 	}
@@ -256,17 +262,17 @@ public class MemberServlet extends MyServlet{
 			e.printStackTrace();
 		}
 	}
-	private void another_Profile(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
+	private void Profile(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
 		MemberDAO dao = new MemberDAO();
 		try {
 			
-			String num = req.getParameter("num");
+			String nickName = req.getParameter("nickName");
 			
 			
 			
 			
 			
-			MemberDTO dto = dao.readMember(num);
+			MemberDTO dto = dao.readMember_nick(nickName);
 			if(dto==null) {
 				return;
 			}
@@ -290,7 +296,7 @@ public class MemberServlet extends MyServlet{
 			req.setAttribute("dto", dto);
 			req.setAttribute("birth", birth);
 			
-			forward(req, resp, "/WEB-INF/views/member/myProfile.jsp");
+			resp.sendRedirect("/WEB-INF/views/member/myProfile.jsp");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -1322,8 +1328,8 @@ public class MemberServlet extends MyServlet{
 			query="condition="+condition+"&keyword="+URLEncoder.encode(keyword, "utf-8");
 		}
 		
-		String listUrl = cp+"/member/ud_list.do";
-		String articleUrl = cp+"/member/ud_article.do?page="+current_page;
+		String listUrl = cp + "/udongphoto/list.do";
+		String articleUrl = cp + "/udongphoto/article.do?page="+current_page;
 		if(query.length()!=0) {
 			listUrl += "?" + query;
 			articleUrl += "&" + query;
@@ -1630,5 +1636,82 @@ public class MemberServlet extends MyServlet{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	private void up_list(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		// 게시물 리스트
+		String cp = req.getContextPath();
+		UdongPhotoDAO dao = new UdongPhotoDAO();
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		MyUtil util = new MyUtil();
+		
+		String page = req.getParameter("page");
+		int current_page = 1;
+		if(page != null) {
+			current_page=Integer.parseInt(page);
+		}
+		
+		// 전체데이터 개수
+		int dataCount = dao.dataCount_up(info.getUserId());
+
+		// 전체페이지수
+		int rows = 6;
+		int total_page = util.pageCount(rows, dataCount);
+		if(current_page > total_page) {
+			current_page = total_page;
+		}
+	
+					
+		// 게시물 가져올 시작과 끝위치
+		int offset = (current_page-1) * rows;
+		if(offset < 0) offset = 0;
+			
+		// 게시물 가져오기
+		List<UdongPhotoDTO> list = dao.listPhoto_up(offset, rows,info.getUserId());
+		
+		// 페이징 처리
+		String listUrl = cp + "/member/up_list.do";
+		String articleUrl = cp + "/member/up_article.do?page="+current_page;
+		String paging=util.paging(current_page, total_page, listUrl);
+		
+		// 포워딩할 list.jsp에 넘길 값
+		req.setAttribute("list", list);
+		req.setAttribute("dataCount", dataCount);
+		req.setAttribute("articleUrl", articleUrl);
+		req.setAttribute("page", current_page);
+		req.setAttribute("total_page", total_page);
+		req.setAttribute("paging", paging);
+		
+		forward(req, resp, "/WEB-INF/views/udongphoto/list.jsp");
+	}
+	private void up_article(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		// 게시물 보기
+		String cp=req.getContextPath();
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		UdongPhotoDAO dao=new UdongPhotoDAO();
+		String page=req.getParameter("page");
+	
+		try {
+			int num=Integer.parseInt(req.getParameter("num"));
+			dao.updateHitCount_up(num,info.getUserId());
+			
+			UdongPhotoDTO dto=dao.readPhoto_up(num,info.getUserId());
+			if(dto==null) {
+				resp.sendRedirect(cp+"/member/up_list.do?page="+page);
+				return;
+			}
+			dto.setContent(dto.getContent().replaceAll("\n", "<br>"));
+			
+			req.setAttribute("dto", dto);
+			req.setAttribute("page", page);
+			
+			forward(req, resp, "/WEB-INF/views/udongphoto/article.jsp");
+			return;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		resp.sendRedirect(cp+"/member/up_list.do?page="+page);
 	}
 }

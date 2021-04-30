@@ -75,7 +75,7 @@ public class MemberDAO {
 		}
 		return dto;
 	}
-	public MemberDTO readMember_nick(String userId) {
+	public MemberDTO readMember_nick(String nickName) {
 		MemberDTO dto = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -87,7 +87,7 @@ public class MemberDAO {
 			sb.append(" LEFT OUTER JOIN member2 m2 ON m1.userId= m2.userId WHERE nickName = ? ");
 			
 			pstmt = conn.prepareStatement(sb.toString());
-			pstmt.setString(1, userId);
+			pstmt.setString(1, nickName);
 			rs=pstmt.executeQuery();
 			
 			if(rs.next()) {
