@@ -145,16 +145,6 @@ li {
     display: inline-block;
 }
 
-.btnArticle {
-	border:0; 
-	background-color: white;
-	color: gray;
-	font-size: 16px;
-	font-weight: 500;
-	cursor: pointer;
-	font-family: "Noto Sans KR";
-}
-
 .body-title button:hover {
 	color: #FF8A3D;
 }
