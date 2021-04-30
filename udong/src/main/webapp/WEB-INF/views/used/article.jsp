@@ -41,15 +41,12 @@ $(".btn btnList").click(() {
 </div>
 	
 <div class="container">
-    <div class="body-container" style="width: 700px;">
-        <div class="body-title" style="margin: 0;">
-            <h3><span style="font-family: Webdings">4</span> 중고거래 </h3>
-        </div>
+    <div class="body-container">
         
         <div>
 			<table style="width: 100%; margin: 0 auto; border-spacing: 0px; border-collapse: collapse;">
 			<tr height="35" class="row-3">
-			    <td width="50%" align="left" class="col-2">
+			    <td width="50%" align="left" class="col-1">
 			        ${dto.subject}
 			    </td>     
 			</tr>
@@ -62,45 +59,71 @@ $(".btn btnList").click(() {
 			        ${dto.created}
 			    </td>
 			</tr>
+			</table>
 			
-			<tr class="row-2">
-			  <td  rowspan="6" height="50">
+			<table style="width: 100%; margin: 0 auto; border-spacing: 0px; border-collapse: collapse;">
+			<tr>
+			  <td style="padding-left: 20px; padding-top: 20px;">
 			    <img src="${pageContext.request.contextPath}/uploads/photo/${dto.imageFilename}" style="max-width:85%; height:auto; resize:both;">
 			   </td>
-			    <td  height="25">
-			    > ${dto.category}
-			   </td>
-			</tr>
-			<tr class="row-2">
-			    <td  height="40">
-			    ${dto.subject}
-			   </td>
-			</tr>
-			<tr class="row-2">
-			    <td  height="40">
-			    <b>${dto.price} 원</b>  
-			   </td>
-			</tr>
-			<tr class="row-2">
-			    <td  height="40" style="#BDBDBD;"> ${dto.area} </td>
-			</tr>
-			<tr class="row-2">			   
-				<td  height="40">  
-			       <c:if test ="${sessionScope.member.userId != null && sessionScope.member.userId != dto.userId}">
-			       <button type="button" class="btn btnList" style="width: 45%; height: 85%;" onclick="javascript:location.href='${pageContext.request.contextPath}/used/like.do?num=${dto.num}&page=${page}';">관심글에 추가</button>
-			       </c:if>
-			    </td>
-		    </tr>
-			<tr class="row-2">			
-			    <c:if test ="${sessionScope.member.userId != null && sessionScope.member.userId != dto.userId}">	
-			    <td height="50" style="margin: 0 auto; text-align: center;">
-			    <form name="boardForm" method="post">
-			    	<input 	type="hidden" name="userId" value="${dto.userId }">    
-			  		<button type="button" class="btn btnList" style="width: 45%; height: 85%;" onclick="javascript:location.href='${pageContext.request.contextPath}/used/message_ready.do?num=${dto.num}&page=${page}';">구매 문의 쪽지</button>
-			  	</form>
-			    </td>
-			    </c:if>
-			</tr>
+			    <td width="60%" >
+			    
+			    <table style="width: 100%; margin-top: 20px;">
+				    <tr>
+					    <td height="30" style="color: gray;" >
+					    > ${dto.category}
+					    </td>
+					</tr>
+					<tr>
+					    <td height="30" style="font-weight: 700; font-size: 16px;">
+					    <span style="color: #FF8A3D; margin-right: 5px;">판매</span>${dto.subject}
+					   </td>
+					</tr>
+					<tr>
+					    <td height="30" style="font-weight: 700; font-size: 16px;">
+					    <b>${dto.price} 원</b>  
+					   </td>
+					</tr>
+					<tr>
+					    <td height="30" style="#BDBDBD;"> ${dto.area} </td>
+					</tr>
+					<tr height="50">			   
+						<td width="50%" align="left">  
+					       <c:if test ="${sessionScope.member.userId != null && sessionScope.member.userId != dto.userId}">
+						       <button type="button" class="btn" 
+						       style="width: 90%; color: #495057; background-color: #eee; border: 0; font-weight: 700;"
+						       onclick="javascript:location.href='${pageContext.request.contextPath}/used/like.do?num=${dto.num}&page=${page}';">
+						       <i class="fas fa-heart"></i>&nbsp;&nbsp;관심글에 추가</button>
+					       </c:if>
+					       <c:if test ="${sessionScope.member.userId == dto.userId}">
+						       <button type="button" class="btn" 
+						       style="width: 90%; color: #495057; background-color: #eee; border: 0; font-weight: 700;"
+						       disabled="disabled"
+						       onclick="javascript:location.href='${pageContext.request.contextPath}/used/like.do?num=${dto.num}&page=${page}';">
+						       <i class="fas fa-heart"></i>&nbsp;&nbsp;관심글에 추가</button>
+					    	</c:if>
+					    </td>
+					    <td width="50%" align="left">
+					    <form name="boardForm" method="post">
+					    	<input 	type="hidden" name="userId" value="${dto.userId }">    
+					    <c:if test ="${sessionScope.member.userId != null && sessionScope.member.userId != dto.userId}">	
+					  		<button type="button" class="btn" 
+					  		style="width: 90%; color: #495057; background-color: #eee; border: 0; font-weight: 700;"
+					  		onclick="javascript:location.href='${pageContext.request.contextPath}/used/message_ready.do?num=${dto.num}&page=${page}';">
+					  		<i class="fas fa-comment"></i>&nbsp;&nbsp;구매문의 쪽지</button>
+					    </c:if>
+					    <c:if test ="${sessionScope.member.userId == dto.userId}">	
+					  		<button type="button" class="btn" 
+					  		style="width: 90%; color: #495057; background-color: #eee; border: 0; font-weight: 700;"
+					  		disabled="disabled"
+					  		onclick="javascript:location.href='${pageContext.request.contextPath}/used/message_ready.do?num=${dto.num}&page=${page}';">
+					  		<i class="fas fa-comment"></i>&nbsp;&nbsp;구매문의 쪽지</button>
+					  	</c:if>
+					  	</form>
+					    </td>
+				    </tr>
+				    </table>
+				    
 			<tr class="row-2">
 			  <td colspan="2" align="left" class="artiBox" valign="top" height="200">
 			      ${dto.content}
