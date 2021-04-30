@@ -14,6 +14,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.member.SessionInfo;
+import com.neighbor.NeighborDAO;
+import com.neighbor.NeighborReplyDTO;
 import com.util.MyUtil;
 
 @WebServlet("/udong/*")
@@ -55,14 +57,16 @@ public class UdongServlet extends HttpServlet {
 			createdForm(req, resp);
 		} else if(uri.indexOf("created_ok.do") != -1) {
 			createdSubmit(req, resp);
-		} else if(uri.indexOf("article.do") != -1) {
-			article(req, resp);
 		} else if(uri.indexOf("update.do") != -1) {
 			updateForm(req, resp);
 		} else if(uri.indexOf("update_ok.do") != -1) {
 			updateSubmit(req, resp);
 		} else if(uri.indexOf("delete.do") != -1) {
 			delete(req, resp);
+		} else if (uri.indexOf("article.do") != -1) {
+			article(req, resp);
+		} else if (uri.indexOf("reply_ok.do")!= -1) {
+			replySubmit(req, resp);
 		}
 		
 	}
@@ -213,6 +217,16 @@ public class UdongServlet extends HttpServlet {
 			UdongDTO preReadDto = dao.preReadBoard(num, condition, keyword);
 			UdongDTO nextReadDto = dao.nextReadBoard(num, condition, keyword);
 			
+			// 리플 리스트 가져오기
+			int replyCount = dao.replyCount(num);
+
+			List<UdongReplyDTO> reply_list = null;
+			reply_list = dao.replyBoard(num );
+
+			req.setAttribute("reply_list", reply_list);
+			req.setAttribute("repcurrent_page", 1);
+			req.setAttribute("replyCount", replyCount);
+			
 			req.setAttribute("dto", dto);
 			req.setAttribute("preReadDto", preReadDto);
 			req.setAttribute("nextReadDto", nextReadDto);
@@ -331,5 +345,45 @@ public class UdongServlet extends HttpServlet {
 				}
 				
 				resp.sendRedirect(cp+"/udong/list.do?"+query);
-			}
 		}
+		
+	private void replylist(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		UdongDAO dao = new UdongDAO();
+		String reppage = req.getParameter("page");
+		int articleNum = Integer.parseInt(req.getParameter("num"));
+		int repcurrent_page = 1;
+		if (reppage != null)
+			repcurrent_page = Integer.parseInt(reppage);
+
+		int replyCount = dao.replyCount(articleNum);
+
+		List<UdongReplyDTO> reply_list = null;
+		reply_list = dao.replyBoard(articleNum );
+
+		req.setAttribute("reply_list", reply_list);
+		req.setAttribute("repcurrent_page", repcurrent_page);
+		req.setAttribute("replyCount", replyCount);
+		
+
+	}
+
+private void replySubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
+	UdongDAO dao = new UdongDAO();
+	UdongReplyDTO dto = new UdongReplyDTO();
+	String cp = req.getContextPath();
+	String page = req.getParameter("page");
+	HttpSession session = req.getSession();
+	SessionInfo info = (SessionInfo)session.getAttribute("member");
+	
+	try {
+		dto.setArticlenum(Integer.parseInt(req.getParameter("num")));
+		dto.setUserId(info.getUserId());
+		dto.setContent(req.getParameter("content"));
+		dao.insertReply(dto);
+	} catch (Exception e) {
+		e.printStackTrace();
+	}
+	resp.sendRedirect(cp+"/udong/article.do?page="+page+"&num="+dto.getArticlenum());
+	return;	
+}
+}

@@ -7,7 +7,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>spring</title>
+<title>우리동네 이야기</title>
 <jsp:include page="/WEB-INF/views/layout/staticHeader.jsp"/>
 
 <script type="text/javascript">
