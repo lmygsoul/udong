@@ -20,18 +20,9 @@ function deleteBoard(num) {
 	}
 }
 </c:if>
-function sendMessage(){
-	var f = document.boardForm;
-	f.action="${pageContext.request.contextPath}/used/message_ready.do?num=${dto.num}&page=${page}"
-	f.submit();
-	
-}
-
 $(".btn btnList").click(() {
 	  $(this).attr('disabled',true);
 	});
-
-
 </script>
 </head>
 <body>
@@ -90,13 +81,13 @@ $(".btn btnList").click(() {
 					<tr height="50">			   
 						<td width="50%" align="left">  
 					       <c:if test ="${sessionScope.member.userId != null && sessionScope.member.userId != dto.userId}">
-						       <button type="button" class="btn" 
+						       <button type="button" class="btn sendbtn" 
 						       style="width: 90%; color: #495057; background-color: #eee; border: 0; font-weight: 700;"
 						       onclick="javascript:location.href='${pageContext.request.contextPath}/used/like.do?num=${dto.num}&page=${page}';">
 						       <i class="fas fa-heart"></i>&nbsp;&nbsp;관심글에 추가</button>
 					       </c:if>
 					       <c:if test ="${sessionScope.member.userId == dto.userId}">
-						       <button type="button" class="btn" 
+						       <button type="button" class="btn sendbtn" 
 						       style="width: 90%; color: #495057; background-color: #eee; border: 0; font-weight: 700;"
 						       disabled="disabled"
 						       onclick="javascript:location.href='${pageContext.request.contextPath}/used/like.do?num=${dto.num}&page=${page}';">
@@ -104,12 +95,11 @@ $(".btn btnList").click(() {
 					    	</c:if>
 					    </td>
 					    <td width="50%" align="left">
-					    <form name="boardForm" method="post">
-					    	<input 	type="hidden" name="userId" value="${dto.userId }">    
-					    <c:if test ="${sessionScope.member.userId != null && sessionScope.member.userId != dto.userId}">	
-					  		<button type="button" class="btn" 
-					  		style="width: 90%; color: #495057; background-color: #eee; border: 0; font-weight: 700;"
-					  		onclick="javascript:location.href='${pageContext.request.contextPath}/used/message_ready.do?num=${dto.num}&page=${page}';">
+					    <form method="post" action="${pageContext.request.contextPath}/member/sm_created.do">
+					    <c:if test ="${sessionScope.member.userId != null && sessionScope.member.userId != dto.userId}">
+					    	<input 	type="hidden" name="userId" value="${dto.userId}">
+					  		<button type="submit" class="btn" 
+					  		style="width: 90%; color: #495057; background-color: #eee; border: 0; font-weight: 700;">
 					  		<i class="fas fa-comment-dots"></i>&nbsp;&nbsp;구매문의 쪽지</button>
 					    </c:if>
 					    <c:if test ="${sessionScope.member.userId == dto.userId}">	

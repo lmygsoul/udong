@@ -8,9 +8,15 @@ public class MessageDTO {
 	private String sendTime;
 	private String messageType;
 	private String nickName;
-	private int pageNum,listNum;
+	private int pageNum,listNum,num;
 	
 	
+	public int getNum() {
+		return num;
+	}
+	public void setNum(int num) {
+		this.num = num;
+	}
 	public String getNickName() {
 		return nickName;
 	}

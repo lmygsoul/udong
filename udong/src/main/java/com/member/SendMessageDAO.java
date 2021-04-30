@@ -19,7 +19,7 @@ public class SendMessageDAO {
 		StringBuilder sb = new StringBuilder();
 		try {
 			sb.append("SELECT sm.sendUser, receiveUser, subject, content, TO_CHAR(sendTime, 'YYYY-MM-DD') sendTime, messageType, pageNum, nickName FROM sendMessage sm" );
-			sb.append(" LEFT OUTER JOIN member1 m1 ON sm.sendUser = m1.userId WHERE pageNum = ? ");
+			sb.append(" LEFT OUTER JOIN member1 m1 ON sm.sendUser = m1.userId WHERE pageNum = ?");
 			
 			pstmt = conn.prepareStatement(sb.toString());
 			pstmt.setInt(1, num);

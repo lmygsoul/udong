@@ -260,8 +260,13 @@ public class MemberServlet extends MyServlet{
 		MemberDAO dao = new MemberDAO();
 		try {
 			
-			String id = req.getParameter("userId");
-			MemberDTO dto = dao.readMember(id);
+			String num = req.getParameter("num");
+			
+			
+			
+			
+			
+			MemberDTO dto = dao.readMember(num);
 			if(dto==null) {
 				return;
 			}
@@ -269,6 +274,13 @@ public class MemberServlet extends MyServlet{
 			String tel1 = telNum[0];
 			String tel2 = telNum[1];
 			String tel3 = telNum[2];
+			String[] birthNum = dto.getBirth().split("-");
+			String birth1 = birthNum[0];
+			String birth2 = birthNum[1];
+			String birth3 = birthNum[2];
+			String []endbrith = birth3.split(" ");
+			String end = endbrith[0];
+			String birth = birth1+"-"+birth2+"-"+end;
 			
 			dto.setTel1(tel1);
 			dto.setTel2(tel2);
@@ -276,6 +288,7 @@ public class MemberServlet extends MyServlet{
 			req.setAttribute("title", "프로필");
 			req.setAttribute("mode", "another_Profile");
 			req.setAttribute("dto", dto);
+			req.setAttribute("birth", birth);
 			
 			forward(req, resp, "/WEB-INF/views/member/myProfile.jsp");
 		} catch (Exception e) {
@@ -411,12 +424,19 @@ public class MemberServlet extends MyServlet{
 	}
 	private void sendMessage(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
 		
+		MessageDTO mdto = new MessageDTO();
+		SendMessageDAO mdao = new SendMessageDAO();
 		
-		req.setAttribute("title", "보낸쪽지함");
-		req.setAttribute("mode", "sm_created");
-		
-		forward(req, resp, "/WEB-INF/views/member/sm_created.jsp");
-		return;
+		try {
+			mdto = mdao.readMember(req.getParameter("userId"));		
+			req.setAttribute("title", "보낸쪽지함");
+			req.setAttribute("mode", "sm_created");
+			req.setAttribute("mdto", mdto);
+			forward(req, resp, "/WEB-INF/views/member/sm_created.jsp");
+			return;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	private void sendMessage_ok(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

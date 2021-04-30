@@ -7,7 +7,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>우동사리-회원가입</title>
+<title>우동사리-마이프로필</title>
 <style type="text/css">
 .memberForm {
    width : 400px;
