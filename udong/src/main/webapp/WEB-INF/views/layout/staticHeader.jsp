@@ -3,6 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
+<link rel="shortcut icon" type="image/x-icon" href="${pageContext.request.contextPath}/resource/images/favicon.ico" />
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/style.css" type="text/css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/layout.css" type="text/css">

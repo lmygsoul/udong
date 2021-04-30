@@ -55,14 +55,16 @@ function deleteNotice(num) {
 			</tr>
 			
 			<tr height="35" class="row-2">
-			    <td colspan="2" align="left" class="col-3" style="position: relative;">
+			    <td colspan="2" align="left" class="col-3">
 			       첨&nbsp;&nbsp;부 :
 		           <c:if test="${not empty dto.saveFilename}">
 		                   ${dto.originalFilename}
 		                    (<fmt:formatNumber value="${dto.fileSize/1024}" pattern="0.00"/> kb)
-		                   <a href="${pageContext.request.contextPath}/notice/download.do?num=${dto.num}">
-		                   		<img src="${pageContext.request.contextPath}/resource/images/download_icon.png" style="height: 22px;position: absolute;left: 253px;top: 8px;border: 1px solid #bbb;border-radius: 4px;">
+		                   <div style="position:relative; display: inline; ">
+			                   <a href="${pageContext.request.contextPath}/notice/download.do?num=${dto.num}">
+			                   <img src="${pageContext.request.contextPath}/resource/images/download_icon.png" style="height: 20px; top: -1px; left: 5px; position:absolute; border: 1px solid #bbb; border-radius: 4px;">
 		                   </a>
+		                   </div>
 		           </c:if>
 			    </td>
 			</tr>
