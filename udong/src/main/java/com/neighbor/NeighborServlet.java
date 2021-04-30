@@ -323,43 +323,19 @@ public class NeighborServlet extends MyUploadServlet {
 	
 	private void replylist(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		NeighborDAO dao = new NeighborDAO();
-		MyUtil util = new MyUtil();
-		String cp = req.getContextPath();
-		String page = req.getParameter("page");
+		String reppage = req.getParameter("page");
 		int articleNum = Integer.parseInt(req.getParameter("num"));
 		int repcurrent_page = 1;
-		if (page != null)
-			repcurrent_page = Integer.parseInt(page);
+		if (reppage != null)
+			repcurrent_page = Integer.parseInt(reppage);
 
 		int replyCount = dao.replyCount(articleNum);
 
-		int rows = 20;
-		int total_page = util.pageCount(rows, replyCount);
-		if (repcurrent_page > total_page)
-			repcurrent_page = total_page;
-
-		int offset = (repcurrent_page - 1) * rows;
-		if (offset < 0)
-			offset = 0;
-
 		List<NeighborReplyDTO> reply_list = null;
-		reply_list = dao.replyBoard(offset, rows, articleNum );
+		reply_list = dao.replyBoard(articleNum );
 
-
-		String query = "";
-
-
-		String listUrl = cp + "/neighbor/article.do";
-		if (query.length() != 0) {
-			listUrl += "?" + query;
-		}
-
-		String reppaging = util.paging(repcurrent_page, total_page, listUrl);
-		
 		req.setAttribute("reply_list", reply_list);
 		req.setAttribute("repcurrent_page", repcurrent_page);
-		req.setAttribute("reptotal_page", total_page);
-		req.setAttribute("reppaging", reppaging);
 		req.setAttribute("replyCount", replyCount);
 		
 

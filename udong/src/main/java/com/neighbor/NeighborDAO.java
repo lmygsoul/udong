@@ -686,7 +686,7 @@ private Connection conn = DBConn.getConnection();
 		return result;
 	}
 
-	public List<NeighborReplyDTO> replyBoard(int offset, int rows, int num) {
+	public List<NeighborReplyDTO> replyBoard(int num) {
 		List<NeighborReplyDTO> list = new ArrayList<NeighborReplyDTO>();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -696,12 +696,9 @@ private Connection conn = DBConn.getConnection();
 					+ " FROM neighbor_rep r"
 					+ " LEFT OUTER JOIN member1 m ON r.userId = m.userId"
 					+ " WHERE articleNum = ?"
-					+ " ORDER BY num DESC"
-					+ " OFFSET ? ROWS FETCH FIRST ? ROW ONLY";
+					+ " ORDER BY num DESC";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, num);
-			pstmt.setInt(2, offset);
-			pstmt.setInt(3, rows);
 			
 			rs = pstmt.executeQuery();
 			while(rs.next()) {
