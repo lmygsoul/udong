@@ -41,10 +41,18 @@ public class QaDAO {
 				dto.setParent(0);
 			} else if(mode.equals("reply")) {
 				// 답변일때
-				updateOrderNo(dto.getGroupNum(), dto.getOrderNo());
+				int selectreply = selectOrderNo(dto.getGroupNum(), dto.getOrderNo(), dto.getDepth());
 				
-				dto.setDepth(dto.getDepth() + 1);
-				dto.setOrderNo(dto.getOrderNo() + 1);
+				if(selectreply == 0) {
+					dto.setOrderNo(ifzeroOrderNo(dto.getGroupNum())); 
+					dto.setDepth(dto.getDepth() + 1);
+				} else {
+					updateOrderNo(dto.getGroupNum(), selectreply);
+					dto.setOrderNo(selectreply);
+					dto.setDepth(dto.getDepth() + 1);
+				}
+
+				
 			}
 			
 			sql = "INSERT INTO qaBoard(boardNum, userId, subject, content, "
@@ -83,7 +91,7 @@ public class QaDAO {
 		PreparedStatement pstmt=null;
 		String sql;
 		
-		sql = "UPDATE qaBoard SET orderNo=orderNo+1 WHERE groupNum = ? AND orderNo > ?";
+		sql = "UPDATE qaBoard SET orderNo=orderNo+1 WHERE groupNum = ? AND orderNo >= ?";
 		
 		try {
 			pstmt = conn.prepareStatement(sql);
@@ -104,6 +112,86 @@ public class QaDAO {
 		
 		return result;
 	}
+	
+	public int selectOrderNo(int groupNum, int orderNo, int depth) throws SQLException {
+		int result = 0;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		
+		try {
+			sql = "SELECT NVL(MIN(orderNo),0) FROM qaBoard WHERE groupNum = ? "
+				+ " AND orderNo > ? AND depth <= ? ";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, groupNum);
+			pstmt.setInt(2, orderNo);
+			pstmt.setInt(3, depth);
+			
+			rs=pstmt.executeQuery();
+			if(rs.next()) {
+				result=rs.getInt(1);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			if(rs!=null) {
+				try {
+					rs.close();
+				} catch (Exception e2) {
+				}
+			}
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+		
+		return result;
+	}
+	
+	public int ifzeroOrderNo(int groupNum) throws SQLException {
+		int result = 0;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		
+		try {
+			sql = "SELECT NVL(MAX(orderNo),0)+1 FROM qaBoard WHERE groupNum = ? ";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, groupNum);
+			
+			rs=pstmt.executeQuery();
+			if(rs.next()) {
+				result=rs.getInt(1);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			if(rs!=null) {
+				try {
+					rs.close();
+				} catch (Exception e2) {
+				}
+			}
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+		
+		return result;
+	}
+	
 	
 	public int dataCount() {
 		int result=0;
